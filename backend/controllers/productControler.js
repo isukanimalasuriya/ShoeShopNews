@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Shoes from "../modeles/Shoes.js";
+import Shoes from "../modeles/shoe.js";
 
 export function addProduct(req, res) {
   const data = req.body;
