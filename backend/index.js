@@ -29,6 +29,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+console.log("hi himansha")
  app.use("/api/auth/", router)
 // app.use("/api/users", userRouter)
  app.use("/api/product", shoeRouter);
