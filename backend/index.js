@@ -12,7 +12,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import { connectDB } from "./DB/connectDB.js";
 import shoeRouter from "./routes/shoeRoute.js";
-// import router from "./routes/authRouter.js";
+import router from "./routes/authRouter.js";
 
 dotenv.config();
 
@@ -29,7 +29,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-// app.use("/api/auth/", router)
+ app.use("/api/auth/", router)
 // app.use("/api/users", userRouter)
  app.use("/api/product", shoeRouter);
  app.use("/api/cart", cartRoute);
