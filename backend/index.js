@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./DB/connectDB.js";
 import router from "./routes/authRouter.js";
 import productRouter from "../backend/routes/productRouter.js";
+
 // import router from "./routes/authRouter.js";
 
 dotenv.config();
@@ -43,3 +44,4 @@ app.listen(PORT,()=>{
     connectDB()
     console.log("Server starting on port", PORT)
 })
+console.log("hi")
