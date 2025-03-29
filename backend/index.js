@@ -1,17 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose, { connect } from "mongoose";
-import productRouter from "../backend/routes/productRouter.js"
-import cartRoute from "./routes/cartRoute.js";
-import wishlistRoute from "./routes/wishlistRoute.js";
-import reviewRoute from "./routes/reviewRoute.js";
-import customizeShoeRoute from "./routes/customizeshoueRoute.js";
-import userRouter from "./routes/userRouter.js"
+// import productRouter from "../backend/routes/productRouter.js"
+// import cartRoute from "./routes/cartRoute.js";
+// import wishlistRoute from "./routes/wishlistRoute.js";
+// import reviewRoute from "./routes/reviewRoute.js";
+// import customizeShoeRoute from "./routes/customizeshoueRoute.js";
+// import userRouter from "./routes/userRouter.js"
 import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser";
 import { connectDB } from "./DB/connectDB.js";
-import router from "./routes/authRouter.js";
+// import router from "./routes/authRouter.js";
 
 dotenv.config();
 
@@ -22,13 +22,19 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true}));
 app.use(express.json())
 app.use(cookieParser())
 
-app.use("/api/auth/", router)
-app.use("/api/users", userRouter)
-app.use("/api/product", productRouter);
-app.use("/api/cart", cartRoute);
-app.use("/api/wishlist", wishlistRoute);
-app.use("/api/review", reviewRoute);
-app.use("/api/customize", customizeShoeRoute);
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+// app.use("/api/auth/", router)
+// app.use("/api/users", userRouter)
+// app.use("/api/product", productRouter);
+// app.use("/api/cart", cartRoute);
+// app.use("/api/wishlist", wishlistRoute);
+// app.use("/api/review", reviewRoute);
+// app.use("/api/customize", customizeShoeRoute);
 
 
 app.listen(PORT,()=>{
