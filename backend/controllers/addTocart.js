@@ -1,6 +1,6 @@
 
 import Cart from "../modeles/cart.js";
-import Shoes from "../modeles/Shoes.js";
+import Shoes from "../modeles/shoe.js";
 import mongoose from "mongoose";
 
 export const addTocart = async (req, res) => {
@@ -142,36 +142,35 @@ export const updateCartQuantity = async (req, res) => {
 };
 
 export async function deleteCartItem(req, res) {
-    try {
-      const {userId} = req.params;
-      const { brandId, colorId, sizeId } = req.body;
-  
-      // Convert shoeId to ObjectId
-      const brandObjId = new mongoose.Types.ObjectId(brandId);
-      const colorobjId = new mongoose.Types.ObjectId(colorId);
-      const shoeSizeobjId = new mongoose.Types.ObjectId(sizeId);
-  
-      const cart = await Cart.findOneAndUpdate(
-        { userId },
-        {
-          $pull: {
-            items: {
-              "brand.brandId": brandObjId,
-              "color.colorId": colorobjId,
-              "size.sizeId": shoeSizeobjId,
-            },
+  try {
+    const {userId} = req.params;
+    const { brandId, colorId, sizeId } = req.body;
+
+    // Convert shoeId to ObjectId
+    const brandObjId = new mongoose.Types.ObjectId(brandId);
+    const colorobjId = new mongoose.Types.ObjectId(colorId);
+    const shoeSizeobjId = new mongoose.Types.ObjectId(sizeId);
+
+    const cart = await Cart.findOneAndUpdate(
+      { userId },
+      {
+        $pull: {
+          items: {
+            "brand.brandId": brandObjId,
+            "color.colorId": colorobjId,
+            "size.sizeId": shoeSizeobjId,
           },
         },
-        { new: true }
-      );
-  
-      if (!cart) {
-        return res.status(404).json({ message: "Cart not found" });
-      }
-  
-      res.json({ message: "Item removed from cart successfully" , cart});
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete cart item", error });
+      },
+      { new: true }
+    );
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
     }
+
+    res.json({ message: "Item removed from cart successfully" , cart});
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete cart item", error });
   }
-  
+}

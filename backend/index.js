@@ -4,15 +4,16 @@ import mongoose, { connect } from "mongoose";
 // import productRouter from "../backend/routes/productRouter.js"
 import cartRoute from "./routes/cartRoute.js";
 // import wishlistRoute from "./routes/wishlistRoute.js";
-// import reviewRoute from "./routes/reviewRoute.js";
+import reviewRoute from "./routes/reviewRoute.js";
 // import customizeShoeRoute from "./routes/customizeshoueRoute.js";
 // import userRouter from "./routes/userRouter.js"
 import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser";
 import { connectDB } from "./DB/connectDB.js";
-import shoeRouter from "./routes/shoeRoute.js";
 import router from "./routes/authRouter.js";
+import productRouter from "../backend/routes/productRouter.js";
+// import router from "./routes/authRouter.js";
 
 dotenv.config();
 
@@ -32,10 +33,10 @@ app.use(function(req, res, next) {
 console.log("hi himansha")
  app.use("/api/auth/", router)
 // app.use("/api/users", userRouter)
- app.use("/api/product", shoeRouter);
+ app.use("/api/product", productRouter);
  app.use("/api/cart", cartRoute);
 // app.use("/api/wishlist", wishlistRoute);
-// app.use("/api/review", reviewRoute);
+app.use("/api/review", reviewRoute);
 // app.use("/api/customize", customizeShoeRoute);
 
 
