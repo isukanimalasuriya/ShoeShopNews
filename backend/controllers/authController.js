@@ -33,9 +33,9 @@ export const signup = async (req, res)=>{
 		await user.save();
 
 		// jwt
-		//generateTokenAndSetCookie(res, user._id);
+		generateTokenAndSetCookie(res, user._id);
 
-		//await sendVerificationEmail(user.email, verificationToken);
+		await sendVerificationEmail(user.email, verificationToken);
 
 		res.status(201).json({
 			success: true,
@@ -231,5 +231,39 @@ export const updateCustomerInfo = async (req, res) => {
     } catch (error) {
         console.log("Error in updateProfile ", error);
         res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+export const deleteAccount = async (req, res) => {
+    try {
+		console.log("userid",req.userId);
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "User ID missing from request" });
+        }
+        // Find and delete the user
+        const deletedUser = await User.findByIdAndDelete(userId);
+        
+        if (!deletedUser) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "User not found" 
+            });
+        }
+        
+        // Clear authentication cookie
+        res.clearCookie("token");
+        
+        res.status(200).json({ 
+            success: true, 
+            message: "Account successfully deleted" 
+        });
+    } catch (error) {
+        console.log("Error in deleteAccount: ", error);
+        res.status(500).json({ 
+            success: false, 
+            message: "Failed to delete account",
+            error: error.message 
+        });
     }
 };
