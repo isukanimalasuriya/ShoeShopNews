@@ -1,4 +1,4 @@
-const Attendance = require("../Model/Attendancemodel");
+const Attendance = require("../modeles/Attendancemodel");
 
 // Get All Attendance Records
 const getAllAttendance = async (req, res, next) => {
