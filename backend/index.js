@@ -5,7 +5,7 @@ import mongoose, { connect } from "mongoose";
 import cartRoute from "./routes/cartRoute.js";
 // import wishlistRoute from "./routes/wishlistRoute.js";
 import reviewRoute from "./routes/reviewRoute.js";
-import AttendanceRoutes from "./routes/AttendanceRoutes.js"
+
 // import customizeShoeRoute from "./routes/customizeshoueRoute.js";
 // import userRouter from "./routes/userRouter.js"
 import dotenv from "dotenv"
