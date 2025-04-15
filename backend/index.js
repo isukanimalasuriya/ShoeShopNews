@@ -5,6 +5,7 @@ import mongoose, { connect } from "mongoose";
 import cartRoute from "./routes/cartRoute.js";
 // import wishlistRoute from "./routes/wishlistRoute.js";
 import reviewRoute from "./routes/reviewRoute.js";
+import AttendanceRoutes from "./routes/AttendanceRoutes.js"
 // import customizeShoeRoute from "./routes/customizeshoueRoute.js";
 // import userRouter from "./routes/userRouter.js"
 import dotenv from "dotenv"
@@ -38,6 +39,7 @@ app.use(function(req, res, next) {
 // app.use("/api/wishlist", wishlistRoute);
 app.use("/api/review", reviewRoute);
 // app.use("/api/customize", customizeShoeRoute);
+app.use("/api/attendance",AttendanceRoutes);
 
 
 app.listen(PORT,()=>{
