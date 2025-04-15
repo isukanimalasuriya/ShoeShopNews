@@ -16,7 +16,7 @@ import router from "./routes/authRouter.js";
 import productRouter from "../backend/routes/productRouter.js";
 
 // import router from "./routes/authRouter.js";
-
+const AttendanceRoutes = require("./routes/AttendanceRoutes");
 dotenv.config();
 
 let app = express();
