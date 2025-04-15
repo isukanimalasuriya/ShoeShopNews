@@ -1,18 +1,14 @@
-const express = require("express");
-const router = express.Router();
+import express from "express";
 
-// Import Attendance Model & Controller
-const Attendance = require("../modeles/Attendancemodel");
-const AttendanceController = require("../controllers/AttendanceControllers");
+import {addAttendance,getAttendanceById,updateAttendance,deleteAttendance} from "../controllers/AttendanceController"
 
-// Define Routes
-router.get("/", AttendanceController.getAllAttendance);
-router.post("/", AttendanceController.addAttendance);
-router.get("/:id", AttendanceController.getAttendanceById);
-router.put("/:id", AttendanceController.updateAttendance);
-router.delete("/:id", AttendanceController.deleteAttendance);
+const AttendanceRoutes= express.Router();
 
-// Export Router
-module.exports = router;
+AttendanceRoutes.post("/",addAttendance)
+AttendanceRoutes.get("/:userId",getAttendanceById)
+AttendanceRoutes.put("/:userId",updateAttendance)
+AttendanceRoutes.delete("/:userId",deleteAttendance)
+
+export default AttendanceRoutes
 
 
