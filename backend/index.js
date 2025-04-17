@@ -13,6 +13,9 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./DB/connectDB.js";
 import router from "./routes/authRouter.js";
 import productRouter from "../backend/routes/productRouter.js";
+import orderRoute from "../backend/routes/orderManageRoute.js"
+import md5 from "md5";
+
 // import router from "./routes/authRouter.js";
 
 dotenv.config();
@@ -36,8 +39,10 @@ app.use(function(req, res, next) {
  app.use("/api/cart", cartRoute);
 // app.use("/api/wishlist", wishlistRoute);
 app.use("/api/review", reviewRoute);
+app.use("/api/order", orderRoute);
 // app.use("/api/customize", customizeShoeRoute);
 
+// app.use("/payment", paymentRoutes);
 
 app.listen(PORT,()=>{
     connectDB()

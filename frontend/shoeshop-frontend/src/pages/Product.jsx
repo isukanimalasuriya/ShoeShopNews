@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(ShopContext);
+  const { products, currency } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
   // const [sizeId, setSizeId] = useState(""); // Store size ID
