@@ -18,9 +18,13 @@ import Home from "../src/pages/Home";
 import Collection from "./pages/Collection";
 import Product from "../src/pages/Product";
 import Cart from "../src/pages/Cart";
+import PlaceOrder from "../src/pages/PlaceOrder";
 import { Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation } from "react-router-dom";
+import Payment_success from "./pages/Payment_success";
+import Payment_cancel from "./pages/Payment_cancel";
+import Notify from "./pages/Notify";
 
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
@@ -68,6 +72,11 @@ function App() {
         <Route path="/collection" element={<Collection/>}/>
         <Route path="/product/:productId" element={<Product/>}/>
         <Route path="/cart" element={<Cart/>}/>
+        <Route path="/placeOrder" element={<PlaceOrder/>} />
+        <Route path="/Payment_success" element={<Payment_success/>} />
+        <Route path="/Payment_cancel" element={<Payment_cancel/>} />
+        <Route path="/Notify" element={<Notify/>} />
+
       </Routes>
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
     </>
