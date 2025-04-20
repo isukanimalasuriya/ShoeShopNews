@@ -44,7 +44,7 @@ app.use("/api/review", reviewRoute);
 
 app.use("/api/attendance", AttendanceRoutes);
 
-app.use("/api/leave", LeaveRoutes);
+app.use("/api/leaves", LeaveRoutes);
 
 
 app.listen(PORT,()=>{
