@@ -1,7 +1,7 @@
-const Attendance = require("../modeles/Attendancemodel");
+import Attendance from "../modeles/Attendancemodel.js";
 
 // Get All Attendance Records
-const getAllAttendance = async (req, res, next) => {
+export const getAllAttendance = async (req, res, next) => {
     let records;
     try {
         records = await Attendance.find();
@@ -9,7 +9,6 @@ const getAllAttendance = async (req, res, next) => {
         console.log(err);
     }
 
-    // If no records found
     if (!records) {
         return res.status(404).json({ message: "Attendance records not found" });
     }
@@ -17,11 +16,10 @@ const getAllAttendance = async (req, res, next) => {
     return res.status(200).json({ records });
 };
 
-// Add a New Attendance Record
-const addAttendance = async (req, res, next) => {
+export const addAttendance = async (req, res, next) => {
     const { name, department, status, reason } = req.body;
     let records;
-    
+
     try {
         records = new Attendance({ name, department, status, reason });
         await records.save();
@@ -36,9 +34,8 @@ const addAttendance = async (req, res, next) => {
     return res.status(201).json({ records });
 };
 
-// Get Attendance Record by ID
-const getAttendanceById = async (req, res, next) => {
-    const id = req.params.id;
+export const getAttendanceById = async (req, res, next) => {
+    const id = req.params.userId;
     let records;
 
     try {
@@ -54,14 +51,13 @@ const getAttendanceById = async (req, res, next) => {
     return res.status(200).json({ records });
 };
 
-// Update an Attendance Record
-const updateAttendance = async (req, res, next) => {
-    const id = req.params.id;
+export const updateAttendance = async (req, res, next) => {
+    const id = req.params.userId;
     const { name, department, status, reason } = req.body;
     let records;
 
     try {
-        records = await Attendance.findByIdAndUpdate(id, {  name, department, status, reason}, { new: true });
+        records = await Attendance.findByIdAndUpdate(id, { name, department, status, reason }, { new: true });
     } catch (err) {
         console.log(err);
     }
@@ -73,9 +69,8 @@ const updateAttendance = async (req, res, next) => {
     return res.status(200).json({ records });
 };
 
-// Delete an Attendance Record
-const deleteAttendance = async (req, res, next) => {
-    const id = req.params.id;
+export const deleteAttendance = async (req, res, next) => {
+    const id = req.params.userId;
     let records;
 
     try {
@@ -90,10 +85,3 @@ const deleteAttendance = async (req, res, next) => {
 
     return res.status(200).json({ message: "Attendance record deleted successfully" });
 };
-
-// Export Functions
-exports.getAllAttendance = getAllAttendance;
-exports.addAttendance = addAttendance;
-exports.getAttendanceById = getAttendanceById;
-exports.updateAttendance = updateAttendance;
-exports.deleteAttendance = deleteAttendance;

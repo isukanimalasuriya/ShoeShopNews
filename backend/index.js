@@ -13,6 +13,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./DB/connectDB.js";
 import router from "./routes/authRouter.js";
 import productRouter from "../backend/routes/productRouter.js";
+import AttendanceRoutes from "./routes/AttendanceRoutes.js";
 
 // import router from "./routes/authRouter.js";
 
@@ -40,6 +41,7 @@ app.use("/api/review", reviewRoute);
 // app.use("/api/customize", customizeShoeRoute);
 
 
+app.use("/api/attendance", AttendanceRoutes);
 
 app.listen(PORT,()=>{
     connectDB()

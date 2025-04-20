@@ -1,6 +1,6 @@
 import express from "express";
 
-import {addAttendance,getAttendanceById,updateAttendance,deleteAttendance} from "../controllers/AttendanceController"
+import {addAttendance,getAttendanceById,updateAttendance,deleteAttendance} from "../controllers/AttendanceController.js"
 
 const AttendanceRoutes= express.Router();
 
