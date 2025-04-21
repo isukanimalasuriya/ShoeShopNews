@@ -15,6 +15,7 @@ import router from "./routes/authRouter.js";
 import productRouter from "../backend/routes/productRouter.js";
 import AttendanceRoutes from "./routes/AttendanceRoutes.js";
 import LeaveRoutes from "./routes/LeaveRoutes.js";
+import EmployeeRoutes from "./routes/EmployeeRoutes.js";
 
 // import router from "./routes/authRouter.js";
 
@@ -45,6 +46,7 @@ app.use("/api/review", reviewRoute);
 app.use("/api/attendance", AttendanceRoutes);
 
 app.use("/api/leaves", LeaveRoutes);
+app.use("/api/employees",EmployeeRoutes);
 
 
 app.listen(PORT,()=>{
