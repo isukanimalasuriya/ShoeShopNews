@@ -25,9 +25,13 @@ import { useLocation } from "react-router-dom";
 import Payment_success from "./pages/Payment_success";
 import Payment_cancel from "./pages/Payment_cancel";
 import Notify from "./pages/Notify";
+import EmployeeRoutes from "./pages/EmployeeRoutes";
+import EmployeeLogin from "./pages/EmployeeLogin";
 import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
+
+
 
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
@@ -49,13 +53,14 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard'];
 
   return (
     <>
       <Toaster position="top-right"/>
       <ToastContainer />
-      <NavBar2/>
+      {!noHeaderRoutes.includes(location.pathname) && <NavBar2 />}
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/customerlogin" element={<CustomerLoginPage />}/>
@@ -84,6 +89,7 @@ function App() {
         <Route path="/reviews" element={<ReviewSection/>}/>
 
       </Routes>
+      <EmployeeRoutes />
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
     </>
   )

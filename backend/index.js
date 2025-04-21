@@ -15,6 +15,7 @@ import router from "./routes/authRouter.js";
 import productRouter from "../backend/routes/productRouter.js";
 import orderRoute from "../backend/routes/orderManageRoute.js"
 import md5 from "md5";
+import userRouter from "./routes/employeeRoute.js";
 
 // import router from "./routes/authRouter.js";
 
@@ -41,7 +42,7 @@ app.use(function(req, res, next) {
 app.use("/api/review", reviewRoute);
 app.use("/api/order", orderRoute);
 // app.use("/api/customize", customizeShoeRoute);
-
+app.use("/api/users", userRouter);
 // app.use("/payment", paymentRoutes);
 
 app.listen(PORT,()=>{
