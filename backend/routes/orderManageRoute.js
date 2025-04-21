@@ -1,10 +1,13 @@
 import express from "express";
 
-import { addOrders, displayOrders } from "../controllers/orderManagementController.js";
+import { addOrders, displayOrders, getAllOrders } from "../controllers/orderManagementController.js";
 
 const OrderRoute = express.Router();
 
 OrderRoute.post("/",addOrders)
-OrderRoute.get("/",displayOrders)
+OrderRoute.get("/all",getAllOrders)
+OrderRoute.get("/:userId",displayOrders)
+
+
 
 export default OrderRoute

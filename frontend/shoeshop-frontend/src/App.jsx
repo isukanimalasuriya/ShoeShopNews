@@ -25,6 +25,9 @@ import { useLocation } from "react-router-dom";
 import Payment_success from "./pages/Payment_success";
 import Payment_cancel from "./pages/Payment_cancel";
 import Notify from "./pages/Notify";
+import Orders from "./pages/Orders";
+import AllOrders from "./pages/AllOrders"
+import ReviewSection from "./pages/Reviews";
 
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
@@ -76,6 +79,9 @@ function App() {
         <Route path="/Payment_success" element={<Payment_success/>} />
         <Route path="/Payment_cancel" element={<Payment_cancel/>} />
         <Route path="/Notify" element={<Notify/>} />
+        <Route path="/orders"  element={<Orders/>}/>
+        <Route path="/allorders"  element={<AllOrders />}/>
+        <Route path="/reviews" element={<ReviewSection/>}/>
 
       </Routes>
       {!noFooterRoutes.includes(location.pathname) && <Footer />}

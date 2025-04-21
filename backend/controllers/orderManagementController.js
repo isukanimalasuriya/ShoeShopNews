@@ -4,7 +4,9 @@ import Shoes from "../modeles/shoe.js"
 
 export async function addOrders(req, res) {
   const data = req.body;
+  console.log(data);
   const newOrders = new Orders(data);
+
 
   try {
     // Save the order first
@@ -53,13 +55,13 @@ export async function addOrders(req, res) {
 export async function displayOrders(req,res) {
 
     try {
-        const { userId } = req.body; 
+        const { userId } = req.params; 
 
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
-        const order = await Orders.findOne({ userId });
+        const order = await Orders.find({ userId });
 
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
@@ -71,3 +73,20 @@ export async function displayOrders(req,res) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+export async function getAllOrders(req, res) {
+  try {
+      const orders = await Orders.find();
+
+      if (!orders || orders.length === 0) {
+          return res.status(404).json({ message: "No orders found" });
+      }
+
+      res.status(200).json(orders);
+  } catch (error) {
+      console.error("Error fetching all orders:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+
