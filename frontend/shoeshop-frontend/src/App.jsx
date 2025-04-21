@@ -27,6 +27,10 @@ import Payment_cancel from "./pages/Payment_cancel";
 import Notify from "./pages/Notify";
 import EmployeeRoutes from "./pages/EmployeeRoutes";
 import EmployeeLogin from "./pages/EmployeeLogin";
+import Orders from "./pages/Orders";
+import AllOrders from "./pages/AllOrders"
+import ReviewSection from "./pages/Reviews";
+
 
 
 const RedirectAuthenticatedUser = ({children})=>{
@@ -80,6 +84,9 @@ function App() {
         <Route path="/Payment_success" element={<Payment_success/>} />
         <Route path="/Payment_cancel" element={<Payment_cancel/>} />
         <Route path="/Notify" element={<Notify/>} />
+        <Route path="/orders"  element={<Orders/>}/>
+        <Route path="/allorders"  element={<AllOrders />}/>
+        <Route path="/reviews" element={<ReviewSection/>}/>
 
       </Routes>
       <EmployeeRoutes />

@@ -24,6 +24,10 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    shoePhoto:{
+        type:String,
+    
+    },
     date: {
         type: Date,
         default: Date.now

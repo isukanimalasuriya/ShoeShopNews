@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export async function addReview(req, res) {
     try {
-        const { brandId, userId, userFullName, rating, comment, profilepicture} = req.body;
+        const { brandId, userId, userFullName, rating, comment,shoePhoto,profilepicture} = req.body;
 
 
         // Create a new review since no duplicate exists
@@ -14,9 +14,11 @@ export async function addReview(req, res) {
             userFullName,
             rating,
             comment,
+            shoePhoto,
             profilepicture
         });
 
+        console.log(newReview);
         
         await newReview.save();
         res.status(200).json({ message: "Review added successfully" });
