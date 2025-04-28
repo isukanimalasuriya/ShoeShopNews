@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 
-
-
 const Leave = () => {
   const [searchId, setSearchId] = useState("");
   const [leaves, setLeaves] = useState([]);
@@ -21,7 +19,6 @@ const Leave = () => {
 
   const navigate = useNavigate();
 
-  // Fetch all leave records on component mount
   useEffect(() => {
     fetchLeaves();
   }, []);
@@ -41,10 +38,7 @@ const Leave = () => {
   };
 
   const handleAddLeave = () => {
-    // Navigate to add leave page or show add form
     navigate("/add-leave");
-    // Alternatively, you could show a form modal:
-    // setIsAdding(true);
   };
 
   const handleSearch = async () => {
@@ -110,200 +104,176 @@ const Leave = () => {
     }
   };
 
-  const handleStatusChange = async (id, status) => {
-    try {
-      setLoading(true);
-      await leaveService.updateLeaveStatus(id, status);
-      fetchLeaves();
-    } catch (err) {
-      setError("Failed to update leave status.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
-    <div className="app-container">
-      <Header />
-      <div className="main-content">
+   
+      <div className="flex flex-1">
         <Sidebar />
-        <div className="leave-container">
-          <div className="page-header">
-            <h1>Manage Leaves</h1>
-          </div>
-          <div className="action-buttons">
-            <button onClick={handleAddLeave} className="add-leave-button">
-              <i className="fa fa-plus"></i> Add New Leave
+        <div className="flex-1 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">Manage Leaves</h1>
+            <button
+              onClick={handleAddLeave}
+              className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+            >
+              <i className="fa fa-plus mr-2"></i> Add New Leave
             </button>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+              {error}
+            </div>
+          )}
 
-          <div className="search-filter">
+          <div className="flex items-center gap-4 mb-6">
             <input
               type="text"
               placeholder="Search By Emp ID"
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
+              className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />
-            <button onClick={handleSearch}>Search</button>
+            <button
+              onClick={handleSearch}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+            >
+              Search
+            </button>
           </div>
 
           {loading ? (
-            <div className="loading">Loading leave records...</div>
+            <div className="text-center text-gray-500">Loading leave records...</div>
           ) : (
-            <div className="card table-card">
-              <div className="table-responsive">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Emp ID</th>
-                      <th>Name</th>
-                      <th>Leave Type</th>
-                      <th>Department</th>
-                      <th>Position</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leaves.length > 0 ? (
-                      leaves.map((leave) => (
-                        <tr key={leave._id}>
-                          <td>{leave.empId}</td>
-                          <td>{leave.name}</td>
-                          <td>{leave.leaveType}</td>
-                          <td>{leave.department}</td>
-                          <td>{leave.position}</td>
-                          <td className={`status ${leave.status.toLowerCase()}`}>
+            <div className="overflow-x-auto bg-white rounded shadow">
+              <table className="min-w-full table-auto">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Emp ID</th>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Name</th>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Leave Type</th>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Department</th>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Position</th>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Status</th>
+                    <th className="px-6 py-3 text-center font-semibold text-gray-700">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaves.length > 0 ? (
+                    leaves.map((leave) => (
+                      <tr key={leave._id} className="border-b hover:bg-gray-50">
+                        <td className="px-6 py-4">{leave.empId}</td>
+                        <td className="px-6 py-4">{leave.name}</td>
+                        <td className="px-6 py-4">{leave.leaveType}</td>
+                        <td className="px-6 py-4">{leave.department}</td>
+                        <td className="px-6 py-4">{leave.position}</td>
+                        <td className={`px-6 py-4 capitalize`}>
+                          <span className={`px-2 py-1 rounded-full text-sm font-medium ${leave.status === "Approved" ? "bg-green-100 text-green-700" : leave.status === "Rejected" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}`}>
                             {leave.status}
-                          </td>
-                          <td className="action-cell">
-                            <button className="view-btn" onClick={() => setSelectedLeave(leave)}>
-                              <i className="fa fa-eye"></i>
-                            </button>
-                            <button className="edit-btn" onClick={() => handleEditClick(leave)}>
-                              <i className="fa fa-pencil"></i>
-                            </button>
-                            <button className="delete-btn" onClick={() => handleDeleteClick(leave._id)}>
-                              <i className="fa fa-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="7">No leave records found</td>
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 flex justify-center gap-2">
+                          <button
+                            className="text-blue-500 hover:text-blue-700"
+                            onClick={() => setSelectedLeave(leave)}
+                          >
+                            <i className="fa fa-eye"></i>
+                          </button>
+                          <button
+                            className="text-yellow-500 hover:text-yellow-700"
+                            onClick={() => handleEditClick(leave)}
+                          >
+                            <i className="fa fa-pencil"></i>
+                          </button>
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => handleDeleteClick(leave._id)}
+                          >
+                            <i className="fa fa-trash"></i>
+                          </button>
+                        </td>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="text-center py-6 text-gray-500">
+                        No leave records found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           )}
 
           {isEditing && (
-            <div className="card edit-form">
-              <h3>Edit Leave</h3>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Leave Type:</label>
+            <div className="mt-6 bg-white p-6 rounded shadow">
+              <h2 className="text-xl font-bold mb-4">Edit Leave</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-1">Leave Type</label>
                   <input
                     type="text"
                     name="leaveType"
                     value={formData.leaveType}
                     onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-                <div className="form-group">
-                  <label>Department:</label>
+                <div>
+                  <label className="block mb-1">Department</label>
                   <input
                     type="text"
                     name="department"
                     value={formData.department}
                     onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-                <div className="form-group">
-                  <label>Position:</label>
+                <div>
+                  <label className="block mb-1">Position</label>
                   <input
                     type="text"
                     name="position"
                     value={formData.position}
                     onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
-                <div className="form-group">
-                  <label>Status:</label>
+                <div>
+                  <label className="block mb-1">Status</label>
                   <input
                     type="text"
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
+                    className="w-full border rounded px-3 py-2"
                   />
                 </div>
               </div>
-              <div className="form-buttons">
-                <button className="save-btn" onClick={handleUpdateClick}>
-                  <i className="fa fa-save"></i> Save
+              <div className="flex justify-end mt-4 gap-2">
+                <button
+                  onClick={handleUpdateClick}
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                >
+                  Save
                 </button>
-                <button className="cancel-btn" onClick={() => setIsEditing(false)}>
-                  <i className="fa fa-times"></i> Cancel
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                >
+                  Cancel
                 </button>
-              </div>
-            </div>
-          )}
-
-          {selectedLeave && !isEditing && (
-            <div className="modal-backdrop">
-              <div className="card leave-details">
-                <div className="details-header">
-                  <h3>Leave Details</h3>
-                  <button className="close-btn" onClick={() => setSelectedLeave(null)}>
-                    <i className="fa fa-times"></i>
-                  </button>
-                </div>
-                <div className="details-content">
-                  <div className="detail-item">
-                    <label>Leave Type</label>
-                    <p>{selectedLeave.leaveType}</p>
-                  </div>
-                  <div className="detail-item">
-                    <label>Department</label>
-                    <p>{selectedLeave.department}</p>
-                  </div>
-                  <div className="detail-item">
-                    <label>Position</label>
-                    <p>{selectedLeave.position}</p>
-                  </div>
-                  <div className="detail-item">
-                    <label>Status</label>
-                    <p>{selectedLeave.status}</p>
-                  </div>
-                </div>
-                <div className="details-footer">
-                  <button className="edit-btn" onClick={() => handleEditClick(selectedLeave)}>
-                    <i className="fa fa-pencil"></i> Edit
-                  </button>
-                  <button className="close-btn secondary" onClick={() => setSelectedLeave(null)}>
-                    Close
-                  </button>
-                </div>
               </div>
             </div>
           )}
         </div>
       </div>
-    </div>
+  
   );
 };
 

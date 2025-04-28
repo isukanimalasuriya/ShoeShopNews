@@ -32,7 +32,7 @@ import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
 import Employees from "./pages/Employees";
 import Leave from "./pages/Leave"; 
-import EmployeeDashboard from "./pages/EmployeeDashboard";
+import HRDashboard from "./pages/HRDashboard";
 
 
 
@@ -92,7 +92,7 @@ function App() {
         <Route path="/reviews" element={<ReviewSection/>}/>
         <Route path="/employee"element={<Employees/>}/>
         <Route path="/leaves" element={<Leave />} /> 
-        <Route path="/employeedashboard" element={<EmployeeDashboard />} />
+        <Route path="/hrdashboard" element={<HRDashboard />} />
 
       </Routes>
       <EmployeeRoutes />
