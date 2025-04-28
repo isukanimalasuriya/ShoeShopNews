@@ -16,6 +16,9 @@ import productRouter from "../backend/routes/productRouter.js";
 import orderRoute from "../backend/routes/orderManageRoute.js"
 import md5 from "md5";
 import userRouter from "./routes/employeeRoute.js";
+import AttendanceRoutes from "./routes/AttendanceRoutes.js";
+import LeaveRoutes from "./routes/LeaveRoutes.js";
+import EmployeeRoutes from "./routes/EmployeeRoutes.js";
 
 // import router from "./routes/authRouter.js";
 
@@ -44,6 +47,12 @@ app.use("/api/order", orderRoute);
 // app.use("/api/customize", customizeShoeRoute);
 app.use("/api/users", userRouter);
 // app.use("/payment", paymentRoutes);
+
+app.use("/api/attendance", AttendanceRoutes);
+
+app.use("/api/leaves", LeaveRoutes);
+app.use("/api/employees",EmployeeRoutes);
+
 
 app.listen(PORT,()=>{
     connectDB()
