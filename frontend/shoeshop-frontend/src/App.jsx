@@ -18,9 +18,20 @@ import Home from "../src/pages/Home";
 import Collection from "./pages/Collection";
 import Product from "../src/pages/Product";
 import Cart from "../src/pages/Cart";
+import PlaceOrder from "../src/pages/PlaceOrder";
 import { Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation } from "react-router-dom";
+import Payment_success from "./pages/Payment_success";
+import Payment_cancel from "./pages/Payment_cancel";
+import Notify from "./pages/Notify";
+import EmployeeRoutes from "./pages/EmployeeRoutes";
+import EmployeeLogin from "./pages/EmployeeLogin";
+import Orders from "./pages/Orders";
+import AllOrders from "./pages/AllOrders"
+import ReviewSection from "./pages/Reviews";
+
+
 
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
@@ -42,13 +53,14 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard'];
 
   return (
     <>
       <Toaster position="top-right"/>
       <ToastContainer />
-      <NavBar2/>
+      {!noHeaderRoutes.includes(location.pathname) && <NavBar2 />}
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/customerlogin" element={<CustomerLoginPage />}/>
@@ -68,7 +80,16 @@ function App() {
         <Route path="/collection" element={<Collection/>}/>
         <Route path="/product/:productId" element={<Product/>}/>
         <Route path="/cart" element={<Cart/>}/>
+        <Route path="/placeOrder" element={<PlaceOrder/>} />
+        <Route path="/Payment_success" element={<Payment_success/>} />
+        <Route path="/Payment_cancel" element={<Payment_cancel/>} />
+        <Route path="/Notify" element={<Notify/>} />
+        <Route path="/orders"  element={<Orders/>}/>
+        <Route path="/allorders"  element={<AllOrders />}/>
+        <Route path="/reviews" element={<ReviewSection/>}/>
+
       </Routes>
+      <EmployeeRoutes />
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
     </>
   )

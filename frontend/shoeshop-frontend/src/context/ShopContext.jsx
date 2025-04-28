@@ -8,10 +8,10 @@ export const ShopContext = createContext();
 export const ShopContextProvider = (props) => {
 
 
-    const currency = "$";
+    const currency = "LKR ";
     const delivery_fee = 10;
     const [cartItems,setCartItems] = useState({});
-
+/*
     const addToCart = async (itemId,size)=> {
 
         if(!size){
@@ -33,7 +33,7 @@ export const ShopContextProvider = (props) => {
         setCartItems(cartData)
         toast.success('Product added successfully!');
     }
-
+*/
     const getCartCount = ()=>{
         let totalCount = 0;
         for(const items in cartItems){
@@ -84,7 +84,7 @@ export const ShopContextProvider = (props) => {
         products,
         currency,
         delivery_fee,
-        cartItems,addToCart,
+        cartItems,
         getCartCount,updateQuantity,getCartAmount
     };
 

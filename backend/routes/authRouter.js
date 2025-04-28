@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logout, signup, verifyEmail, forgotPassword, resetPassword, checkAuth, updateCustomerInfo } from "../controllers/authController.js";
+import { login, logout, signup, verifyEmail, forgotPassword, resetPassword, checkAuth, updateCustomerInfo, deleteAccount } from "../controllers/authController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router()
@@ -13,6 +13,7 @@ router.post("/verify-email", verifyEmail)
 router.post("/forgot-password", forgotPassword)
 router.post("/reset-password/:token", resetPassword);
 router.put("/update-profile", verifyToken, updateCustomerInfo);
+router.delete("/delete-account", verifyToken, deleteAccount);
 
 
 export default router

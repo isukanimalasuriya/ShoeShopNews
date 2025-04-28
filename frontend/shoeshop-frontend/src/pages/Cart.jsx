@@ -6,6 +6,7 @@ import { MdDelete } from "react-icons/md";
 import { HiOutlinePlusCircle } from "react-icons/hi";
 import { HiOutlineMinusCircle } from "react-icons/hi";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
     const { currency } = useContext(ShopContext);
@@ -14,7 +15,8 @@ const Cart = () => {
     const [totalprice,setTotal]= useState(0)
 
     const userId = "user236"
-    const DELIVERY_FEE = 2000;
+    const DELIVERY_FEE = 200;
+    const navigate = useNavigate();
 
     useEffect(() => {
         // const userId = "user122"
@@ -152,6 +154,14 @@ const Cart = () => {
             <div className='flex justify-between'>
                 <b>Total</b>
                 <b>{currency}{totalprice}</b>
+                
+            </div>
+            <div className='w -full text-end'>
+              
+                    <button  onClick={() => navigate('/placeOrder')} disabled={!(cartData.items && cartData.items.length > 0)} className='bg-black text-white cursor-pointer text-sm my-8 px-8 py-3'>
+                        PROCEED TO CHECKOUT
+                    </button>
+                
             </div>
 
       </div>
