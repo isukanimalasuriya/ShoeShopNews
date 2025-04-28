@@ -30,6 +30,9 @@ import EmployeeLogin from "./pages/EmployeeLogin";
 import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
+import Employees from "./pages/Employees";
+import Leave from "./pages/Leave"; 
+import EmployeeDashboard from "./pages/EmployeeDashboard";
 
 
 
@@ -87,6 +90,9 @@ function App() {
         <Route path="/orders"  element={<Orders/>}/>
         <Route path="/allorders"  element={<AllOrders />}/>
         <Route path="/reviews" element={<ReviewSection/>}/>
+        <Route path="/employee"element={<Employees/>}/>
+        <Route path="/leaves" element={<Leave />} /> 
+        <Route path="/employeedashboard" element={<EmployeeDashboard />} />
 
       </Routes>
       <EmployeeRoutes />
