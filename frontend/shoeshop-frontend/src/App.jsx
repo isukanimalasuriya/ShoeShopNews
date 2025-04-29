@@ -33,7 +33,9 @@ import ReviewSection from "./pages/Reviews";
 import Employees from "./pages/Employees";
 import Leave from "./pages/Leave"; 
 import HRDashboard from "./pages/HRDashboard";
-
+import Department from "./pages/Department";
+import TrackingBonus from "./pages/TrackingBonus";
+import Attendance from "./pages/Attendance";
 
 
 const RedirectAuthenticatedUser = ({children})=>{
@@ -93,6 +95,11 @@ function App() {
         <Route path="/employee"element={<Employees/>}/>
         <Route path="/leaves" element={<Leave />} /> 
         <Route path="/hrdashboard" element={<HRDashboard />} />
+        <Route path="/department" element={<Department />} />
+        <Route path="/TrackingBonus" element={<TrackingBonus/>}/>
+        <Route path="/attendance" element={<Attendance />} />
+   
+     
 
       </Routes>
       <EmployeeRoutes />

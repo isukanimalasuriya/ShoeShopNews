@@ -5,7 +5,7 @@ const API_URL = 'http://localhost:5000';
 export const userService = {
   getAllEmployees: async () => {
     try {
-      const response = await axios.get(`${API_URL}/employees`);
+      const response = await axios.get(`${API_URL}/api/employees`);
       return response.data;
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -15,7 +15,7 @@ export const userService = {
   
   getById: async (id) => {
     try {
-      const response = await axios.get(`${API_URL}/employees/${id}`);
+      const response = await axios.get(`${API_URL}/api/employees/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching user ${id}:`, error);
@@ -25,7 +25,7 @@ export const userService = {
   
   addEmployees: async (userData) => {
     try {
-      const response = await axios.post(`${API_URL}/employees`, userData);
+      const response = await axios.post(`${API_URL}/api/employees`, userData);
       return response.data;
     } catch (error) {
       console.error('Error adding user:', error);
@@ -35,7 +35,7 @@ export const userService = {
   
   updateEmployee: async (id, userData) => {
     try {
-      const response = await axios.put(`${API_URL}/employees/${id}`, userData);
+      const response = await axios.put(`${API_URL}/api/employees/${id}`, userData);
       return response.data;
     } catch (error) {
       console.error(`Error updating user ${id}:`, error);
@@ -45,7 +45,7 @@ export const userService = {
   
   deleteEmployee: async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/employees/${id}`);
+      const response = await axios.delete(`${API_URL}/api/employees/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting user ${id}:`, error);
@@ -57,7 +57,7 @@ export const userService = {
 export const leaveService = {
   getAllLeaves: async () => {
     try {
-      const response = await axios.get(`${API_URL}/leaves`);
+      const response = await axios.get(`${API_URL}/api/leaves`);
       return response.data;
     } catch (error) {
       console.error('Error fetching leaves:', error);
@@ -67,7 +67,7 @@ export const leaveService = {
   
   getLeaveById: async (id) => {
     try {
-      const response = await axios.get(`${API_URL}/leaves/${id}`);
+      const response = await axios.get(`${API_URL}/api/leaves/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching leave ${id}:`, error);
@@ -77,7 +77,7 @@ export const leaveService = {
   
   addLeave: async (leaveData) => {
     try {
-      const response = await axios.post(`${API_URL}/leaves`, leaveData);
+      const response = await axios.post(`${API_URL}/api/leaves`, leaveData);
       return response.data;
     } catch (error) {
       console.error('Error adding leave:', error);
@@ -87,7 +87,7 @@ export const leaveService = {
   
   updateLeave: async (id, leaveData) => {
     try {
-      const response = await axios.put(`${API_URL}/leaves/${id}`, leaveData);
+      const response = await axios.put(`${API_URL}/api/leaves/${id}`, leaveData);
       return response.data;
     } catch (error) {
       console.error(`Error updating leave ${id}:`, error);
@@ -97,7 +97,7 @@ export const leaveService = {
   
   deleteLeave: async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/leaves/${id}`);
+      const response = await axios.delete(`${API_URL}/api/leaves/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting leave ${id}:`, error);
