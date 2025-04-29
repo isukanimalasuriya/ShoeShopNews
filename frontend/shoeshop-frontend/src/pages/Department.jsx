@@ -94,6 +94,7 @@ const Department = () => {
                   <td className="border px-4 py-2">{dept.name}</td>
                   <td className="border px-4 py-2">{dept.type}</td>
                   <td className="border px-4 py-2">Active</td>
+                  <td className="border px-4 py-2">Not Active</td>
                   <td className="border px-4 py-2 flex gap-2 justify-center">
                     <button className="text-blue-600 hover:underline">View</button>
                     <button className="text-yellow-600 hover:underline">Edit</button>
