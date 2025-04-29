@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
-import Header from "./Header"; // (You forgot this import, I added it!)
+
 import { useNavigate } from "react-router-dom";
+import { userService } from "../services/api";
 
 const EmployeePage = () => {
   const [searchId, setSearchId] = useState("");
