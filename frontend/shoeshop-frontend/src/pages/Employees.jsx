@@ -253,17 +253,20 @@ const EmployeePage = () => {
                           <td className="py-3 px-6">{emp.email}</td>
                           <td className="py-3 px-6">{emp.role}</td>
                           <td className="py-3 px-6">{emp.age}</td>
-                          <td className="py-3 px-6 text-center flex justify-center gap-2">
-                            <button onClick={() => handleView(emp._id)} className="text-blue-500 hover:text-blue-700">
-                              <i className="fa fa-eye"></i>
-                            </button>
-                            <button onClick={() => handleEditClick(emp)} className="text-green-500 hover:text-green-700">
-                              <i className="fa fa-pencil"></i>
-                            </button>
-                            <button onClick={() => handleDeleteClick(emp._id)} className="text-red-500 hover:text-red-700">
-                              <i className="fa fa-trash"></i>
-                            </button>
-                          </td>
+                          <td className="py-3 px-6 text-center">
+  <div className="flex justify-center gap-2">
+    <button onClick={() => handleView(emp._id)} className="text-blue-500 hover:text-blue-700">
+      <i className="fa fa-eye"></i>
+    </button>
+    <button onClick={() => handleEditClick(emp)} className="text-green-500 hover:text-green-700">
+      <i className="fa fa-pencil"></i>
+    </button>
+    <button onClick={() => handleDeleteClick(emp._id)} className="text-red-500 hover:text-red-700">
+      <i className="fa fa-trash"></i>
+    </button>
+  </div>
+</td>
+
                         </tr>
                       ))
                     ) : (
