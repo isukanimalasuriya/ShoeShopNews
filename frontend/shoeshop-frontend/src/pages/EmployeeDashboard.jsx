@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Clock, Calendar, DollarSign, Award } from "lucide-react";
 import EmSidebar from "./EmSidebar";
 const EmployeeDashboard = () => {
