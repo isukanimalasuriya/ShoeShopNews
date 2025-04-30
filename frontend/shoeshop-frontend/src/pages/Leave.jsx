@@ -8,7 +8,7 @@ const Leave = () => {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedLeave, setSelectedLeave] = useState(null);
+  const [selectedLeave, setSelectedLeave] = useState(null); // Leave details for View
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     leaveType: "",
@@ -104,176 +104,218 @@ const Leave = () => {
     }
   };
 
+  const handleViewClick = (leave) => {
+    setSelectedLeave(leave); // Set the leave to display details in the view section
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   return (
-   
-      <div className="flex flex-1">
-        <Sidebar />
-        <div className="flex-1 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Manage Leaves</h1>
-            <button
-              onClick={handleAddLeave}
-              className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
-            >
-              <i className="fa fa-plus mr-2"></i> Add New Leave
-            </button>
+    <div className="flex flex-1">
+      <Sidebar />
+      <div className="flex-1 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Manage Leaves</h1>
+          <button
+            onClick={handleAddLeave}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            <i className="fa fa-plus mr-2"></i> Add New Leave
+          </button>
+        </div>
+
+        {error && (
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+            {error}
           </div>
+        )}
 
-          {error && (
-            <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
-              {error}
-            </div>
-          )}
+        <div className="flex items-center gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search By Emp ID"
+            value={searchId}
+            onChange={(e) => setSearchId(e.target.value)}
+            className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Search
+          </button>
+        </div>
 
-          <div className="flex items-center gap-4 mb-6">
-            <input
-              type="text"
-              placeholder="Search By Emp ID"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            />
-            <button
-              onClick={handleSearch}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-            >
-              Search
-            </button>
-          </div>
-
-          {loading ? (
-            <div className="text-center text-gray-500">Loading leave records...</div>
-          ) : (
-            <div className="overflow-x-auto bg-white rounded shadow">
-              <table className="min-w-full table-auto">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Emp ID</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Name</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Leave Type</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Department</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Position</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Status</th>
-                    <th className="px-6 py-3 text-center font-semibold text-gray-700">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leaves.length > 0 ? (
-                    leaves.map((leave) => (
-                      <tr key={leave._id} className="border-b hover:bg-gray-50">
-                        <td className="px-6 py-4">{leave.empId}</td>
-                        <td className="px-6 py-4">{leave.name}</td>
-                        <td className="px-6 py-4">{leave.leaveType}</td>
-                        <td className="px-6 py-4">{leave.department}</td>
-                        <td className="px-6 py-4">{leave.position}</td>
-                        <td className={`px-6 py-4 capitalize`}>
-                          <span className={`px-2 py-1 rounded-full text-sm font-medium ${leave.status === "Approved" ? "bg-green-100 text-green-700" : leave.status === "Rejected" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}`}>
-                            {leave.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 flex justify-center gap-2">
-                          <button
-                            className="text-blue-500 hover:text-blue-700"
-                            onClick={() => setSelectedLeave(leave)}
-                          >
-                            <i className="fa fa-eye"></i>
-                          </button>
-                          <button
-                            className="text-yellow-500 hover:text-yellow-700"
-                            onClick={() => handleEditClick(leave)}
-                          >
-                            <i className="fa fa-pencil"></i>
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700"
-                            onClick={() => handleDeleteClick(leave._id)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" className="text-center py-6 text-gray-500">
-                        No leave records found
+        {loading ? (
+          <div className="text-center text-gray-500">Loading leave records...</div>
+        ) : (
+          <div className="overflow-x-auto bg-white rounded shadow">
+            <table className="min-w-full table-auto">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-700">Emp ID</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-700">Name</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-700">Leave Type</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-700">Department</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-700">Position</th>
+                  <th className="px-6 py-3 text-left font-semibold text-gray-700">Status</th>
+                  <th className="px-6 py-3 text-center font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaves.length > 0 ? (
+                  leaves.map((leave) => (
+                    <tr key={leave._id} className="border-b hover:bg-gray-50">
+                      <td className="px-6 py-4">{leave.empId}</td>
+                      <td className="px-6 py-4">{leave.name}</td>
+                      <td className="px-6 py-4">{leave.leaveType}</td>
+                      <td className="px-6 py-4">{leave.department}</td>
+                      <td className="px-6 py-4">{leave.position}</td>
+                      <td className={`px-6 py-4 capitalize`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-sm font-medium ${
+                            leave.status === "Approved"
+                              ? "bg-green-100 text-green-700"
+                              : leave.status === "Rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
+                        >
+                          {leave.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 flex justify-center gap-2">
+                        <button
+                          onClick={() => handleViewClick(leave)} // Set the selected leave
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleEditClick(leave)}
+                          className="text-green-600 hover:text-green-700"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(leave._id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center py-6 text-gray-500">
+                      No leave records found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-          {isEditing && (
-            <div className="mt-6 bg-white p-6 rounded shadow">
-              <h2 className="text-xl font-bold mb-4">Edit Leave</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-1">Leave Type</label>
-                  <input
-                    type="text"
-                    name="leaveType"
-                    value={formData.leaveType}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1">Department</label>
-                  <input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1">Position</label>
-                  <input
-                    type="text"
-                    name="position"
-                    value={formData.position}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block mb-1">Status</label>
-                  <input
-                    type="text"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
+        {selectedLeave && (
+          <div className="mt-6 bg-white p-6 rounded shadow">
+            <h2 className="text-xl font-bold mb-4">Leave Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-1">Emp ID</label>
+                <p>{selectedLeave.empId}</p>
               </div>
-              <div className="flex justify-end mt-4 gap-2">
-                <button
-                  onClick={handleUpdateClick}
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-                >
-                  Cancel
-                </button>
+              <div>
+                <label className="block mb-1">Name</label>
+                <p>{selectedLeave.name}</p>
+              </div>
+              <div>
+                <label className="block mb-1">Leave Type</label>
+                <p>{selectedLeave.leaveType}</p>
+              </div>
+              <div>
+                <label className="block mb-1">Department</label>
+                <p>{selectedLeave.department}</p>
+              </div>
+              <div>
+                <label className="block mb-1">Position</label>
+                <p>{selectedLeave.position}</p>
+              </div>
+              <div>
+                <label className="block mb-1">Status</label>
+                <p>{selectedLeave.status}</p>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {isEditing && (
+          <div className="mt-6 bg-white p-6 rounded shadow">
+            <h2 className="text-xl font-bold mb-4">Edit Leave</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-1">Leave Type</label>
+                <input
+                  type="text"
+                  name="leaveType"
+                  value={formData.leaveType}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Position</label>
+                <input
+                  type="text"
+                  name="position"
+                  value={formData.position}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">Status</label>
+                <input
+                  type="text"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleInputChange}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end mt-4 gap-2">
+              <button
+                onClick={handleUpdateClick}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-  
+    </div>
   );
 };
 

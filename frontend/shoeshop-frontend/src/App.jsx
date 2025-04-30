@@ -37,6 +37,9 @@ import Department from "./pages/Department";
 import TrackingBonus from "./pages/TrackingBonus";
 import Attendance from "./pages/Attendance";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
+import Applyleave from "./pages/Applyleave";
+import SalaryPromotion from "./pages/SalaryPromotion";
+
 
 
 
@@ -102,6 +105,9 @@ function App() {
         <Route path="/TrackingBonus" element={<TrackingBonus/>}/>
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/employeeDashboard" element={<EmployeeDashboard />} />
+        <Route path="/applyleave" element={<Applyleave />} />
+        <Route path="/salary&promotion" element={<SalaryPromotion />} />
+        
    
      
 
