@@ -36,6 +36,9 @@ import HRDashboard from "./pages/HRDashboard";
 import Department from "./pages/Department";
 import TrackingBonus from "./pages/TrackingBonus";
 import Attendance from "./pages/Attendance";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
+
+
 
 
 const RedirectAuthenticatedUser = ({children})=>{
@@ -98,6 +101,7 @@ function App() {
         <Route path="/department" element={<Department />} />
         <Route path="/TrackingBonus" element={<TrackingBonus/>}/>
         <Route path="/attendance" element={<Attendance />} />
+        <Route path="/employeeDashboard" element={<EmployeeDashboard />} />
    
      
 
