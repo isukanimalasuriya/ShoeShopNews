@@ -30,8 +30,13 @@ import EmployeeLogin from "./pages/EmployeeLogin";
 import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
-
-
+import DeliveryManagerLogin from "./pages/delivary/DeliveryManagerLogin";
+import DeliveryManagerDashboard from "./pages/delivary/DeliveryManagerDashboard";
+import DeliveryLogin from "./pages/delivary/DeliveryLogin";
+import DeliverySignup from "./pages/delivary/DeliverySignup";
+import DeliveryPersonDashboard from "./pages/delivary/DeliveryPersonDashboard";
+import DeliveryServiceReview from "./pages/delivary/DeliveryServiceReview";
+import RefundOrders from "./pages/RefundOrders";
 
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
@@ -41,6 +46,23 @@ const RedirectAuthenticatedUser = ({children})=>{
   }
   return children
 }
+
+const ProtectedDeliveryRoute = ({ children }) => {
+  const token = localStorage.getItem('deliveryManagerToken');
+  if (!token) {
+    return <Navigate to="/delivery-login" replace />;
+  }
+  return children;
+};
+
+const ProtectedDeliveryPersonRoute = ({ children }) => {
+  const token = localStorage.getItem('deliveryPersonToken');
+  console.log('Checking delivery person token:', token); // For debugging
+  if (!token) {
+    return <Navigate to="/delivery-person-login" replace />;
+  }
+  return children;
+};
 
 function App() {
   const { isAuthenticated, checkAuth, user } = useAuthStore();
@@ -53,8 +75,8 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard'];
-  const noHeaderRoutes = ['/employeelogin', '/admindashboard'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard', '/delivery-login', '/delivery-dashboard'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard', '/delivery-login', '/delivery-dashboard'];
 
   return (
     <>
@@ -65,6 +87,27 @@ function App() {
         <Route path="/" element={<Home />}/>
         <Route path="/customerlogin" element={<CustomerLoginPage />}/>
         <Route path="/customerdashboard" element={<CustomerDashboard />}/>
+        
+        {/* Delivery Manager Routes */}
+        <Route path="/delivery-login" element={<DeliveryManagerLogin />}/>
+        <Route path="/delivery-dashboard" element={
+          <ProtectedDeliveryRoute>
+            <DeliveryManagerDashboard />
+          </ProtectedDeliveryRoute>
+        }/>
+
+        {/* Delivery Person Routes */}
+        <Route path="/delivery-person-login" element={<DeliveryLogin />}/>
+        <Route path="/delivery-signup" element={<DeliverySignup />}/>
+        <Route path="/delivery-person-dashboard" element={
+          <ProtectedDeliveryPersonRoute>
+            <DeliveryPersonDashboard />
+          </ProtectedDeliveryPersonRoute>
+        }/>
+
+        {/* Customer Routes */}
+        <Route path="/delivery-service-review" element={<DeliveryServiceReview />}/>
+        <Route path="/refund-orders" element={<RefundOrders />}/>
 
         <Route path="/customerregister" element={
           <RedirectAuthenticatedUser>
@@ -84,8 +127,8 @@ function App() {
         <Route path="/Payment_success" element={<Payment_success/>} />
         <Route path="/Payment_cancel" element={<Payment_cancel/>} />
         <Route path="/Notify" element={<Notify/>} />
-        <Route path="/orders"  element={<Orders/>}/>
-        <Route path="/allorders"  element={<AllOrders />}/>
+        <Route path="/orders" element={<Orders/>}/>
+        <Route path="/allorders" element={<AllOrders />}/>
         <Route path="/reviews" element={<ReviewSection/>}/>
 
       </Routes>
