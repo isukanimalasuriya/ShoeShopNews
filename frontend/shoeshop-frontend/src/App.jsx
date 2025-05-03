@@ -44,6 +44,7 @@ import AddNewEmployee from "./pages/AddNewEmployee";
 import TrackingBonus from "./pages/TrackingBonus";
 import Salary from "./pages/Salary";
 import EMAttendance from "./pages/EMAttendance";
+import AddLeave from "./pages/Addleave";
 
 
 
@@ -117,8 +118,8 @@ function App() {
        <Route path="/trackingbonus" element={<TrackingBonus/>}/>
        <Route path="/Salary" element={<Salary />}/>
        <Route path="/EmAttendance" element={<EMAttendance />} />
-       
-
+       <Route path="/EmAttendance" element={<EMAttendance />} />
+       <Route path="/Addleave" element={<AddLeave />} />
       
         
    

@@ -8,9 +8,10 @@ const Leave = () => {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedLeave, setSelectedLeave] = useState(null); // Leave details for View
+  const [selectedLeave, setSelectedLeave] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
+    name: "",
     leaveType: "",
     department: "",
     position: "",
@@ -37,9 +38,7 @@ const Leave = () => {
     }
   };
 
-  const handleAddLeave = () => {
-    navigate("/add-leave");
-  };
+  const handleAddLeave = () => navigate("/addleave");
 
   const handleSearch = async () => {
     if (!searchId.trim()) {
@@ -49,12 +48,16 @@ const Leave = () => {
 
     try {
       setLoading(true);
-      const data = await leaveService.getLeaveByEmpId(searchId);
+      const data = await leaveService.getLeaveByEmpId(searchId.trim());
       if (data.leaves) {
         setLeaves([data.leaves]);
+        setError(null);
+      } else {
+        setLeaves([]);
+        setError("Leave record not found.");
       }
     } catch (err) {
-      setError("Leave record not found");
+      setError("Error searching leave record.");
       setLeaves([]);
     } finally {
       setLoading(false);
@@ -64,10 +67,11 @@ const Leave = () => {
   const handleEditClick = (leave) => {
     setIsEditing(true);
     setFormData({
-      leaveType: leave.leaveType,
-      department: leave.department,
-      position: leave.position,
-      status: leave.status
+      name: leave.name || "",
+      leaveType: leave.leaveType || "",
+      department: leave.department || "",
+      position: leave.position || "",
+      status: leave.status || ""
     });
     setSelectedLeave(leave);
   };
@@ -104,9 +108,7 @@ const Leave = () => {
     }
   };
 
-  const handleViewClick = (leave) => {
-    setSelectedLeave(leave); // Set the leave to display details in the view section
-  };
+  const handleViewClick = (leave) => setSelectedLeave(leave);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -128,9 +130,7 @@ const Leave = () => {
         </div>
 
         {error && (
-          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
-            {error}
-          </div>
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">{error}</div>
         )}
 
         <div className="flex items-center gap-4 mb-6">
@@ -174,7 +174,7 @@ const Leave = () => {
                       <td className="px-6 py-4">{leave.leaveType}</td>
                       <td className="px-6 py-4">{leave.department}</td>
                       <td className="px-6 py-4">{leave.position}</td>
-                      <td className={`px-6 py-4 capitalize`}>
+                      <td className="px-6 py-4">
                         <span
                           className={`px-2 py-1 rounded-full text-sm font-medium ${
                             leave.status === "Approved"
@@ -189,7 +189,7 @@ const Leave = () => {
                       </td>
                       <td className="px-6 py-4 flex justify-center gap-2">
                         <button
-                          onClick={() => handleViewClick(leave)} // Set the selected leave
+                          onClick={() => handleViewClick(leave)}
                           className="text-blue-500 hover:text-blue-700"
                         >
                           View
@@ -221,34 +221,16 @@ const Leave = () => {
           </div>
         )}
 
-        {selectedLeave && (
+        {selectedLeave && !isEditing && (
           <div className="mt-6 bg-white p-6 rounded shadow">
             <h2 className="text-xl font-bold mb-4">Leave Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1">Emp ID</label>
-                <p>{selectedLeave.empId}</p>
-              </div>
-              <div>
-                <label className="block mb-1">Name</label>
-                <p>{selectedLeave.name}</p>
-              </div>
-              <div>
-                <label className="block mb-1">Leave Type</label>
-                <p>{selectedLeave.leaveType}</p>
-              </div>
-              <div>
-                <label className="block mb-1">Department</label>
-                <p>{selectedLeave.department}</p>
-              </div>
-              <div>
-                <label className="block mb-1">Position</label>
-                <p>{selectedLeave.position}</p>
-              </div>
-              <div>
-                <label className="block mb-1">Status</label>
-                <p>{selectedLeave.status}</p>
-              </div>
+              <div><label className="block mb-1">Emp ID</label><p>{selectedLeave.empId}</p></div>
+              <div><label className="block mb-1">Name</label><p>{selectedLeave.name}</p></div>
+              <div><label className="block mb-1">Leave Type</label><p>{selectedLeave.leaveType}</p></div>
+              <div><label className="block mb-1">Department</label><p>{selectedLeave.department}</p></div>
+              <div><label className="block mb-1">Position</label><p>{selectedLeave.position}</p></div>
+              <div><label className="block mb-1">Status</label><p>{selectedLeave.status}</p></div>
             </div>
           </div>
         )}
@@ -257,60 +239,26 @@ const Leave = () => {
           <div className="mt-6 bg-white p-6 rounded shadow">
             <h2 className="text-xl font-bold mb-4">Edit Leave</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1">Leave Type</label>
-                <input
-                  type="text"
-                  name="leaveType"
-                  value={formData.leaveType}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block mb-1">Department</label>
-                <input
-                  type="text"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block mb-1">Position</label>
-                <input
-                  type="text"
-                  name="position"
-                  value={formData.position}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div>
-                <label className="block mb-1">Status</label>
-                <input
-                  type="text"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
+              <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full border rounded px-3 py-2" placeholder="Name" />
+              <input type="text" name="leaveType" value={formData.leaveType} onChange={handleInputChange} className="w-full border rounded px-3 py-2" placeholder="Leave Type" />
+              <input type="text" name="department" value={formData.department} onChange={handleInputChange} className="w-full border rounded px-3 py-2" placeholder="Department" />
+              <select name="position" value={formData.position} onChange={handleInputChange} className="w-full border rounded px-3 py-2">
+                <option value="">Select Position</option>
+                <option value="HR_MANAGER">HR Manager</option>
+                <option value="DELIVERY_MANAGER">Delivery Manager</option>
+                <option value="DELIVERY_PERSON">Delivery Person</option>
+                <option value="admin">Admin</option>
+              </select>
+              <select name="status" value={formData.status} onChange={handleInputChange} className="w-full border rounded px-3 py-2">
+                <option value="">Select Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
             </div>
             <div className="flex justify-end mt-4 gap-2">
-              <button
-                onClick={handleUpdateClick}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-              >
-                Cancel
-              </button>
+              <button onClick={handleUpdateClick} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save</button>
+              <button onClick={() => setIsEditing(false)} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Cancel</button>
             </div>
           </div>
         )}
