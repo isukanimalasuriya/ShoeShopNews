@@ -67,3 +67,4 @@ app.listen(PORT,()=>{
     connectDB()
     console.log("Server starting on port", PORT)
 })
+
