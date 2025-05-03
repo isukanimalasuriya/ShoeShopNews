@@ -17,7 +17,7 @@ const employeeSchema = new mongoose.Schema(
 		},
         role: { 
             type: String,
-            enum: ["HR_MANAGER", "DELIVERY_MANAGER", "DELIVERY_PERSON"],
+            enum: ["HR_MANAGER", "DELIVERY_MANAGER", "DELIVERY_PERSON","admin"],
             required: true
         },
         age:{

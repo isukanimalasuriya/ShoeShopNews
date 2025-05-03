@@ -10,7 +10,7 @@ const EmployeeDashboard = () => {
         <div className="space-y-6">
           {/* Header */}
           <div className="bg-black text-white p-6 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold">Welcome, John Doe</h1>
+            <h1 className="text-3xl font-bold">Welcome</h1>
             <p className="text-gray-300 mt-2">Have a productive day!</p>
           </div>
           

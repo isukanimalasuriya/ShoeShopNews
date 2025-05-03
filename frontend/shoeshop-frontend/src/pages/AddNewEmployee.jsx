@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../services/api";
@@ -9,7 +8,8 @@ const AddNewEmployee = () => {
     name: "",
     email: "",
     role: "",
-    age: ""
+    age: "",
+    password: ""
   });
   const [error, setError] = useState(null);
 
@@ -57,6 +57,15 @@ const AddNewEmployee = () => {
             className="w-full border rounded px-4 py-2"
             required
           />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full border rounded px-4 py-2"
+            required
+          />
           <select
             name="role"
             value={formData.role}
@@ -68,6 +77,7 @@ const AddNewEmployee = () => {
             <option value="HR_MANAGER">HR Manager</option>
             <option value="DELIVERY_MANAGER">Delivery Manager</option>
             <option value="DELIVERY_PERSON">Delivery Person</option>
+            <option value="admin">admin</option>
           </select>
           <input
             type="number"

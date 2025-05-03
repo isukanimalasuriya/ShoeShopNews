@@ -189,6 +189,7 @@ const EmployeePage = () => {
                 <option value="HR_MANAGER">HR Manager</option>
                 <option value="DELIVERY_MANAGER">Delivery Manager</option>
                 <option value="DELIVERY_PERSON">Delivery Person</option>
+                <option value="admin">admin</option>
               </select>
               <input
                 name="age"
