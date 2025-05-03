@@ -5,34 +5,32 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { GoStar } from "react-icons/go";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuthStore } from "../store/authStore"; 
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
-  // const [sizeId, setSizeId] = useState(""); // Store size ID
   const [sizesArray, setSizesArray] = useState(false);
-  const [selectedVariantId, setSelectedVariantId] = useState(""); // Track selected variant ID
-  const [selectedSizeId, setSelectedSizeId] = useState(""); // Track selected variant ID
-  const [selectedSize, setSelectedSize] = useState(0); // Track selected variant ID
-  const [selectedColor, setSelectedColor] = useState(""); // Track selected variant ID
-  
+  const [selectedVariantId, setSelectedVariantId] = useState("");
+  const [selectedSizeId, setSelectedSizeId] = useState("");
+  const [selectedSize, setSelectedSize] = useState(0);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [reviewData, setReviewData] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [reviewImage, setReviewImage] = useState(null);
-  const [reviewImageBase64, setReviewImageBase64] = useState(null);
-
-  const [editingReview, setEditingReview] = useState(null);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [reviewData, setReviewData] = useState([]);
+  const [reviewImagePreview, setReviewImagePreview] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
   const [editedRating, setEditedRating] = useState(0);
   const [editedComment, setEditedComment] = useState("");
-  const [editedImageBase64, setEditedImageBase64] = useState(null);
-  const [currentReviewId, setCurrentReviewId] = useState(null);
-  const [isCompressing, setIsCompressing] = useState(false);
-  const [isEditCompressing, setIsEditCompressing] = useState(false);
+  const [editedImage, setEditedImage] = useState(null);
+  const [editedImagePreview, setEditedImagePreview] = useState("");
+  const { user, isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
 
   const fetchProductData = async () => {
     axios
@@ -42,7 +40,7 @@ const Product = () => {
         setProductData(res.data);
         setImage(res.data.variants[0].imageUrl);
         setSizesArray(res.data.variants[0].sizes);
-        setSelectedVariantId(res.data.variants[0]._id); // Set the initial variant ID
+        setSelectedVariantId(res.data.variants[0]._id);
         setSelectedColor(res.data.variants[0].color);
       })
       .catch((err) => {
@@ -58,7 +56,7 @@ const Product = () => {
     setImage(productData.variants[index].imageUrl);
     setSizesArray(productData.variants[index].sizes);
     setSelectedVariantId(productData.variants[index]._id);
-    setSelectedColor(productData.variants[index].color); // Update the variant ID based on clicked image
+    setSelectedColor(productData.variants[index].color);
   };
 
   const onClickSize = (item) => {
@@ -74,9 +72,17 @@ const Product = () => {
       });
       return;
     }
+    if (!isAuthenticated || !user) {
+      toast.error("Please log in to the system", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      navigate("/customerlogin");
+      return;
+    }
 
     const cartItem = {
-      userId: "user236",
+      userId: user._id,
       items: [
         {
           brand: {
@@ -129,94 +135,44 @@ const Product = () => {
         const filteredReviews = res.data.filter(
           (review) => review.brandId === productId
         );
-        console.log(filteredReviews);
         setReviewData(filteredReviews);
       })
       .catch((err) => {
         console.error(err);
       });
   };
-
+  console.log(reviewData)
   useEffect(() => {
     fetchReviewData();
   }, []);
 
-  // Compress and resize image before converting to base64
-  const compressImage = (file, maxWidth = 800, maxHeight = 800, quality = 0.7) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          // Calculate new dimensions maintaining aspect ratio
-          let width = img.width;
-          let height = img.height;
-          
-          if (width > height) {
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width = Math.round((width * maxHeight) / height);
-              height = maxHeight;
-            }
-          }
-          
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // Convert to base64 with reduced quality
-          const base64 = canvas.toDataURL("image/jpeg", quality);
-          resolve(base64);
-        };
-        img.onerror = error => reject(error);
-      };
-      reader.onerror = error => reject(error);
-    });
-  };
-
-  const handleImageUpload = async (e) => {
+  // Handle image upload for review
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      try {
-        setIsCompressing(true);
-        const compressedBase64 = await compressImage(file);
-        setReviewImage(file);
-        setReviewImageBase64(compressedBase64);
-        setIsCompressing(false);
-      } catch (error) {
-        console.error("Error processing image:", error);
-        toast.error("Failed to process image");
-        setIsCompressing(false);
-      }
+      setReviewImage(file);
+      setReviewImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handleEditImageUpload = async (e) => {
+  // Handle image upload for editing review
+  const handleEditImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      try {
-        setIsEditCompressing(true);
-        const compressedBase64 = await compressImage(file);
-        setEditedImageBase64(compressedBase64);
-        setIsEditCompressing(false);
-      } catch (error) {
-        console.error("Error processing image:", error);
-        toast.error("Failed to process image");
-        setIsEditCompressing(false);
-      }
+      setEditedImage(file);
+      setEditedImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleReviewSubmit = () => {
+    if (!isAuthenticated || !user) {
+      toast.error("Please log in to the system", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      navigate("/customerlogin");
+      return;
+    }
     if (rating === 0 || comment.trim() === "") {
       toast.error("Please provide both a rating and a comment", {
         position: "top-right",
@@ -225,37 +181,40 @@ const Product = () => {
       return;
     }
 
-    const reviewData = {
-      brandId: productId,
-      userId: "user128", // Replace with actual user ID
-      userFullName: "Jayantha", // Replace with actual user's name
-      rating: rating,
-      comment: comment,
-    };
-
-    // Add the image if available
-    if (reviewImageBase64) {
-      reviewData.reviewImage = reviewImageBase64;
+    // Create form data for multipart/form-data submission
+    const formData = new FormData();
+    formData.append("brandId", productId);
+    formData.append("userId", user._id);
+    formData.append("userFullName", user.name);
+    formData.append("rating", rating);
+    formData.append("comment", comment);
+    formData.append("profilepicture",user.profilePicture);
+    
+    // Append image if exists
+    if (reviewImage) {
+      formData.append("reviewImage", reviewImage);
     }
 
     axios
-      .post("http://localhost:5000/api/review", reviewData)
+      .post("http://localhost:5000/api/review", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       .then((res) => {
         toast.success("Review submitted successfully!", {
           position: "top-right",
           autoClose: 3000,
         });
-        // Reset form fields
+        // Reset form
         setRating(0);
         setComment("");
         setReviewImage(null);
-        setReviewImageBase64(null);
+        setReviewImagePreview("");
         fetchReviewData(); // Re-fetch reviews after submission
       })
       .catch((err) => {
-        console.error("Error submitting review:", err);
-        const errorMsg = err.response?.data?.message || "Failed to submit review";
-        toast.error(errorMsg, {
+        toast.error("Failed to submit review", {
           position: "top-right",
           autoClose: 3000,
         });
@@ -266,62 +225,77 @@ const Product = () => {
     setEditingReview(review);
     setEditedRating(review.rating);
     setEditedComment(review.comment);
-    setEditedImageBase64(review.reviewImage || null);
+    setEditedImagePreview(review.imageUrl || "");
     setIsModalOpen(true);
   };
 
   const handleUpdateReview = () => {
-    if (!editingReview) return;
-
-    const updatedReview = {
-      userId: "user128",
-      rating: editedRating,
-      comment: editedComment,
-    };
-    
-    // Add the image if available
-    if (editedImageBase64) {
-      updatedReview.reviewImage = editedImageBase64;
+    if (!editingReview||!user){
+      toast.error("You must be logged in to update a review", { autoClose: 3000 });
+      return;
     }
+    // Create form data for multipart/form-data submission
+    const formData = new FormData();
+    formData.append("userId", user._id);
+    formData.append("rating", editedRating);
+    formData.append("comment", editedComment);
+    
+    // Append image if a new one was selected
+    if (editedImage) {
+      formData.append("reviewImage", editedImage);
+    }
+    console.log("Sending FormData:");
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
+}
 
     axios
       .put(
         `http://localhost:5000/api/review/${editingReview._id}`,
-        updatedReview
+        formData,
+        
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
       )
       .then((res) => {
         toast.success("Review updated successfully!", { autoClose: 3000 });
         setIsModalOpen(false);
-        setEditedImageBase64(null);
+        // Reset edit form
+        setEditingReview(null);
+        setEditedRating(0);
+        setEditedComment("");
+        setEditedImage(null);
+        setEditedImagePreview("");
         fetchReviewData(); // Refresh reviews
       })
       .catch((err) => {
-        console.error("Error updating review:", err);
-        const errorMsg = err.response?.data?.message || "Failed to update review";
-        toast.error(errorMsg, { autoClose: 3000 });
+        toast.error("Failed to update review", { autoClose: 3000 });
       });
   };
 
   const handleDeleteClick = (reviewId) => {
-    // Confirm if the user wants to delete the review
-    {
-      axios
-        .delete(`http://localhost:5000/api/review/${reviewId}`)
-        .then((res) => {
-          toast.success("Review deleted successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-          fetchReviewData(); // Re-fetch the reviews after deletion
-        })
-        .catch((err) => {
-          toast.error("Failed to delete review", {
-            position: "top-right",
-            autoClose: 3000,
-          });
+    axios
+      .delete(`http://localhost:5000/api/review/${reviewId}`)
+      .then((res) => {
+        toast.success("Review deleted successfully!", {
+          position: "top-right",
+          autoClose: 3000,
         });
-    }
+        fetchReviewData(); // Re-fetch the reviews after deletion
+      })
+      .catch((err) => {
+        toast.error("Failed to delete review", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      });
+      
   };
+
+ 
 
   return productData ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 m-8 font-display">
@@ -360,7 +334,7 @@ const Product = () => {
             <div className="flex gap-2">
               {sizesArray?.map((item, index) => (
                 <button
-                  onClick={() => onClickSize(item)} // Store size ID
+                  onClick={() => onClickSize(item)}
                   className={`py-2 px-4 bg-gray-100 border ${
                     item._id === selectedSizeId
                       ? "border-orange-500"
@@ -374,7 +348,7 @@ const Product = () => {
             </div>
           </div>
           <button
-            onClick={handleAddToCart} // Use the updated handleAddToCart function
+            onClick={handleAddToCart}
             className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700 cursor-pointer"
           >
             ADD TO CART
@@ -394,7 +368,7 @@ const Product = () => {
           <p className="px-5 py-3 text-sm"></p>
         </div>
         <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
-          {/*Show revies in this section*/}
+          {/*Show reviews in this section*/}
           {reviewData && reviewData.length > 0 ? (
             reviewData.map((review) => {
               const localDate = new Date(review.date).toLocaleDateString(
@@ -418,8 +392,22 @@ const Product = () => {
                     </div>
                   </div>
 
+                  <p className="mt-2">{review.comment}</p>
+                 
+                  {/* Display review image if available */}
+                  {review.shoePicture && (
+                    <div className="mt-3">
+                      <img 
+                        src={review.shoePicture} 
+                        alt="Review" 
+                        className="w-24 h-auto rounded-lg shadow" 
+                      />
+                      
+                    </div>
+                  )}
+
                   {/* Show Edit Button Only for Review Author */}
-                  {review.userId === "user128" && (
+                  {isAuthenticated && user &&review.userId === user._id && (
                     <div className="flex gap-2 mt-2">
                       <button
                         className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
@@ -430,23 +418,10 @@ const Product = () => {
 
                       <button
                         className="bg-red-500 text-white px-4 py-2 mt-2 rounded"
-                        onClick={() => handleDeleteClick(review._id)} // Call delete function
+                        onClick={() => handleDeleteClick(review._id)}
                       >
                         Delete
                       </button>
-                    </div>
-                  )}
-
-                  <p className="mt-2">{review.comment}</p>
-
-                  {/* Display review image if available */}
-                  {review.reviewImage && (
-                    <div className="mt-3">
-                      <img 
-                        src={review.reviewImage} 
-                        alt="Review image" 
-                        className="max-w-xs rounded-lg shadow-sm"
-                      />
                     </div>
                   )}
                 </div>
@@ -479,58 +454,45 @@ const Product = () => {
                 rows="4"
               />
             </div>
-            
-            {/* Image Upload Field */}
+            {/* New Image Upload Field */}
             <div>
               <label className="block mb-2 font-medium">Upload Image (Optional)</label>
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleImageChange}
                 className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled={isCompressing}
               />
-              
-              {isCompressing && (
-                <p className="text-blue-500 mt-1">Compressing image...</p>
-              )}
-              
-              {/* Image Preview */}
-              {reviewImageBase64 && !isCompressing && (
+              {reviewImagePreview && (
                 <div className="mt-2">
-                  <p className="mb-1 font-medium">Image Preview:</p>
                   <img 
-                    src={reviewImageBase64} 
+                    src={reviewImagePreview} 
                     alt="Preview" 
-                    className="max-w-xs h-auto rounded-lg border border-gray-300"
+                    className="max-w-xs h-32 object-contain rounded" 
                   />
-                  <button
-                    className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm"
+                  <button 
                     onClick={() => {
                       setReviewImage(null);
-                      setReviewImageBase64(null);
+                      setReviewImagePreview("");
                     }}
+                    className="mt-1 text-red-500 text-xs"
                   >
                     Remove Image
                   </button>
                 </div>
               )}
             </div>
-            
             <button
-              className={`${
-                isCompressing ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              } text-white px-6 py-2 rounded transition duration-300`}
+              className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition duration-300"
               onClick={handleReviewSubmit}
-              disabled={isCompressing}
             >
-              {isCompressing ? "Processing..." : "Submit Review"}
+              Submit Review
             </button>
           </div>
 
           {isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-lg max-h-[90vh] overflow-y-auto">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-full mx-4">
                 <h2 className="text-xl font-semibold mb-4">Edit Review</h2>
 
                 {/* Rating Input */}
@@ -552,39 +514,34 @@ const Product = () => {
                   className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows="4"
                 />
-                
-                {/* Edit Image Upload */}
+
+                {/* Edit Image Upload Field */}
                 <div className="mt-4">
-                  <label className="block mb-2 font-medium">Upload Image (Optional)</label>
+                  <label className="block mb-2 font-medium">Change Image (Optional)</label>
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleEditImageUpload}
+                    onChange={handleEditImageChange}
                     className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    disabled={isEditCompressing}
                   />
-                  
-                  {isEditCompressing && (
-                    <p className="text-blue-500 mt-1">Compressing image...</p>
-                  )}
-                  
-                  {/* Image Preview */}
-                  {editedImageBase64 && !isEditCompressing && (
+                  {(editedImagePreview || editingReview?.imageUrl) && (
                     <div className="mt-2">
-                      <p className="mb-1 font-medium">Image:</p>
                       <img 
-                        src={editedImageBase64} 
-                        alt="Review image" 
-                        className="max-w-full h-auto rounded-lg border border-gray-300"
+                        src={editedImagePreview || editingReview?.imageUrl} 
+                        alt="Preview" 
+                        className="max-w-xs h-32 object-contain rounded" 
                       />
-                      <button
-                        className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm"
-                        onClick={() => {
-                          setEditedImageBase64(null);
-                        }}
-                      >
-                        Remove Image
-                      </button>
+                      {editedImagePreview && (
+                        <button 
+                          onClick={() => {
+                            setEditedImage(null);
+                            setEditedImagePreview(editingReview?.imageUrl || "");
+                          }}
+                          className="mt-1 text-red-500 text-xs"
+                        >
+                          Reset Image
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -598,13 +555,10 @@ const Product = () => {
                     Cancel
                   </button>
                   <button
-                    className={`${
-                      isEditCompressing ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
-                    } text-white px-4 py-2 rounded`}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
                     onClick={handleUpdateReview}
-                    disabled={isEditCompressing}
                   >
-                    {isEditCompressing ? "Processing..." : "Update"}
+                    Update
                   </button>
                 </div>
               </div>

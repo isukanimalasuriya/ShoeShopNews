@@ -7,14 +7,27 @@ import { HiOutlinePlusCircle } from "react-icons/hi";
 import { HiOutlineMinusCircle } from "react-icons/hi";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from "../store/authStore";
+import { toast } from "react-toastify";
 
 const Cart = () => {
     const { currency } = useContext(ShopContext);
     const [cartData, setCartData] = useState([]);
     const [quantity, setQuantity] = useState(0);
     const [totalprice,setTotal]= useState(0)
+    const { user, isAuthenticated } = useAuthStore();
 
-    const userId = "user236"
+
+    if (!isAuthenticated || !user) {
+        toast.error("Please log in to the system", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        navigate("/customerlogin");
+        return;
+    }
+
+    const userId = user._id; //"user125"
     const DELIVERY_FEE = 200;
     const navigate = useNavigate();
 

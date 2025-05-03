@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js"; // Import CryptoJS
 import axios from 'axios';
+import { useAuthStore } from "../store/authStore";
+import { toast } from "react-toastify";
+
 const PlaceOrder = () => {
   const [message, setMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,10 +18,19 @@ const PlaceOrder = () => {
     city: "",
     country: "Sri Lanka",
   });
-
-  const userId = "user236"
+  const { user, isAuthenticated } = useAuthStore();
   const DELIVERY_FEE = 200;
   const navigate = useNavigate();
+  if (!isAuthenticated || !user) {
+    toast.error("Please log in to the system", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+    navigate("/customerlogin");
+    return;
+}
+  const userId = user._id;//"user125"
+ 
 
   // Merchant credentials (replace with your actual credentials)
   const merchant_id = "1230105"; // Replace with your Merchant ID

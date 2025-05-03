@@ -16,6 +16,7 @@ import productRouter from "../backend/routes/productRouter.js";
 import orderRoute from "../backend/routes/orderManageRoute.js"
 import md5 from "md5";
 import userRouter from "./routes/employeeRoute.js";
+import multer from 'multer';
 
 // import router from "./routes/authRouter.js";
 

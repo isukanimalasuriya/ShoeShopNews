@@ -1,9 +1,19 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useAuthStore } from "../store/authStore";
 
 const Orders = () => {
+    const { user, isAuthenticated } = useAuthStore();
+  if (!isAuthenticated || !user) {
+      toast.error("Please log in to the system", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      navigate("/customerlogin");
+      return;
+  }
   const [orders, setOrders] = useState([]);
-  const userId = "user236";
+  const userId = user._id//"user125"
 
   useEffect(() => {
     axios

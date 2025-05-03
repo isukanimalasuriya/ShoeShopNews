@@ -24,7 +24,7 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    shoePhoto:{
+    shoePicture:{
         type:String,
     
     },
