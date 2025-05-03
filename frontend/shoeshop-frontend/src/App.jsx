@@ -34,11 +34,14 @@ import Employees from "./pages/Employees";
 import Leave from "./pages/Leave"; 
 import HRDashboard from "./pages/HRDashboard";
 import Department from "./pages/Department";
-import TrackingBonus from "./pages/TrackingBonus";
+
 import Attendance from "./pages/Attendance";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import Applyleave from "./pages/Applyleave";
 import SalaryPromotion from "./pages/SalaryPromotion";
+import AddNewEmployee from "./pages/AddNewEmployee";
+import TrackingBonus from "./pages/TrackingBonus";
+
 
 
 
@@ -102,11 +105,15 @@ function App() {
         <Route path="/leaves" element={<Leave />} /> 
         <Route path="/hrdashboard" element={<HRDashboard />} />
         <Route path="/department" element={<Department />} />
-        <Route path="/TrackingBonus" element={<TrackingBonus/>}/>
+      
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/employeeDashboard" element={<EmployeeDashboard />} />
         <Route path="/applyleave" element={<Applyleave />} />
         <Route path="/salary&promotion" element={<SalaryPromotion />} />
+       <Route path="/AddNewEmployee" element={<AddNewEmployee />} />
+       
+       <Route path="/trackingbonus" element={<TrackingBonus/>}/>
+      
         
    
      
