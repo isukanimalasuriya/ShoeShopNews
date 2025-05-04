@@ -1,205 +1,197 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Sidebar from "./Sidebar";
+import { Clock, DollarSign, Users, TrendingUp, Search, Plus, Filter } from 'lucide-react';
 
-const TrackingBonus = () => {
-  const [searchId, setSearchId] = useState("");
-  const [bonusRecords, setBonusRecords] = useState([
-    { _id: "1", employeeName: "John Doe", bonusAmount: 500, date: "2025-05-01", status: "Pending" },
-    { _id: "2", employeeName: "Jane Smith", bonusAmount: 750, date: "2025-04-15", status: "Approved" },
-    { _id: "3", employeeName: "Michael Johnson", bonusAmount: 600, date: "2025-03-30", status: "Rejected" }
-  ]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    employeeName: "",
-    bonusAmount: "",
-    date: "",
-    status: ""
-  });
-
+function TrackingBonus() {
+  const [activeTab, setActiveTab] = useState('overtime');
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  // Simulating loading
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  const handleSearch = () => {
-    if (!searchId.trim()) {
-      return;
-    }
-
-    const filtered = bonusRecords.filter(
-      (record) =>
-        record.employeeName.toLowerCase().includes(searchId.toLowerCase()) ||
-        record._id.includes(searchId)
-    );
-    setBonusRecords(filtered);
-  };
-
-  const handleAddBonus = () => {
-    navigate("/AddBonus");
-  };
-
-  const handleEditClick = (record) => {
-    setIsEditing(true);
-    setFormData({
-      employeeName: record.employeeName,
-      bonusAmount: record.bonusAmount,
-      date: record.date,
-      status: record.status
-    });
-  };
-
-  const handleUpdateClick = () => {
-    setIsEditing(false);
-    setBonusRecords(prev => 
-      prev.map(record => record._id === formData._id ? formData : record)
-    );
-  };
-
-  const handleDeleteClick = (id) => {
-    if (window.confirm("Are you sure you want to delete this bonus record?")) {
-      setBonusRecords(prev => prev.filter(record => record._id !== id));
-    }
-  };
+  const [employees] = useState([
+    { id: 1, name: 'Thary', department: 'Deleiver_person', overtimeHours: 12, bonusAmount: 500 },
+    { id: 2, name: 'Isuka', department: 'admin', overtimeHours: 8, bonusAmount: 300 },
+    { id: 3, name: 'Himansha', department: 'Deliver_manager', overtimeHours: 15, bonusAmount: 600 },
+  ]);
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="w-full p-8 bg-gray-50">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-semibold text-gray-800">Track Employee Bonuses</h2>
-          <button
-            onClick={handleAddBonus}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-full shadow-md transform hover:scale-105 transition-transform"
-          >
-            <i className="fas fa-plus mr-2"></i> Add Bonus
-          </button>
-        </div>
+    
+      <div className="main-content flex">
+        <Sidebar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex-1">
+          <div className="container mx-auto px-4 py-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-600 p-3 rounded-lg">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  
+                  <p className="text-gray-600">Overtime & Bonus Tracking</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <button
+                  className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all"
+                  onClick={() => navigate("/AddEmployee")}
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Employee
+                </button>
+                <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all">
+                  <Filter className="w-4 h-4" />
+                  Filters
+                </button>
+              </div>
+            </div>
 
-        {error && <div className="text-red-600 mb-4">{error}</div>}
+            {/* Search Bar */}
+            <div className="relative mb-8">
+              <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search employees..."
+                className="w-full pl-12 pr-4 py-3 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
 
-        <div className="flex items-center mb-6 space-x-4">
-          <input
-            type="text"
-            placeholder="Search by Name or ID"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-            className="w-1/2 p-3 rounded-lg shadow-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md transform hover:scale-105 transition-transform"
-          >
-            Search
-          </button>
-        </div>
+            {/* Tabs */}
+            <div className="flex gap-4 mb-8">
+              <button
+                className={`flex-1 p-4 rounded-lg flex items-center justify-center gap-3 transition-all ${
+                  activeTab === 'overtime'
+                    ? 'bg-green-600 text-white shadow-lg'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                onClick={() => setActiveTab('overtime')}
+              >
+                <Clock className="w-5 h-5" />
+                Overtime Management
+              </button>
+              <button
+                className={`flex-1 p-4 rounded-lg flex items-center justify-center gap-3 transition-all ${
+                  activeTab === 'bonus'
+                    ? 'bg-green-600 text-white shadow-lg'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+                onClick={() => setActiveTab('bonus')}
+              >
+                <DollarSign className="w-5 h-5" />
+                Bonus Tracking
+              </button>
+            </div>
 
-        {loading ? (
-          <div className="text-center text-gray-600">Loading...</div>
-        ) : (
-          <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-            <table className="w-full table-auto">
-              <thead className="bg-indigo-600 text-white">
-                <tr>
-                  <th className="py-3 px-4 text-left">S No</th>
-                  <th className="py-3 px-4 text-left">Employee Name</th>
-                  <th className="py-3 px-4 text-left">Bonus Amount</th>
-                  <th className="py-3 px-4 text-left">Date</th>
-                  <th className="py-3 px-4 text-left">Status</th>
-                  <th className="py-3 px-4 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bonusRecords.length > 0 ? (
-                  bonusRecords.map((record, index) => (
-                    <tr key={record._id} className="border-b hover:bg-gray-50 transition">
-                      <td className="py-3 px-4">{index + 1}</td>
-                      <td className="py-3 px-4">{record.employeeName}</td>
-                      <td className="py-3 px-4">${record.bonusAmount}</td>
-                      <td className="py-3 px-4">{record.date}</td>
-                      <td className="py-3 px-4">{record.status}</td>
-                      <td className="py-3 px-4 space-x-3">
-                        <button
-                          onClick={() => handleEditClick(record)}
-                          className="bg-yellow-500 text-white px-4 py-2 rounded-lg transform hover:scale-105 transition-colors"
-                        >
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="bg-green-100 p-3 rounded-lg">
+                    <Clock className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Total Overtime Hours</p>
+                    <h3 className="text-2xl font-bold">156 hrs</h3>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-2 text-green-600">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-sm">12% increase from last month</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="bg-purple-100 p-3 rounded-lg">
+                    <DollarSign className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Total Bonus Allocated</p>
+                    <h3 className="text-2xl font-bold">+LKR 15,400</h3>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-2 text-purple-600">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-sm">8% increase from last month</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="bg-blue-100 p-3 rounded-lg">
+                    <Users className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Active Employees</p>
+                    <h3 className="text-2xl font-bold">24</h3>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-2 text-blue-600">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-sm">2 new this month</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Employee List */}
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Employee</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Department</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                      {activeTab === 'overtime' ? 'Overtime Hours' : 'Bonus Amount'}
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {employees.map((employee) => (
+                    <tr key={employee.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <span className="text-indigo-600 font-semibold">
+                              {employee.name.split(' ').map(n => n[0]).join('')}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-800">{employee.name}</p>
+                            <p className="text-sm text-gray-500">{employee.id}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+                          {employee.department}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {activeTab === 'overtime' ? (
+                          <span className="font-medium text-gray-800">{employee.overtimeHours} hours</span>
+                        ) : (
+                          <span className="font-medium text-gray-800">LKR{employee.bonusAmount}</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button className="text-indigo-600 hover:text-indigo-800 font-medium">
                           Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(record._id)}
-                          className="bg-red-500 text-white px-4 py-2 rounded-lg transform hover:scale-105 transition-colors"
-                        >
-                          Delete
                         </button>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="py-4 text-center text-gray-500">
-                      No records found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {isEditing && (
-          <div className="mt-6 bg-white p-8 rounded-lg shadow-md">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Edit Bonus</h3>
-            <input
-              type="text"
-              value={formData.employeeName}
-              readOnly
-              className="w-full p-4 mb-4 rounded-lg border focus:outline-none bg-gray-100"
-            />
-            <input
-              type="number"
-              value={formData.bonusAmount}
-              onChange={(e) => setFormData({ ...formData, bonusAmount: e.target.value })}
-              className="w-full p-4 mb-4 rounded-lg border focus:outline-none"
-              placeholder="Bonus Amount"
-            />
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              className="w-full p-4 mb-4 rounded-lg border focus:outline-none"
-            />
-            <select
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full p-4 mb-4 rounded-lg border focus:outline-none"
-            >
-              <option value="Pending">Pending</option>
-              <option value="Approved">Approved</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-            <div className="flex justify-between">
-              <button
-                onClick={handleUpdateClick}
-                className="bg-green-600 text-white px-6 py-3 rounded-full transform hover:scale-105 transition-all"
-              >
-                Save Changes
-              </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="bg-gray-400 text-white px-6 py-3 rounded-full transform hover:scale-105 transition-all"
-              >
-                Cancel
-              </button>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+ 
   );
-};
+}
 
 export default TrackingBonus;
