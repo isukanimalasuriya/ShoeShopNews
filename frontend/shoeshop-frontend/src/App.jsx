@@ -29,6 +29,19 @@ import EmployeeRoutes from "./pages/EmployeeRoutes";
 import EmployeeLogin from "./pages/EmployeeLogin";
 
 
+//inventory
+import Sidebar from './components/Sidebar';
+import DashboardPage from './pages/ShoeDashboard';
+import ShoeListPage from './pages/ShoeListPage';
+import AddShoePage from './pages/AddShoe';
+
+import RestockPage from './pages/RestockPage';
+import ShoeDetailPage from './pages/ShoeDetailPage';
+import EditShoePage from './pages/EditShoe';
+import CategoryPage from './pages/CategoryPage'; // New import
+
+
+
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
 
@@ -81,6 +94,16 @@ function App() {
         <Route path="/Payment_cancel" element={<Payment_cancel/>} />
         <Route path="/Notify" element={<Notify/>} />
 
+        <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/shoes" element={<ShoeListPage />} />
+            <Route path="/shoes/add" element={<AddShoePage />} />
+            
+            <Route path="/restock" element={<RestockPage />} />
+            <Route path="/shoes/:id" element={<ShoeDetailPage />} />
+            <Route path="/shoes/:id/edit" element={<EditShoePage />} />
+            <Route path="/categories" element={<CategoryPage />} />
+            <Route path="/" element={<DashboardPage />} />
+    
       </Routes>
       <EmployeeRoutes />
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
