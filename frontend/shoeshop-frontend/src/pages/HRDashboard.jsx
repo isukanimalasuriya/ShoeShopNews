@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { userService, leaveService } from "../services/api";
+import { useNavigate } from 'react-router-dom';
 
 const HRDashboard = () => {
   const [employeeCount, setEmployeeCount] = useState(0);
@@ -10,8 +11,13 @@ const HRDashboard = () => {
     approved: 0,
     rejected: 0
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/employeelogin'); // Redirect if no token found
+        }
     fetchEmployeeCount();
     fetchLeaveStats();
   }, []);
