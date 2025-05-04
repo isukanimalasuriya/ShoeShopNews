@@ -38,7 +38,7 @@ import AddShoePage from './pages/AddShoe';
 import RestockPage from './pages/RestockPage';
 import ShoeDetailPage from './pages/ShoeDetailPage';
 import EditShoePage from './pages/EditShoe';
-import CategoryPage from './pages/CategoryPage'; // New import
+import CategoryPage from './pages/CategoryPage'; 
 
 
 
@@ -62,8 +62,11 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard'];
-  const noHeaderRoutes = ['/employeelogin', '/admindashboard'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard','/shoes'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard', '/dashboard','/shoes'];
+  const sidebarRoutes = ['/dashboard', '/shoes', '/shoes/add', '/restock', '/shoes/:id', '/shoes/:id/edit', '/categories'];
+
+const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path));
 
   return (
     <>
@@ -93,18 +96,28 @@ function App() {
         <Route path="/Payment_success" element={<Payment_success/>} />
         <Route path="/Payment_cancel" element={<Payment_cancel/>} />
         <Route path="/Notify" element={<Notify/>} />
-
-        <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/shoes" element={<ShoeListPage />} />
-            <Route path="/shoes/add" element={<AddShoePage />} />
-            
-            <Route path="/restock" element={<RestockPage />} />
-            <Route path="/shoes/:id" element={<ShoeDetailPage />} />
-            <Route path="/shoes/:id/edit" element={<EditShoePage />} />
-            <Route path="/categories" element={<CategoryPage />} />
-            <Route path="/" element={<DashboardPage />} />
+        
     
       </Routes>
+
+      {showSidebar && (
+  <div style={{ display: 'flex' }}>
+    <Sidebar />
+    <div style={{ flex: 1, padding: '20px' }}>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/shoes" element={<ShoeListPage />} />
+        <Route path="/shoes/add" element={<AddShoePage />} />
+        <Route path="/restock" element={<RestockPage />} />
+        <Route path="/shoes/:id" element={<ShoeDetailPage />} />
+        <Route path="/shoes/:id/edit" element={<EditShoePage />} />
+        <Route path="/categories" element={<CategoryPage />} />
+      </Routes>
+    </div>
+  </div>
+)}
+
+
       <EmployeeRoutes />
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
     </>
