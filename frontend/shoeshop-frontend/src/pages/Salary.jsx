@@ -11,12 +11,12 @@ const Salary = () => {
     { id: "6", name: "Lanki", baseSalary: "32000", overtimeHours: "1", bonus: "1500" },
   ]);
 
-  const calculateTotalSalary = (bcdase, overtime, bonus) => {
-    const baseSalary = Number(base);
+  const calculateTotalSalary = (baseSalary, overtime, bonus) => {
+    const base = Number(baseSalary);
     const overtimeHours = Number(overtime);
     const bonusAmount = Number(bonus);
     const overtimePay = overtimeHours * 1000; // assume 1000 per hour
-    return baseSalary + overtimePay + bonusAmount;
+    return base + overtimePay + bonusAmount;
   };
 
   const handleView = (id) => alert(`Viewing employee ID: ${id}`);

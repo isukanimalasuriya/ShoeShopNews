@@ -31,7 +31,7 @@ import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
 import Employees from "./pages/Employees";
-import Leave from "./pages/Leave"; 
+import Leave from "./pages/Leave";
 import HRDashboard from "./pages/HRDashboard";
 import Department from "./pages/Department";
 
@@ -45,8 +45,8 @@ import TrackingBonus from "./pages/TrackingBonus";
 import Salary from "./pages/Salary";
 import EMAttendance from "./pages/EMAttendance";
 
-import EmployeeOT from "./pages/EmployeeOT.jsx";
-
+import EmployeeOT from "./pages/EmployeeOT";
+import EmployeeBonusTracking from "./pages/EmployeeBonusTracking";
 
 
 
@@ -123,7 +123,8 @@ function App() {
     
        <Route path="/EmployeeOT" element={< EmployeeOT/>} />
         
-   
+       <Route path="/EmployeeBonusTracking" element={< EmployeeBonusTracking/>} />
+      
      
 
       </Routes>

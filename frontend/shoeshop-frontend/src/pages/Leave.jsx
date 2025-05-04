@@ -79,7 +79,7 @@ const Leave = () => {
     }
   };
 
-  const handleAddLeave = () => navigate("/addleave");
+  const handleAddLeave = () => navigate("/Newleave");
 
   const handleEditClick = (leave) => {
     setIsEditing(true);
