@@ -11,7 +11,7 @@ const Salary = () => {
     { id: "6", name: "Lanki", baseSalary: "32000", overtimeHours: "1", bonus: "1500" },
   ]);
 
-  const calculateTotalSalary = (base, overtime, bonus) => {
+  const calculateTotalSalary = (bcdase, overtime, bonus) => {
     const baseSalary = Number(base);
     const overtimeHours = Number(overtime);
     const bonusAmount = Number(bonus);
