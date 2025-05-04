@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CustomersList from '../components/CustomersList';
+import AdminAnalytics from '../components/AdminAnalytics';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -9,6 +10,7 @@ import {
   Settings,
   LogOut
 } from 'lucide-react';
+
 const AdminDashboard = () => {
     const [activeComponent, setActiveComponent] = useState('dashboard');
     const navigate = useNavigate();
@@ -30,7 +32,7 @@ const AdminDashboard = () => {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'dashboard':
-        return <CustomersList />;
+        return <AdminAnalytics />;
       case 'users':
         return <CustomersList />;
       case 'products':
