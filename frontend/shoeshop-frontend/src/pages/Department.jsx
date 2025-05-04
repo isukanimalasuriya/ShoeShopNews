@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Sidebar from "./Sidebar";
 
@@ -36,7 +36,7 @@ const Department = () => {
           if (!token) {
             navigate('/employeelogin'); // Redirect if no token found
           }
-    }, []);
+  }, []);
 
   return (
     
