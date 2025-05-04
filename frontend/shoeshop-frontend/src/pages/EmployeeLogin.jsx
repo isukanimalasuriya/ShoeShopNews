@@ -27,8 +27,8 @@ const EmployeeLogin = () => {
             else if(user.role === "HR_MANAGER"){
               navigate("/employeedashboardhr")
             }
-            else if(user.role === "DELIVERY_PERSON"){
-              navigate("/employeedashboarddelivery")
+            else if(user.role === "DELIVERY_MANAGER"){
+              navigate("/admindashboard")
             }
             else{
               navigate("/employeelogin")
