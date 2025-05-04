@@ -4,8 +4,9 @@ import Sidebar from "./Sidebar";
 import { leaveService } from "../services/api";
 
 const Leave = () => {
-  const [searchId, setSearchId] = useState("");
+  const [searchName, setSearchName] = useState("");
   const [leaves, setLeaves] = useState([]);
+  const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedLeave, setSelectedLeave] = useState(null);
@@ -30,21 +31,17 @@ const Leave = () => {
     fetchLeaves();
   }, []);
 
+  useEffect(() => {
+    handleSearch();
+  }, [searchName, leaves]);
+
   const fetchLeaves = async () => {
     try {
       setLoading(true);
       const data = await leaveService.getAllLeaves();
       setLeaves(data.leaves);
-
-      // Count statuses
-      const counts = { Approved: 0, Rejected: 0, Pending: 0 };
-      data.leaves.forEach((leave) => {
-        if (counts[leave.status] !== undefined) {
-          counts[leave.status]++;
-        }
-      });
-      setStatusCounts(counts);
-
+      setFilteredLeaves(data.leaves);
+      countStatuses(data.leaves);
       setError(null);
     } catch (err) {
       setError("Failed to fetch leave records. Please try again.");
@@ -54,41 +51,30 @@ const Leave = () => {
     }
   };
 
-  const handleAddLeave = () => navigate("/addleave");
-
-  const handleSearch = async () => {
-    if (!searchId.trim()) {
-      fetchLeaves();
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const data = await leaveService.getLeaveByEmpId(searchId.trim());
-      if (data.leaves) {
-        setLeaves([data.leaves]);
-
-        // Update counts accordingly
-        const counts = { Approved: 0, Rejected: 0, Pending: 0 };
-        if (counts[data.leaves.status] !== undefined) {
-          counts[data.leaves.status]++;
-        }
-        setStatusCounts(counts);
-
-        setError(null);
-      } else {
-        setLeaves([]);
-        setStatusCounts({ Approved: 0, Rejected: 0, Pending: 0 });
-        setError("Leave record not found.");
+  const countStatuses = (leavesList) => {
+    const counts = { Approved: 0, Rejected: 0, Pending: 0 };
+    leavesList.forEach((leave) => {
+      if (counts[leave.status] !== undefined) {
+        counts[leave.status]++;
       }
-    } catch (err) {
-      setError("Error searching leave record.");
-      setLeaves([]);
-      setStatusCounts({ Approved: 0, Rejected: 0, Pending: 0 });
-    } finally {
-      setLoading(false);
+    });
+    setStatusCounts(counts);
+  };
+
+  const handleSearch = () => {
+    if (!searchName.trim()) {
+      setFilteredLeaves(leaves);
+      countStatuses(leaves);
+    } else {
+      const filtered = leaves.filter((leave) =>
+        leave.name.toLowerCase().includes(searchName.trim().toLowerCase())
+      );
+      setFilteredLeaves(filtered);
+      countStatuses(filtered);
     }
   };
+
+  const handleAddLeave = () => navigate("/addleave");
 
   const handleEditClick = (leave) => {
     setIsEditing(true);
@@ -104,7 +90,6 @@ const Leave = () => {
 
   const handleUpdateClick = async () => {
     if (!selectedLeave) return;
-
     try {
       setLoading(true);
       await leaveService.updateLeave(selectedLeave._id, formData);
@@ -159,23 +144,23 @@ const Leave = () => {
           <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">{error}</div>
         )}
 
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-2 mb-6">
           <input
             type="text"
-            placeholder="Search By Emp ID"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
+            placeholder="Search By Employee Name"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
             className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
           <button
             onClick={handleSearch}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
           >
             Search
           </button>
         </div>
 
-        {/* Summary Status Boxes */}
+        {/* Status Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow">
             <p className="font-semibold text-lg">Approved</p>
@@ -208,8 +193,8 @@ const Leave = () => {
                 </tr>
               </thead>
               <tbody>
-                {leaves.length > 0 ? (
-                  leaves.map((leave) => (
+                {filteredLeaves.length > 0 ? (
+                  filteredLeaves.map((leave) => (
                     <tr key={leave._id} className="border-b hover:bg-gray-50">
                       <td className="px-6 py-4">{leave.empId}</td>
                       <td className="px-6 py-4">{leave.name}</td>

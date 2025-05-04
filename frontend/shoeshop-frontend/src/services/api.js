@@ -112,7 +112,7 @@ export const attendanceService = {
       const response = await axios.get(`${API_URL}/attendance`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching attendance:', error);
+      console.error("Error fetching attendance:", error?.response?.data || error.message);
       throw error;
     }
   },
@@ -122,7 +122,7 @@ export const attendanceService = {
       const response = await axios.get(`${API_URL}/attendance/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching attendance record ${id}:`, error);
+      console.error(`Error fetching attendance record ${id}:`, error?.response?.data || error.message);
       throw error;
     }
   },
@@ -132,7 +132,7 @@ export const attendanceService = {
       const response = await axios.post(`${API_URL}/attendance`, attendanceData);
       return response.data;
     } catch (error) {
-      console.error('Error adding attendance record:', error);
+      console.error("Error adding attendance record:", error?.response?.data || error.message);
       throw error;
     }
   },
@@ -142,7 +142,7 @@ export const attendanceService = {
       const response = await axios.put(`${API_URL}/attendance/${id}`, attendanceData);
       return response.data;
     } catch (error) {
-      console.error(`Error updating attendance record ${id}:`, error);
+      console.error(`Error updating attendance record ${id}:`, error?.response?.data || error.message);
       throw error;
     }
   },
@@ -152,7 +152,7 @@ export const attendanceService = {
       const response = await axios.delete(`${API_URL}/attendance/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error deleting attendance record ${id}:`, error);
+      console.error(`Error deleting attendance record ${id}:`, error?.response?.data || error.message);
       throw error;
     }
   }
