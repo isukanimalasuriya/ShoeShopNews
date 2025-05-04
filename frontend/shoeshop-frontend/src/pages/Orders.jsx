@@ -50,6 +50,9 @@ const Orders = () => {
                 >
                   {order.paymentStatus}
                 </span>
+                {/*
+                <span><h3>Delivery Status</h3>{order.deliveryStatus}</span>
+                */}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm text-gray-600">
@@ -62,6 +65,17 @@ const Orders = () => {
                   <p><strong>City:</strong> {order.city}</p>
                   <p><strong>Shipping:</strong> {order.shippingAddress}</p>
                   <p><strong>Date:</strong> {new Date(order.orderDate).toLocaleString()}</p>
+                  <span
+  className={`text-sm inline-block mt-1 px-3 py-1 rounded-full font-medium ${
+    order.deliveryStatus === 'Delivered'
+      ? 'bg-green-100 text-green-700'
+      : order.deliveryStatus === 'Processing'
+      ? 'bg-yellow-100 text-yellow-700'
+      : 'bg-gray-100 text-gray-700'
+  }`}
+>
+  {order.deliveryStatus}
+</span>
                 </div>
               </div>
 
