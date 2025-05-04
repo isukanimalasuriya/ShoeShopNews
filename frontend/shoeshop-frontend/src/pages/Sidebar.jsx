@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/employeelogin');
+  };
   return (
     <aside className="w-64 min-h-screen bg-white shadow-lg p-6">
       <nav>
@@ -69,6 +76,14 @@ const Sidebar = () => {
             >
               Settings
             </Link>
+          </li>
+          <li>
+            <button 
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-sm w-full px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-all"
+            >
+              Logout
+            </button>
           </li>
         </ul>
       </nav>
