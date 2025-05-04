@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useNavigate } from 'react-router-dom';
 import Sidebar from "./Sidebar";
 
 const Department = () => {
@@ -30,6 +30,13 @@ const Department = () => {
   const deleteDepartment = (id) => {
     setDepartments(departments.filter((dept) => dept.id !== id));
   };
+  const navigate = useNavigate();
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+          if (!token) {
+            navigate('/employeelogin'); // Redirect if no token found
+          }
+    }, []);
 
   return (
     

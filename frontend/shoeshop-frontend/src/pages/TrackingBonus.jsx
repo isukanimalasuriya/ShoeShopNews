@@ -15,6 +15,13 @@ function TrackingBonus() {
     { id: 3, name: 'Himansha', department: 'Deliver_manager', overtimeHours: 15, bonusAmount: 600 },
   ]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+            if (!token) {
+              navigate('/employeelogin'); // Redirect if no token found
+            }
+      }, []);
+
   return (
     
       <div className="main-content flex">

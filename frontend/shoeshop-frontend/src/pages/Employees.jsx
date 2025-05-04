@@ -20,6 +20,10 @@ const EmployeePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/employeelogin'); // Redirect if no token found
+        }
     fetchEmployees();
   }, []);
 
