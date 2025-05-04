@@ -4,11 +4,11 @@ import Sidebar from "./Sidebar";
 
 const Department = () => {
   const [departments, setDepartments] = useState([
-    { id: 1, name: "tharushui", type: "delivery" },
-    { id: 2, name: "malki", type: "sales" },
-    { id: 3, name: "pasasn", type: "user" },
-    { id: 4, name: "nishan", type: "admin" },
-    { id: 5, name: "nadith", type: "hr" },
+    { id: 1, name: "HR", type: "sales" },
+    { id: 2, name: "Deliver", type: "deliver_person" },
+    { id: 3, name: "admin", type: "user" },
+    { id: 4, name: "Deliver", type: "deliver_manager" },
+    { id: 5, name: "HR", type: "hrmanager" },
   ]);
   const [newDepartment, setNewDepartment] = useState("");
   const [newDepartmentType, setNewDepartmentType] = useState("");

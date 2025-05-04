@@ -18,6 +18,12 @@ const Leave = () => {
     status: ""
   });
 
+  const [statusCounts, setStatusCounts] = useState({
+    Approved: 0,
+    Rejected: 0,
+    Pending: 0
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +35,16 @@ const Leave = () => {
       setLoading(true);
       const data = await leaveService.getAllLeaves();
       setLeaves(data.leaves);
+
+      // Count statuses
+      const counts = { Approved: 0, Rejected: 0, Pending: 0 };
+      data.leaves.forEach((leave) => {
+        if (counts[leave.status] !== undefined) {
+          counts[leave.status]++;
+        }
+      });
+      setStatusCounts(counts);
+
       setError(null);
     } catch (err) {
       setError("Failed to fetch leave records. Please try again.");
@@ -51,14 +67,24 @@ const Leave = () => {
       const data = await leaveService.getLeaveByEmpId(searchId.trim());
       if (data.leaves) {
         setLeaves([data.leaves]);
+
+        // Update counts accordingly
+        const counts = { Approved: 0, Rejected: 0, Pending: 0 };
+        if (counts[data.leaves.status] !== undefined) {
+          counts[data.leaves.status]++;
+        }
+        setStatusCounts(counts);
+
         setError(null);
       } else {
         setLeaves([]);
+        setStatusCounts({ Approved: 0, Rejected: 0, Pending: 0 });
         setError("Leave record not found.");
       }
     } catch (err) {
       setError("Error searching leave record.");
       setLeaves([]);
+      setStatusCounts({ Approved: 0, Rejected: 0, Pending: 0 });
     } finally {
       setLoading(false);
     }
@@ -147,6 +173,22 @@ const Leave = () => {
           >
             Search
           </button>
+        </div>
+
+        {/* Summary Status Boxes */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow">
+            <p className="font-semibold text-lg">Approved</p>
+            <p className="text-2xl">{statusCounts.Approved}</p>
+          </div>
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow">
+            <p className="font-semibold text-lg">Rejected</p>
+            <p className="text-2xl">{statusCounts.Rejected}</p>
+          </div>
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow">
+            <p className="font-semibold text-lg">Pending</p>
+            <p className="text-2xl">{statusCounts.Pending}</p>
+          </div>
         </div>
 
         {loading ? (

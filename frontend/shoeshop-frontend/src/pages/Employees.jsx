@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { userService } from "../services/api";
 
 const EmployeePage = () => {
-  const [searchId, setSearchId] = useState("");
+  const [searchName, setSearchName] = useState("");
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,23 +37,15 @@ const EmployeePage = () => {
     }
   };
 
-  const handleSearch = async () => {
-    if (!searchId.trim()) {
+  const handleSearch = () => {
+    if (!searchName.trim()) {
       fetchEmployees();
       return;
     }
-    try {
-      setLoading(true);
-      const data = await userService.getById(searchId);
-      if (data.employees) {
-        setEmployees([data.employees]);
-      }
-    } catch (err) {
-      setError("Employee not found");
-      setEmployees([]);
-    } finally {
-      setLoading(false);
-    }
+    const filtered = employees.filter(emp =>
+      emp.name.toLowerCase().includes(searchName.toLowerCase())
+    );
+    setEmployees(filtered);
   };
 
   const handleAddEmployee = () => {
@@ -148,9 +140,9 @@ const EmployeePage = () => {
         <div className="flex gap-4 mb-6">
           <input
             type="text"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-            placeholder="Search by Employee ID"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            placeholder="Search by Employee Name"
             className="flex-1 px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
