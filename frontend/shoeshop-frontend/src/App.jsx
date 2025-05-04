@@ -47,6 +47,8 @@ import EMAttendance from "./pages/EMAttendance";
 
 import EmployeeOT from "./pages/EmployeeOT";
 import EmployeeBonusTracking from "./pages/EmployeeBonusTracking";
+import SalesPerformance from "./pages/SalesPerformance";
+
 
 
 
@@ -124,7 +126,9 @@ function App() {
        <Route path="/EmployeeOT" element={< EmployeeOT/>} />
         
        <Route path="/EmployeeBonusTracking" element={< EmployeeBonusTracking/>} />
-      
+       <Route path="/SalesPerformance" element={<SalesPerformance/>} />
+    
+   
      
 
       </Routes>

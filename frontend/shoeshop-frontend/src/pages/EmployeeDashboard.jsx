@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Clock, Calendar, DollarSign, Award, LogOut } from "lucide-react";
+import { Clock, Calendar, DollarSign, Award, LogOut, Gift } from "lucide-react";
 import EmSidebar from "./EmSidebar";
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +21,10 @@ const EmployeeDashboard = () => {
     navigate("/EmployeeOT");
   };
 
+  const handleTrackBonus = () => {
+    navigate("/EmployeeBonusTracking"); // 🔁 Navigate to bonus tracker page
+  };
+
   if (!employee) return <div>Loading...</div>;
 
   return (
@@ -37,9 +41,19 @@ const EmployeeDashboard = () => {
 
         <div className="space-y-6">
           {/* Header */}
-          <div className="bg-black text-white p-6 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold">Welcome, {employee.name}</h1>
-            <p className="text-gray-300 mt-2">Role: {employee.role}</p>
+          <div className="bg-black text-white p-6 rounded-lg shadow-lg flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Welcome, {employee.name}</h1>
+              <p className="text-gray-300 mt-2">Role: {employee.role}</p>
+            </div>
+
+            {/* 🆕 Track Bonus Button */}
+            <button
+              onClick={handleTrackBonus}
+              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
+            >
+              <Gift className="mr-2" size={18} /> Track Bonus
+            </button>
           </div>
 
           {/* Stats Cards */}

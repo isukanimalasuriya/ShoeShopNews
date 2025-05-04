@@ -40,6 +40,16 @@ const EmSidebar = () => {
           </Link>
         </li>
         <li>
+        <Link 
+            to="/SalesPerformance" 
+            className="block text-gray-700 font-semibold hover:bg-indigo-100 hover:text-indigo-600 rounded-lg px-4 py-2 transition duration-200"
+          >
+            SalesPerformance
+                       
+
+          </Link>
+        </li>
+        <li>
           <Link 
             to="/logout" 
             className="block text-gray-700 font-semibold hover:bg-indigo-100 hover:text-indigo-600 rounded-lg px-4 py-2 transition duration-200"
