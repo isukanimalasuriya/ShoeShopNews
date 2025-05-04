@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const employees = [
-  { id: 1, name: "Alice", role: "Manager", leaveBalance: 10, salary: 4000, performance: "Excellent" },
-  { id: 2, name: "Bob", role: "Sales", leaveBalance: 5, salary: 3000, performance: "Good" },
-  { id: 3, name: "Charlie", role: "Support", leaveBalance: 8, salary: 3500, performance: "Very Good" },
+  { id: 1, name: "Isuka", role: "Admin", leaveBalance: 10, salary: 4000, performance: "Excellent" },
+  { id: 2, name: "Himansha", role: "Delivery_person", leaveBalance: 5, salary: 3000, performance: "Good" },
+  { id: 3, name: "Devshan", role: "Delivery_manager", leaveBalance: 8, salary: 3500, performance: "Very Good" },
 ];
 
 const EmployeeOT= () => {
@@ -16,7 +16,7 @@ const EmployeeOT= () => {
     const employee = employees.find(emp => emp.id === parseInt(selectedId));
     if (employee) {
       localStorage.setItem("employee", JSON.stringify(employee));
-      navigate("/dashboard");
+      navigate("/employeedashboard");
     }
   };
 

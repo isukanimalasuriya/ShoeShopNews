@@ -1,166 +1,111 @@
-import React, { useState } from 'react';
-import EmSidebar from './EmSidebar';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import { leaveService } from "../services/api";
 
-const RequestLeave = () => {
-  const [leaveData, setLeaveData] = useState({
-    empId: '',
-    position: '',
-    startDate: '',
-    endDate: '',
-    leaveType: '',
-    reason: ''
+const Applyleave = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    leaveType: "",
+    department: "",
+    position: "",
+    status: "Pending"
   });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const [leaveDays, setLeaveDays] = useState(0);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setLeaveData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-
-    if (name === 'startDate' || name === 'endDate') {
-      const start = name === 'startDate' ? value : leaveData.startDate;
-      const end = name === 'endDate' ? value : leaveData.endDate;
-      calculateLeaveDays(start, end);
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
-  const calculateLeaveDays = (start, end) => {
-    if (start && end) {
-      const startDate = new Date(start);
-      const endDate = new Date(end);
-      const diffTime = endDate.getTime() - startDate.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      setLeaveDays(diffDays > 0 ? diffDays : 0);
-    } else {
-      setLeaveDays(0);
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Leave request submitted:', leaveData, `Total Leave Days: ${leaveDays}`);
-    setShowSuccess(true);
-
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-
-    setLeaveData({
-      empId: '',
-      position: '',
-      startDate: '',
-      endDate: '',
-      leaveType: '',
-      reason: ''
-    });
-    setLeaveDays(0);
+    try {
+      await leaveService.addLeave(formData);
+      navigate("/leaves");
+    } catch (err) {
+      setError("Failed to add leave record.");
+      console.error(err);
+    }
   };
 
   return (
-    <div className="flex">
-      <EmSidebar />
-      <div className="flex-1 p-8">
-        <div className="bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-6 text-center">Request Leave</h2>
-          {showSuccess && (
-            <div className="mb-4 p-3 bg-green-500 text-white text-center font-bold rounded-md">
-              Leave request submitted successfully!
-            </div>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <label htmlFor="empId" className="mb-2 font-medium text-gray-700">Employee ID</label>
-                <input
-                  type="text"
-                  id="empId"
-                  name="empId"
-                  value={leaveData.empId}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="position" className="mb-2 font-medium text-gray-700">Position</label>
-                <input
-                  type="text"
-                  id="position"
-                  name="position"
-                  value={leaveData.position}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                />
-              </div>
-            </div>
+    <div className="flex flex-1">
+      <Sidebar />
+      <div className="flex-1 p-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Add New Leave</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <label htmlFor="startDate" className="mb-2 font-medium text-gray-700">Start Date</label>
-                <input
-                  type="date"
-                  id="startDate"
-                  name="startDate"
-                  value={leaveData.startDate}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="endDate" className="mb-2 font-medium text-gray-700">End Date</label>
-                <input
-                  type="date"
-                  id="endDate"
-                  name="endDate"
-                  value={leaveData.endDate}
-                  onChange={handleChange}
-                  required
-                  className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                />
-              </div>
-            </div>
+        {error && (
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">{error}</div>
+        )}
 
-            <div className="flex flex-col">
-              <label className="mb-2 font-medium text-gray-700">Total Leave Days</label>
-              <p className="text-xl font-semibold text-gray-800">{leaveDays} day(s)</p>
-            </div>
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2"
+              placeholder="Employee Name"
+              required
+            />
+            <input
+              type="text"
+              name="leaveType"
+              value={formData.leaveType}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2"
+              placeholder="Leave Type"
+              required
+            />
+            <input
+              type="text"
+              name="department"
+              value={formData.department}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2"
+              placeholder="Department"
+              required
+            />
+            <select
+              name="position"
+              value={formData.position}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2"
+              required
+            >
+              <option value="">Select Position</option>
+              <option value="HR_MANAGER">HR Manager</option>
+              <option value="DELIVERY_MANAGER">Delivery Manager</option>
+              <option value="DELIVERY_PERSON">Delivery Person</option>
+              <option value="admin">Admin</option>
+            </select>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleInputChange}
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
 
-            <div className="flex space-x-6">
-              <button 
-                type="submit" 
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-300"
-              >
-                Submit Request
-              </button>
-              <button 
-                type="button" 
-                onClick={() => {
-                  setLeaveData({
-                    empId: '',
-                    position: '',
-                    startDate: '',
-                    endDate: '',
-                    leaveType: '',
-                    reason: ''
-                  });
-                  setLeaveDays(0);
-                }} 
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-300"
-              >
-                Reset Form
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="flex justify-end mt-4 gap-2">
+            <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+              Save
+            </button>
+            <button onClick={() => navigate("/leave")} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default RequestLeave;
+export default Applyleave;

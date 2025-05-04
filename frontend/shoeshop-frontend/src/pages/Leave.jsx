@@ -39,13 +39,14 @@ const Leave = () => {
     try {
       setLoading(true);
       const data = await leaveService.getAllLeaves();
+      console.log('Fetched leaves:', data);  // Debugging line to log API response
       setLeaves(data.leaves);
       setFilteredLeaves(data.leaves);
       countStatuses(data.leaves);
       setError(null);
     } catch (err) {
       setError("Failed to fetch leave records. Please try again.");
-      console.error(err);
+      console.error(err);  // Log the error for more details
     } finally {
       setLoading(false);
     }
@@ -203,13 +204,12 @@ const Leave = () => {
                       <td className="px-6 py-4">{leave.position}</td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-2 py-1 rounded-full text-sm font-medium ${
-                            leave.status === "Approved"
+                          className={`px-2 py-1 rounded-full text-sm font-medium ${leave.status === "Approved"
                               ? "bg-green-100 text-green-700"
                               : leave.status === "Rejected"
                               ? "bg-red-100 text-red-700"
                               : "bg-yellow-100 text-yellow-700"
-                          }`}
+                            }`}
                         >
                           {leave.status}
                         </span>

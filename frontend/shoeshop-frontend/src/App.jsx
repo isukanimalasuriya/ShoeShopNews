@@ -44,7 +44,7 @@ import AddNewEmployee from "./pages/AddNewEmployee";
 import TrackingBonus from "./pages/TrackingBonus";
 import Salary from "./pages/Salary";
 import EMAttendance from "./pages/EMAttendance";
-import AddLeave from "./pages/Addleave";
+
 import EmployeeOT from "./pages/EmployeeOT.jsx";
 
 
@@ -120,7 +120,7 @@ function App() {
        <Route path="/Salary" element={<Salary />}/>
        <Route path="/EmAttendance" element={<EMAttendance />} />
        <Route path="/EmAttendance" element={<EMAttendance />} />
-       <Route path="/Addleave" element={<AddLeave />} />
+    
        <Route path="/EmployeeOT" element={< EmployeeOT/>} />
         
    
