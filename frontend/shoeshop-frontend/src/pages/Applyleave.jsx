@@ -46,9 +46,6 @@ const ApplyLeave = () => {
             if (!token) {
               navigate('/employeelogin'); // Redirect if no token found
             }
-<<<<<<< HEAD
-    }, []);
-=======
 
             const employeeData = localStorage.getItem("employee");
     if (employeeData) {
@@ -65,7 +62,6 @@ const ApplyLeave = () => {
       }
     }
     }, [navigate]);
->>>>>>> 2efa4688cfa0e5f51a13f67e30c9040bd2a0c652
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
