@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, PieChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Pie, Cell } from 'recharts';
 import { Users, UserCheck, UserX, Calendar, ArrowUp, ArrowDown } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const AdminAnalytics = () => {
 
-    const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState({
@@ -17,6 +19,35 @@ const AdminAnalytics = () => {
     userGrowthRate: 0
   });
   const [timeRange, setTimeRange] = useState('week'); // 'week', 'month', 'year'
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+  
+    // Define table columns
+    const tableColumn = ["Name", "Email", "Verified", "Joined"];
+    // Map user data for the table
+    const tableRows = users.map(user => [
+      user.name,
+      user.email,
+      user.isVerified ? "Yes" : "No",
+      new Date(user.createdAt).toLocaleDateString()
+    ]);
+  
+    // Add a title
+    doc.text("Registered Customers", 14, 15);
+  
+    // Add the table
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 25,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [52, 73, 94] }
+    });
+  
+    // Save the PDF
+    doc.save("registered_customers.pdf");
+  };
 
   // Colors for charts
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
@@ -153,7 +184,12 @@ const AdminAnalytics = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-800">Customer Analytics Dashboard</h2>
-      
+      <button
+  onClick={handleDownloadPDF}
+  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+>
+  Download as PDF
+</button>
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="text-gray-500">Loading customer data...</div>
