@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EmSidebar from "./EmSidebar";
 import { leaveService } from "../services/api";
 
@@ -37,6 +38,13 @@ const ApplyLeave = () => {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+        const token = localStorage.getItem('token');
+            if (!token) {
+              navigate('/employeelogin'); // Redirect if no token found
+            }
+    }, [navigate]);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CheckCircle, XCircle } from "lucide-react";
 import { jsPDF } from "jspdf";
 import EmSidebar from './EmSidebar';
+import { useNavigate } from "react-router-dom";
 
 const EMAttendance = () => {
   const [message, setMessage] = useState("");
@@ -57,6 +58,15 @@ const EMAttendance = () => {
     // Download the generated report
     doc.save("attendance_report.pdf");
   };
+
+  const navigate = useNavigate();
+  
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/employeelogin'); // Redirect if no token found
+        }
+    }, [navigate]);
 
   return (
     <div className="flex flex-1 bg-white">
