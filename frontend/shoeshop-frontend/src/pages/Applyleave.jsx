@@ -44,7 +44,7 @@ const ApplyLeave = () => {
             if (!token) {
               navigate('/employeelogin'); // Redirect if no token found
             }
-    }, [navigate]);
+    }, []);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">

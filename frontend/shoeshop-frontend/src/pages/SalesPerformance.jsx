@@ -28,37 +28,7 @@ const upcomingTraining = [
   { id: 3, title: 'Team Building Session', date: 'May 22, 2025', time: '1:00 PM', trainer: 'Lisa Taylor' },
 ];
 
-// Main component
-export default function EmployeeManagement() {
-  const [activeTab, setActiveTab] = useState('sales');
-  
-  return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-indigo-800 text-white">
-        
-     
-        
-        
-        <nav className="mt-2">
-        
-          <SidebarItem icon={<TrendingUp size={18} />} text="Sales Performance" active={activeTab === 'sales'} onClick={() => setActiveTab('sales')} />
-          <SidebarItem icon={<BookOpen size={18} />} text="Training Portal" active={activeTab === 'training'} onClick={() => setActiveTab('training')} />
-          <div className="mt-auto pt-20">
-            <SidebarItem icon={<LogoutIcon size={18} />} text="Logout" active={false} />
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
-        {activeTab === 'sales' ? <SalesPerformance /> : <TrainingPortal />}
-      </div>
-    </div>
-  );
-}
-
-// Custom logout icon that matches the style
+// Custom logout icon
 function LogoutIcon(props) {
   return (
     <svg
@@ -88,6 +58,163 @@ function SidebarItem({ icon, text, active, onClick }) {
     >
       <span className="mr-3">{icon}</span>
       <span className="text-sm">{text}</span>
+    </div>
+  );
+}
+
+// Stats Card Component
+function StatCard({ icon, title, value, change, isPositive }) {
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="flex items-center justify-between mb-4">
+        <span className="p-2 rounded-lg bg-gray-100">{icon}</span>
+        <span className={`text-xs font-medium rounded-full px-2 py-1 ${isPositive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+          {change}
+        </span>
+      </div>
+      <h3 className="text-gray-500 text-sm">{title}</h3>
+      <p className="text-2xl font-bold mt-1">{value}</p>
+    </div>
+  );
+}
+
+// Product Sale Item Component
+function ProductSaleItem({ name, category, sales, imageSrc }) {
+  return (
+    <div className="flex items-center">
+      <img src={imageSrc} alt={name} className="w-10 h-10 rounded object-cover" />
+      <div className="ml-3 flex-1">
+        <h3 className="text-sm font-medium">{name}</h3>
+        <p className="text-xs text-gray-500">{category}</p>
+      </div>
+      <div className="text-right">
+        <p className="text-sm font-medium">{sales} sold</p>
+        <div className="w-20 bg-gray-200 rounded-full h-1 mt-1">
+          <div 
+            className="bg-indigo-600 h-1 rounded-full" 
+            style={{ width: `${Math.min(sales / 0.3, 100)}%` }}
+          ></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Customer Feedback Component
+function CustomerFeedback({ name, date, rating, comment }) {
+  return (
+    <div className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="font-medium">{name}</h3>
+        <span className="text-xs text-gray-500">{date}</span>
+      </div>
+      <div className="flex items-center mb-2">
+        {[...Array(5)].map((_, i) => (
+          <svg 
+            key={i}
+            className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        ))}
+      </div>
+      <p className="text-sm text-gray-600">{comment}</p>
+    </div>
+  );
+}
+
+// Training Stats Card
+function TrainingStatCard({ icon, title, value, subtitle, bgColor, textColor }) {
+  return (
+    <div className={`${bgColor} rounded-lg p-6`}>
+      <div className="mb-4">{icon}</div>
+      <p className={`${textColor} text-2xl font-bold`}>{value}</p>
+      <p className="text-gray-600 text-sm">{title}</p>
+      <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
+    </div>
+  );
+}
+
+// Training Module Card
+function TrainingModuleCard({ module }) {
+  return (
+    <div className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors">
+      <div className="flex justify-between items-start">
+        <div>
+          <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 mb-2 inline-block">
+            {module.category}
+          </span>
+          <h3 className="font-medium mb-1">{module.title}</h3>
+          <p className="text-sm text-gray-500 flex items-center">
+            <Clock size={14} className="mr-1" /> {module.duration}
+          </p>
+        </div>
+        {module.progress === 100 ? (
+          <span className="bg-green-500 text-white p-1 rounded-full">
+            <CheckCircle size={16} />
+          </span>
+        ) : (
+          <button className="bg-indigo-600 text-white rounded-full p-1 hover:bg-indigo-700">
+            <Play size={16} />
+          </button>
+        )}
+      </div>
+      <div className="mt-4">
+        <div className="flex justify-between text-xs mb-1">
+          <span>Progress</span>
+          <span>{module.progress}%</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className={`h-2 rounded-full ${
+              module.progress === 100 ? 'bg-green-500' : 
+              module.progress > 0 ? 'bg-indigo-600' : 'bg-gray-300'
+            }`}
+            style={{ width: `${module.progress}%` }}
+          ></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Upcoming Training Card
+function UpcomingTrainingCard({ training }) {
+  return (
+    <div className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
+      <h3 className="font-medium">{training.title}</h3>
+      <div className="flex items-center mt-2 text-sm text-gray-500">
+        <Calendar size={14} className="mr-1" />
+        <span>{training.date}</span>
+      </div>
+      <div className="flex items-center mt-1 text-sm text-gray-500">
+        <Clock size={14} className="mr-1" />
+        <span>{training.time}</span>
+      </div>
+      <div className="flex justify-between items-center mt-2">
+        <span className="text-xs text-gray-500">Trainer: {training.trainer}</span>
+        <button className="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+          Add to Calendar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Certification Card
+function CertificationCard({ title, date, image }) {
+  return (
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center text-center hover:border-indigo-300 transition-colors">
+      <div className="w-16 h-16 rounded-full flex items-center justify-center bg-indigo-100 mb-3">
+        <img src={image} alt={title} className="w-10 h-10" />
+      </div>
+      <h3 className="font-medium text-sm">{title}</h3>
+      <p className="text-xs text-gray-500 mt-1">{date}</p>
+      <button className="mt-3 text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+        View Certificate
+      </button>
     </div>
   );
 }
@@ -343,159 +470,44 @@ function TrainingPortal() {
   );
 }
 
-// Stats Card Component
-function StatCard({ icon, title, value, change, isPositive }) {
+// Main App Component
+export default function EmployeeManagement() {
+  const [activeTab, setActiveTab] = useState('sales');
+  
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex items-center justify-between mb-4">
-        <span className="p-2 rounded-lg bg-gray-100">{icon}</span>
-        <span className={`text-xs font-medium rounded-full px-2 py-1 ${isPositive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-          {change}
-        </span>
-      </div>
-      <h3 className="text-gray-500 text-sm">{title}</h3>
-      <p className="text-2xl font-bold mt-1">{value}</p>
-    </div>
-  );
-}
-
-// Product Sale Item Component
-function ProductSaleItem({ name, category, sales, imageSrc }) {
-  return (
-    <div className="flex items-center">
-      <img src={imageSrc} alt={name} className="w-10 h-10 rounded object-cover" />
-      <div className="ml-3 flex-1">
-        <h3 className="text-sm font-medium">{name}</h3>
-        <p className="text-xs text-gray-500">{category}</p>
-      </div>
-      <div className="text-right">
-        <p className="text-sm font-medium">{sales} sold</p>
-        <div className="w-20 bg-gray-200 rounded-full h-1 mt-1">
-          <div 
-            className="bg-indigo-600 h-1 rounded-full" 
-            style={{ width: `${Math.min(sales / 0.3, 100)}%` }}
-          ></div>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div className="w-64 bg-indigo-800 text-white">
+        <div className="p-4">
+          <h1 className="text-xl font-bold">ShoeStore Dashboard</h1>
+          <p className="text-sm text-indigo-200">Employee Portal</p>
         </div>
+        
+        <nav className="mt-6">
+          <SidebarItem 
+            icon={<TrendingUp size={18} />} 
+            text="Sales Performance" 
+            active={activeTab === 'sales'} 
+            onClick={() => setActiveTab('sales')} 
+          />
+          <SidebarItem 
+            icon={<BookOpen size={18} />} 
+            text="Training Portal" 
+            active={activeTab === 'training'} 
+            onClick={() => setActiveTab('training')} 
+          />
+          <SidebarItem 
+            icon={<LogoutIcon size={18} />} 
+            text="Logout" 
+            active={false} 
+          />
+        </nav>
       </div>
-    </div>
-  );
-}
 
-// Customer Feedback Component
-function CustomerFeedback({ name, date, rating, comment }) {
-  return (
-    <div className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium">{name}</h3>
-        <span className="text-xs text-gray-500">{date}</span>
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto">
+        {activeTab === 'sales' ? <SalesPerformance /> : <TrainingPortal />}
       </div>
-      <div className="flex items-center mb-2">
-        {[...Array(5)].map((_, i) => (
-          <svg 
-            key={i}
-            className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        ))}
-      </div>
-      <p className="text-sm text-gray-600">{comment}</p>
-    </div>
-  );
-}
-
-// Training Stats Card
-function TrainingStatCard({ icon, title, value, subtitle, bgColor, textColor }) {
-  return (
-    <div className={`${bgColor} rounded-lg p-6`}>
-      <div className="mb-4">{icon}</div>
-      <p className={`${textColor} text-2xl font-bold`}>{value}</p>
-      <p className="text-gray-600 text-sm">{title}</p>
-      <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
-    </div>
-  );
-}
-
-// Training Module Card
-function TrainingModuleCard({ module }) {
-  return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors">
-      <div className="flex justify-between items-start">
-        <div>
-          <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 mb-2 inline-block">
-            {module.category}
-          </span>
-          <h3 className="font-medium mb-1">{module.title}</h3>
-          <p className="text-sm text-gray-500 flex items-center">
-            <Clock size={14} className="mr-1" /> {module.duration}
-          </p>
-        </div>
-        {module.progress === 100 ? (
-          <span className="bg-green-500 text-white p-1 rounded-full">
-            <CheckCircle size={16} />
-          </span>
-        ) : (
-          <button className="bg-indigo-600 text-white rounded-full p-1 hover:bg-indigo-700">
-            <Play size={16} />
-          </button>
-        )}
-      </div>
-      <div className="mt-4">
-        <div className="flex justify-between text-xs mb-1">
-          <span>Progress</span>
-          <span>{module.progress}%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className={`h-2 rounded-full ${
-              module.progress === 100 ? 'bg-green-500' : 
-              module.progress > 0 ? 'bg-indigo-600' : 'bg-gray-300'
-            }`}
-            style={{ width: `${module.progress}%` }}
-          ></div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Upcoming Training Card
-function UpcomingTrainingCard({ training }) {
-  return (
-    <div className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-      <h3 className="font-medium">{training.title}</h3>
-      <div className="flex items-center mt-2 text-sm text-gray-500">
-        <Calendar size={14} className="mr-1" />
-        <span>{training.date}</span>
-      </div>
-      <div className="flex items-center mt-1 text-sm text-gray-500">
-        <Clock size={14} className="mr-1" />
-        <span>{training.time}</span>
-      </div>
-      <div className="flex justify-between items-center mt-2">
-        <span className="text-xs text-gray-500">Trainer: {training.trainer}</span>
-        <button className="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
-          Add to Calendar
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// Certification Card
-function CertificationCard({ title, date, image }) {
-  return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center text-center hover:border-indigo-300 transition-colors">
-      <div className="w-16 h-16 rounded-full flex items-center justify-center bg-indigo-100 mb-3">
-        <img src={image} alt={title} className="w-10 h-10" />
-      </div>
-      <h3 className="font-medium text-sm">{title}</h3>
-      <p className="text-xs text-gray-500 mt-1">{date}</p>
-      <button className="mt-3 text-xs text-indigo-600 hover:text-indigo-800 font-medium">
-        View Certificate
-      </button>
     </div>
   );
 }
