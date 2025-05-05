@@ -39,12 +39,33 @@ const ApplyLeave = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   useEffect(() => {
         const token = localStorage.getItem('token');
             if (!token) {
               navigate('/employeelogin'); // Redirect if no token found
             }
+<<<<<<< HEAD
     }, []);
+=======
+
+            const employeeData = localStorage.getItem("employee");
+    if (employeeData) {
+      try {
+        const parsedEmployee = JSON.parse(employeeData);
+        setFormData((prev) => ({
+          ...prev,
+          name: parsedEmployee.name || "",
+          position: parsedEmployee.role || "",
+          department: parsedEmployee.department || "",
+        }));
+      } catch (err) {
+        console.error("Failed to parse employee data:", err);
+      }
+    }
+    }, [navigate]);
+>>>>>>> 2efa4688cfa0e5f51a13f67e30c9040bd2a0c652
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -73,6 +94,7 @@ const ApplyLeave = () => {
                 type="text"
                 name="name"
                 value={formData.name}
+                readOnly
                 onChange={handleInputChange}
                 placeholder="Enter your name"
                 required
