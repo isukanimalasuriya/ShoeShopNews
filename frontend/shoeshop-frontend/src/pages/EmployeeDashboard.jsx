@@ -8,6 +8,10 @@ const EmployeeDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/employeelogin'); // Redirect if no token found
+        }
     const data = JSON.parse(localStorage.getItem("employee"));
     if (data) {
       setEmployee(data);

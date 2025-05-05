@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { leaveService } from "../services/api";
@@ -29,6 +29,13 @@ const Applyleave = () => {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+        const token = localStorage.getItem('token');
+            if (!token) {
+              navigate('/employeelogin'); // Redirect if no token found
+            }
+    }, [navigate]);
 
   return (
     <div className="flex flex-1">
