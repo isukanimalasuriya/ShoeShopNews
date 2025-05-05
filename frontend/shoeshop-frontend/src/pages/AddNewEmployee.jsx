@@ -78,6 +78,7 @@ const AddNewEmployee = () => {
             <option value="DELIVERY_MANAGER">Delivery Manager</option>
             <option value="DELIVERY_PERSON">Delivery Person</option>
             <option value="admin">admin</option>
+            <option value="FINANCE_MANAGER">Finance Manager</option>
           </select>
           <input
             type="number"
