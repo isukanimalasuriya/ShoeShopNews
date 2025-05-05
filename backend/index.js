@@ -16,6 +16,9 @@ import productRouter from "../backend/routes/productRouter.js";
 import orderRoute from "../backend/routes/orderManageRoute.js"
 import md5 from "md5";
 import userRouter from "./routes/employeeRoute.js";
+import AttendanceRoutes from "./routes/AttendanceRoutes.js";
+import LeaveRoutes from "./routes/LeaveRoutes.js";
+import EmployeeRoutes from "./routes/EmployeeRoutes.js";
 
 import shoeRoutes from './routes/shoeRoutes.js';
 import restock from './routes/restock.js';
@@ -55,6 +58,10 @@ app.use('/api/restock', restock);
 // Serve static files
 app.use('/uploads', express.static('Uploads'));
 
+app.use("/api/attendance", AttendanceRoutes);
+
+app.use("/api/leaves", LeaveRoutes);
+app.use("/api/employees",EmployeeRoutes);
 
 
 app.listen(PORT,()=>{

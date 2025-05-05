@@ -15,7 +15,7 @@ const Cart = () => {
     const [totalprice,setTotal]= useState(0)
 
     const userId = "user236"
-    const DELIVERY_FEE = 2000;
+    const DELIVERY_FEE = 200;
     const navigate = useNavigate();
 
     useEffect(() => {

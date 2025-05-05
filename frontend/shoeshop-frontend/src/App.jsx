@@ -27,6 +27,29 @@ import Payment_cancel from "./pages/Payment_cancel";
 import Notify from "./pages/Notify";
 import EmployeeRoutes from "./pages/EmployeeRoutes";
 import EmployeeLogin from "./pages/EmployeeLogin";
+import Orders from "./pages/Orders";
+import AllOrders from "./pages/AllOrders"
+import ReviewSection from "./pages/Reviews";
+import Employees from "./pages/Employees";
+import Leave from "./pages/Leave"; 
+import HRDashboard from "./pages/HRDashboard";
+import Department from "./pages/Department";
+
+import Attendance from "./pages/Attendance";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
+import Applyleave from "./pages/Applyleave";
+import SalaryPromotion from "./pages/SalaryPromotion";
+import AddNewEmployee from "./pages/AddNewEmployee";
+
+import TrackingBonus from "./pages/TrackingBonus";
+import Salary from "./pages/Salary";
+import EMAttendance from "./pages/EMAttendance";
+
+import EmployeeOT from "./pages/EmployeeOT.jsx";
+
+
+
+
 
 
 //inventory
@@ -96,8 +119,29 @@ const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path
         <Route path="/Payment_success" element={<Payment_success/>} />
         <Route path="/Payment_cancel" element={<Payment_cancel/>} />
         <Route path="/Notify" element={<Notify/>} />
-        
+        <Route path="/orders"  element={<Orders/>}/>
+        <Route path="/allorders"  element={<AllOrders />}/>
+        <Route path="/reviews" element={<ReviewSection/>}/>
+        <Route path="/employee"element={<Employees/>}/>
+        <Route path="/leaves" element={<Leave />} /> 
+        <Route path="/hrdashboard" element={<HRDashboard />} />
+        <Route path="/department" element={<Department />} />
+      
+        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/employeeDashboard" element={<EmployeeDashboard />} />
+        <Route path="/applyleave" element={<Applyleave />} />
+        <Route path="/salary&promotion" element={<SalaryPromotion />} />
+       <Route path="/AddNewEmployee" element={<AddNewEmployee />} />
+       <Route path="/trackingbonus" element={<TrackingBonus/>}/>
+       <Route path="/Salary" element={<Salary />}/>
+       <Route path="/EmAttendance" element={<EMAttendance />} />
+       <Route path="/EmAttendance" element={<EMAttendance />} />
     
+       <Route path="/EmployeeOT" element={< EmployeeOT/>} />
+        
+   
+     
+
       </Routes>
 
       {showSidebar && (
