@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "./EmSidebar";
+import EmSidebar from "./EmSidebar";
 import { leaveService } from "../services/api";
 
 const ApplyLeave = () => {
@@ -40,7 +40,7 @@ const ApplyLeave = () => {
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
-      <Sidebar />
+      <EmSidebar />
       <div className="flex-1 p-8">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
           <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-4">
