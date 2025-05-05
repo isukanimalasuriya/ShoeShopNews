@@ -48,6 +48,8 @@ import EMAttendance from "./pages/EMAttendance";
 import EmployeeOT from "./pages/EmployeeOT";
 import EmployeeBonusTracking from "./pages/EmployeeBonusTracking";
 import SalesPerformance from "./pages/SalesPerformance";
+import AttendancePage from "./pages/Attendance";
+import AddNewAttendance from "./pages/AddNewAttendance";
 
 
 
@@ -113,7 +115,7 @@ function App() {
         <Route path="/hrdashboard" element={<HRDashboard />} />
         <Route path="/department" element={<Department />} />
       
-        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/attendance" element={<AttendancePage />} />
         <Route path="/employeeDashboard" element={<EmployeeDashboard />} />
         <Route path="/applyleave" element={<Applyleave />} />
         <Route path="/salary&promotion" element={<SalaryPromotion />} />
@@ -127,9 +129,9 @@ function App() {
         
        <Route path="/EmployeeBonusTracking" element={< EmployeeBonusTracking/>} />
        <Route path="/SalesPerformance" element={<SalesPerformance/>} />
-    
+       <Route path="/AddNewAttendance" element={<AddNewAttendance/>} />
    
-     
+       
 
       </Routes>
       <EmployeeRoutes />

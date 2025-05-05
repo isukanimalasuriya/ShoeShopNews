@@ -1,92 +1,196 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import { salaryService } from "../services/api";
 
 const Salary = () => {
-  const [employees, setEmployees] = useState([
-    { id: "1", name: "Mithun", baseSalary: "50000", overtimeHours: "2", bonus: "4000" },
-    { id: "2", name: "Kaveesh", baseSalary: "30000", overtimeHours: "3", bonus: "2000" },
-    { id: "3", name: "Nimasha", baseSalary: "40000", overtimeHours: "4", bonus: "1000" },
-    { id: "4", name: "Sandu", baseSalary: "35000", overtimeHours: "5", bonus: "3000" },
-    { id: "5", name: "Latheesh", baseSalary: "45000", overtimeHours: "3", bonus: "2500" },
-    { id: "6", name: "Lanki", baseSalary: "32000", overtimeHours: "1", bonus: "1500" },
-  ]);
+  const [searchName, setSearchName] = useState("");
+  const [salaries, setSalaries] = useState([]);
+  const [filteredSalaries, setFilteredSalaries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedSalary, setSelectedSalary] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    empId: "",
+    department: "",
+    position: "",
+    baseSalary: "",
+    bonus: "",
+    totalSalary: ""
+  });
 
-  const calculateTotalSalary = (baseSalary, overtime, bonus) => {
-    const base = Number(baseSalary);
-    const overtimeHours = Number(overtime);
-    const bonusAmount = Number(bonus);
-    const overtimePay = overtimeHours * 1000; // assume 1000 per hour
-    return base + overtimePay + bonusAmount;
-  };
+  const navigate = useNavigate();
 
-  const handleView = (id) => alert(`Viewing employee ID: ${id}`);
-  const handleEdit = (id) => alert(`Editing employee ID: ${id}`);
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
-      setEmployees(employees.filter((emp) => emp.id !== id));
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/employeelogin');
+    }
+    fetchSalaries();
+  }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchName, salaries]);
+
+  const fetchSalaries = async () => {
+    try {
+      setLoading(true);
+      const data = await salaryService.getAllSalaries();
+      setSalaries(data.salaries);
+      setFilteredSalaries(data.salaries);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch salary records. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleSearch = () => {
+    if (!searchName.trim()) {
+      setFilteredSalaries(salaries);
+    } else {
+      const filtered = salaries.filter((salary) =>
+        salary.name.toLowerCase().includes(searchName.trim().toLowerCase())
+      );
+      setFilteredSalaries(filtered);
+    }
+  };
+
+  const handleEditClick = (salary) => {
+    setIsEditing(true);
+    setFormData({
+      name: salary.name || "",
+      empId: salary.empId || "",
+      department: salary.department || "",
+      position: salary.position || "",
+      baseSalary: salary.baseSalary || "",
+      bonus: salary.bonus || "",
+      totalSalary: salary.totalSalary || ""
+    });
+    setSelectedSalary(salary);
+  };
+
+  const handleUpdateClick = async () => {
+    if (!selectedSalary) return;
+    try {
+      setLoading(true);
+      await salaryService.updateSalary(selectedSalary._id, formData);
+      setIsEditing(false);
+      setSelectedSalary(null);
+      fetchSalaries();
+    } catch (err) {
+      setError("Failed to update salary record.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteClick = async (id) => {
+    if (window.confirm("Are you sure you want to delete this salary record?")) {
+      try {
+        setLoading(true);
+        await salaryService.deleteSalary(id);
+        fetchSalaries();
+      } catch (err) {
+        setError("Failed to delete salary record.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-100 text-gray-800">
+    <div className="flex flex-1">
       <Sidebar />
-      <div className="flex-1 p-8">
-        <h1 className="text-3xl font-bold mb-6 text-indigo-700">Salary Management</h1>
-        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-lg overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse text-sm">
-            <thead>
-              <tr className="bg-indigo-600 text-white">
-                <th className="py-3 px-4 text-left">Employee Name</th>
-                <th className="py-3 px-4 text-left">Base Salary</th>
-                <th className="py-3 px-4 text-left">Overtime Hours</th>
-                <th className="py-3 px-4 text-left">Bonus</th>
-                <th className="py-3 px-4 text-left">Total Salary</th>
-                <th className="py-3 px-4 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map((emp) => (
-                <tr key={emp.id} className="border-b hover:bg-gray-50 transition">
-                  <td className="py-3 px-4">{emp.name}</td>
-                  <td className="py-3 px-4">Rs. {Number(emp.baseSalary).toLocaleString()}</td>
-                  <td className="py-3 px-4">{emp.overtimeHours}</td>
-                  <td className="py-3 px-4">Rs. {Number(emp.bonus).toLocaleString()}</td>
-                  <td className="py-3 px-4">
-                    Rs.{" "}
-                    {calculateTotalSalary(emp.baseSalary, emp.overtimeHours, emp.bonus).toLocaleString()}
-                  </td>
-                  <td className="py-3 px-4 text-center space-x-2">
-                    <button
-                      onClick={() => handleView(emp.id)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded transition"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleEdit(emp.id)}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(emp.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {employees.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="text-center py-4 text-gray-500">
-                    No employee records available.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      <div className="flex-1 p-6">
+        <h1 className="text-2xl font-bold mb-6">Manage Salaries</h1>
+
+        {error && <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">{error}</div>}
+
+        <div className="flex gap-2 mb-6">
+          <input
+            type="text"
+            placeholder="Search By Employee Name"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            className="border border-gray-300 rounded px-4 py-2"
+          />
+          <button onClick={handleSearch} className="bg-indigo-600 text-white px-4 py-2 rounded">
+            Search
+          </button>
         </div>
+
+        {loading ? (
+          <p className="text-center text-gray-500">Loading salary records...</p>
+        ) : (
+          <div className="overflow-x-auto bg-white rounded shadow">
+            <table className="min-w-full">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="px-6 py-3">Emp ID</th>
+                  <th className="px-6 py-3">Name</th>
+                  <th className="px-6 py-3">Department</th>
+                  <th className="px-6 py-3">Position</th>
+                  <th className="px-6 py-3">Base Salary</th>
+                  <th className="px-6 py-3">Bonus</th>
+                  <th className="px-6 py-3">Total Salary</th>
+                  <th className="px-6 py-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSalaries.length > 0 ? (
+                  filteredSalaries.map((salary) => (
+                    <tr key={salary._id} className="border-b">
+                      <td className="px-6 py-4">{salary.empId}</td>
+                      <td className="px-6 py-4">{salary.name}</td>
+                      <td className="px-6 py-4">{salary.department}</td>
+                      <td className="px-6 py-4">{salary.position}</td>
+                      <td className="px-6 py-4">{salary.baseSalary}</td>
+                      <td className="px-6 py-4">{salary.bonus}</td>
+                      <td className="px-6 py-4">{salary.totalSalary}</td>
+                      <td className="px-6 py-4 text-center flex gap-2 justify-center">
+                        <button onClick={() => handleEditClick(salary)} className="text-green-600">Edit</button>
+                        <button onClick={() => handleDeleteClick(salary._id)} className="text-red-600">Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8" className="text-center py-6 text-gray-500">No salary records found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {isEditing && (
+          <div className="mt-6 bg-white p-6 rounded shadow">
+            <h2 className="text-xl font-bold mb-4">Edit Salary</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input name="name" value={formData.name} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Name" />
+              <input name="empId" value={formData.empId} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Emp ID" />
+              <input name="department" value={formData.department} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Department" />
+              <input name="position" value={formData.position} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Position" />
+              <input name="baseSalary" value={formData.baseSalary} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Base Salary" />
+              <input name="bonus" value={formData.bonus} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Bonus" />
+              <input name="totalSalary" value={formData.totalSalary} onChange={handleInputChange} className="border rounded px-3 py-2" placeholder="Total Salary" />
+            </div>
+            <div className="flex justify-end mt-4 gap-2">
+              <button onClick={handleUpdateClick} className="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+              <button onClick={() => setIsEditing(false)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

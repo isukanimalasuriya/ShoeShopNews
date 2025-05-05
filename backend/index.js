@@ -19,6 +19,7 @@ import userRouter from "./routes/employeeRoute.js";
 import AttendanceRoutes from "./routes/AttendanceRoutes.js";
 import LeaveRoutes from "./routes/LeaveRoutes.js";
 import EmployeeRoutes from "./routes/EmployeeRoutes.js";
+import SalaryRoutes from "./routes/SalaryRoutes.js"
 
 // import router from "./routes/authRouter.js";
 
@@ -52,6 +53,7 @@ app.use("/api/attendance", AttendanceRoutes);
 
 app.use("/api/leaves", LeaveRoutes);
 app.use("/api/employees",EmployeeRoutes);
+app.use("/api/salary",SalaryRoutes);
 
 
 app.listen(PORT,()=>{
