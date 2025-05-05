@@ -112,7 +112,7 @@ const ShoeDashboard = () => {
                 Total Inventory Value
               </h3>
               <p className="text-2xl font-bold text-gray-800">
-                ${stats.totalValue.toFixed(2)}
+                LKR {stats.totalValue.toFixed(2)}
               </p>
             </div>
           </div>
@@ -190,7 +190,7 @@ const ShoeDashboard = () => {
                       {item.stock}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      ${(item.price * item.stock).toFixed(2)}
+                      LKR{(item.price * item.stock).toFixed(2)}
                     </td>
                   </tr>
                 ))}

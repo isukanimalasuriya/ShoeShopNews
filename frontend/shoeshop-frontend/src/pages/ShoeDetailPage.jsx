@@ -93,7 +93,7 @@ const ShoeDetailPage = () => {
             <FiDollarSign className="text-2xl text-green-600 mr-4" />
             <div>
               <h3 className="text-sm font-medium text-gray-500">Price</h3>
-              <p className="text-2xl font-bold text-gray-900">${shoe.price}</p>
+              <p className="text-2xl font-bold text-gray-900">LKR {shoe.price}</p>
             </div>
           </div>
           <div className="flex items-center">

@@ -227,7 +227,7 @@ const EditShoeForm = () => {
 
           {/* Price */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Price (LKR)</label>
             <input
               type="number"
               name="price"

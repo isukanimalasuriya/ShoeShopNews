@@ -114,7 +114,7 @@ const ShoeList = ({ shoes, onDelete }) => {
                   {shoe.brand} {shoe.model}
                 </h3>
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-gray-600">${shoe.price.toFixed(2)}</p>
+                  <p className="text-gray-600">LKR {shoe.price.toFixed(2)}</p>
                   <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
                     {shoe.shoeType}
                   </span>
