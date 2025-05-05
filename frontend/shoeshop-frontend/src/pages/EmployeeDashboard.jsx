@@ -22,19 +22,19 @@ const EmployeeDashboard = () => {
   };
 
   const handleTrackBonus = () => {
-    navigate("/EmployeeBonusTracking"); // 🔁 Navigate to bonus tracker page
+    navigate("/EmployeeBonusTracking");
   };
 
   if (!employee) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-1 bg-gray-100">
+    <div className="flex flex-1 bg-gray-100 min-h-screen">
       <EmSidebar />
       <main className="flex-1 p-6 relative">
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="absolute top-6 right-6 flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow"
+          className="absolute top-6 right-6 flex items-center bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg shadow"
         >
           <LogOut className="mr-2" size={18} /> Logout
         </button>
@@ -47,10 +47,10 @@ const EmployeeDashboard = () => {
               <p className="text-gray-300 mt-2">Role: {employee.role}</p>
             </div>
 
-            {/* 🆕 Track Bonus Button */}
+            {/* Track Bonus Button */}
             <button
               onClick={handleTrackBonus}
-              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
+              className="flex items-center bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg shadow"
             >
               <Gift className="mr-2" size={18} /> Track Bonus
             </button>
