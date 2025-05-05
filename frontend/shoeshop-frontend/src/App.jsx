@@ -50,6 +50,7 @@ import EmployeeBonusTracking from "./pages/EmployeeBonusTracking";
 import SalesPerformance from "./pages/SalesPerformance";
 import AttendancePage from "./pages/Attendance";
 import AddNewAttendance from "./pages/AddNewAttendance";
+import AddSalary from "./pages/AddSalary";
 
 
 
@@ -130,7 +131,7 @@ function App() {
        <Route path="/EmployeeBonusTracking" element={< EmployeeBonusTracking/>} />
        <Route path="/SalesPerformance" element={<SalesPerformance/>} />
        <Route path="/AddNewAttendance" element={<AddNewAttendance/>} />
-   
+       <Route path="/AddSalary" element={<AddSalary/>} />
        
 
       </Routes>

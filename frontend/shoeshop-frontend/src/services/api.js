@@ -269,17 +269,19 @@ export const attendanceService =
 };
 
 export const salaryService = {
-  getAllSalary: async () => {
+  getAllSalaries: async () => {
     try {
       const response = await axios.get(`${API_URL}/api/salary`);
-      // Extract the salary records from the response
-      return response.data.records || response.data;
+      // Format the data to match what the component expects
+      return { 
+        salaries: response.data.records || response.data 
+      };
     } catch (error) {
       console.error("Error fetching salary data:", error?.response?.data || error.message);
       throw error;
     }
   },
-  
+
   getSalaryById: async (id) => {
     try {
       const response = await axios.get(`${API_URL}/api/salary/${id}`);
@@ -319,4 +321,4 @@ export const salaryService = {
       throw error;
     }
   }
-};
+}
