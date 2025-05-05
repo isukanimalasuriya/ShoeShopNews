@@ -21,8 +21,9 @@ const EmployeeDashboard = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("employee");
-    navigate("/EmployeeOT");
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/employeelogin');
   };
 
   if (!employee) return <div>Loading...</div>;
@@ -34,7 +35,7 @@ const EmployeeDashboard = () => {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="absolute top-6 right-6 flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow"
+          className="absolute top-6 right-6 flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 mt-9 mr-9 rounded-lg shadow"
         >
           <LogOut className="mr-2" size={18} /> Logout
         </button>

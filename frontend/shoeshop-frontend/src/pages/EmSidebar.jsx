@@ -1,8 +1,15 @@
 
 import React from 'react';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const EmSidebar = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/employeelogin');
+  };
   return (
     <aside className="w-64 min-h-screen bg-white shadow-lg p-6">
     <nav>
@@ -40,12 +47,12 @@ const EmSidebar = () => {
           </Link>
         </li>
         <li>
-          <Link 
-            to="/logout" 
-            className="block text-gray-700 font-semibold hover:bg-indigo-100 hover:text-indigo-600 rounded-lg px-4 py-2 transition duration-200"
+          <button 
+          onClick={handleLogout}
+          className="block text-gray-700 font-semibold hover:bg-indigo-100 hover:text-indigo-600 rounded-lg px-4 py-2 transition duration-200"
           >
             Logout
-          </Link>
+          </button>
           </li>
           
       </ul>

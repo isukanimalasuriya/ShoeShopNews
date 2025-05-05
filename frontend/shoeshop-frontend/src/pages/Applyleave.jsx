@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import EmSidebar from "./EmSidebar";
 import { leaveService } from "../services/api";
 
 const Applyleave = () => {
@@ -39,7 +39,7 @@ const Applyleave = () => {
 
   return (
     <div className="flex flex-1">
-      <Sidebar />
+      <EmSidebar />
       <div className="flex-1 p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Add New Leave</h1>
 
