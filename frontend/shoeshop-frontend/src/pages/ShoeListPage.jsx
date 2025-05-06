@@ -7,12 +7,25 @@ const ShoeListPage = () => {
   const [shoes, setShoes] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/employeelogin'); // Redirect if no token found
-    }
+  const employeeData = localStorage.getItem('employee');
+
+  if (!token || !employeeData) {
+    navigate('/employeelogin');
+    return;
+  }
+
+  const user = JSON.parse(employeeData);
+
+  if (user.role === 'admin' || user.role === 'INVENTORY_MANAGER') {
+    setIsAuthorized(true);
+  } else {
+    // Optional: redirect or show unauthorized message
+    navigate('/unauthorized'); // Or you can navigate elsewhere
+  }
   }, [navigate]);
 
   useEffect(() => {
@@ -54,7 +67,7 @@ const ShoeListPage = () => {
   const hasCategory = query.has('category');
 
   return (
-    <div className="p-8">
+    <div className="-mt-30">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Shoe Inventory</h1>
       <div className="flex items-center mb-6 space-x-4">
         <Link

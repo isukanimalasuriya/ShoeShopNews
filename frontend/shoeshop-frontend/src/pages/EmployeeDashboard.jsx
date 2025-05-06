@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Clock, Calendar, DollarSign, Award, LogOut, Gift } from "lucide-react";
+import { Clock, Calendar, DollarSign, Award, LogOut, Gift,Package  } from "lucide-react";
 import EmSidebar from "./EmSidebar";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 const EmployeeDashboard = () => {
   const [employee, setEmployee] = useState(null);
@@ -83,6 +85,11 @@ const EmployeeDashboard = () => {
               { date: "2025-04-01", label: "Training Session" },
             ]} />
           </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            <Link to="/Allorders">
+                      <Card title="Orders" value="23 Orders" icon={<Package className="w-8 h-8" />} />
+            </Link>
         </div>
       </main>
     </div>

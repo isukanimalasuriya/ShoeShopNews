@@ -1,6 +1,6 @@
 import express from 'express';
 import { sendRestockEmail } from '../utils/email.js';
-import Shoe from '../modeles/Shoe.js';
+import Shoe from '../modeles/shoe.js';
 import multer from 'multer';
 
 const router = express.Router();

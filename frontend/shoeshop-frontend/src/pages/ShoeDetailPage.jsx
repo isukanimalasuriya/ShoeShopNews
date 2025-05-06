@@ -8,12 +8,25 @@ const ShoeDetailPage = () => {
   const [shoe, setShoe] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/employeelogin'); // Redirect if no token found
-    }
+  const employeeData = localStorage.getItem('employee');
+
+  if (!token || !employeeData) {
+    navigate('/employeelogin');
+    return;
+  }
+
+  const user = JSON.parse(employeeData);
+
+  if (user.role === 'admin' || user.role === 'INVENTORY_MANAGER') {
+    setIsAuthorized(true);
+  } else {
+    // Optional: redirect or show unauthorized message
+    navigate('/unauthorized'); // Or you can navigate elsewhere
+  }
   }, [navigate]);
 
   useEffect(() => {
