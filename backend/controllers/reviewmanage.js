@@ -1,13 +1,29 @@
 import Review from "../modeles/review.js";
 import mongoose from "mongoose";
-
+import Orders from "../modeles/order.js";
 
 export async function addReview(req, res) {
     try {
-        const { brandId, userId, userFullName, rating, comment,profilepicture} = req.body;
+        const { brandId, userId, userFullName, rating, comment, profilepicture } = req.body;
         const shoePicture = `/images/${req.file.filename}`;
 
-        // Create a new review since no duplicate exists
+        // Check if user has ordered this specific shoe
+        const existingOrder = await Orders.findOne({
+            userId: userId,
+            "items.shoeId": brandId
+        });
+
+        if (!existingOrder) {
+            return res.status(403).json({ error: "You are not allowed to review this item. Purchase required." });
+        }
+
+        // Optional: check if user already reviewed the shoe (prevent duplicate reviews)
+        const alreadyReviewed = await Review.findOne({ brandId, userId });
+        if (alreadyReviewed) {
+            return res.status(400).json({ error: "You have already reviewed this item." });
+        }
+
+        // Create a new review
         const newReview = new Review({
             brandId,
             userId,
@@ -18,8 +34,6 @@ export async function addReview(req, res) {
             profilepicture
         });
 
-        console.log(newReview);
-        
         await newReview.save();
         res.status(200).json({ message: "Review added successfully" });
 

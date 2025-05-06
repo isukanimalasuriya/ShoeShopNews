@@ -5,8 +5,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { GoStar } from "react-icons/go";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuthStore } from "../store/authStore"; 
+import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
+import Heart from "../assets/heart.png"
 
 const Product = () => {
   const { productId } = useParams();
@@ -141,7 +143,7 @@ const Product = () => {
         console.error(err);
       });
   };
-  console.log(reviewData)
+  console.log(reviewData);
   useEffect(() => {
     fetchReviewData();
   }, []);
@@ -188,8 +190,8 @@ const Product = () => {
     formData.append("userFullName", user.name);
     formData.append("rating", rating);
     formData.append("comment", comment);
-    formData.append("profilepicture",user.profilePicture);
-    
+    formData.append("profilepicture", user.profilePicture);
+
     // Append image if exists
     if (reviewImage) {
       formData.append("reviewImage", reviewImage);
@@ -198,8 +200,8 @@ const Product = () => {
     axios
       .post("http://localhost:5000/api/review", formData, {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((res) => {
         toast.success("Review submitted successfully!", {
@@ -214,7 +216,8 @@ const Product = () => {
         fetchReviewData(); // Re-fetch reviews after submission
       })
       .catch((err) => {
-        toast.error("Failed to submit review", {
+        const errorMessage = err.response?.data?.error || "Failed to submit review";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
         });
@@ -230,8 +233,10 @@ const Product = () => {
   };
 
   const handleUpdateReview = () => {
-    if (!editingReview||!user){
-      toast.error("You must be logged in to update a review", { autoClose: 3000 });
+    if (!editingReview || !user) {
+      toast.error("You must be logged in to update a review", {
+        autoClose: 3000,
+      });
       return;
     }
     // Create form data for multipart/form-data submission
@@ -239,7 +244,7 @@ const Product = () => {
     formData.append("userId", user._id);
     formData.append("rating", editedRating);
     formData.append("comment", editedComment);
-    
+
     // Append image if a new one was selected
     if (editedImage) {
       formData.append("reviewImage", editedImage);
@@ -247,17 +252,17 @@ const Product = () => {
     console.log("Sending FormData:");
     for (let pair of formData.entries()) {
       console.log(`${pair[0]}:`, pair[1]);
-}
+    }
 
     axios
       .put(
         `http://localhost:5000/api/review/${editingReview._id}`,
         formData,
-        
+
         {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }
       )
       .then((res) => {
@@ -292,10 +297,55 @@ const Product = () => {
           autoClose: 3000,
         });
       });
-      
   };
 
- 
+  const handleAddToWishlists = () => {
+    if (!isAuthenticated || !user) {
+      toast.error("Please log in to the system", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      navigate("/customerlogin");
+      return;
+    }
+
+    const WishlistItem = {
+      userId: user._id,
+      items: [
+        {
+          shoeId: productId,
+          brand: productData.brand,
+          model: productData.model,
+          price: productData.price,
+          imageUrl: image,
+        },
+      ],
+    };
+    console.log("-------------------------------->", WishlistItem);
+
+    axios
+      .post(`http://localhost:5000/api/wishlist`, WishlistItem)
+      .then((res) => {
+        console.log(res.data);
+
+        if (res.status >= 200 && res.status < 300) {
+          toast.success(res.data.message, {
+            position: "top-right",
+            autoClose: 3000,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        const errorMessage =
+          err.response?.data?.message || "Failed to add product to wishlist";
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      });
+    // console.log(WishlistItem);
+  };
 
   return productData ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 m-8 font-display">
@@ -353,6 +403,11 @@ const Product = () => {
           >
             ADD TO CART
           </button>
+          <button className="" onClick={handleAddToWishlists}>
+          <div className="bg-amber-400 w-10 h-10 ml-16 relative top-2 flex items-center justify-center rounded-full">
+              <img src={Heart} alt="Add to Wishlist" className="w-8 h-8" />
+          </div>
+          </button>
           <hr className="mt-8 sm:w-4/5" />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original product</p>
@@ -386,28 +441,38 @@ const Product = () => {
                     <div>
                       <p className="font-bold">{review.userFullName}</p>
                       <p>
-                        <GoStar className="text-yellow-500" /> {review.rating}/5
+                        <div className="flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <FaStar
+                              key={star}
+                              className={`text-sm ${
+                                star <= review.rating
+                                  ? "text-yellow-500"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </p>
                       <p className="text-xs text-gray-400">{localDate}</p>
                     </div>
                   </div>
 
                   <p className="mt-2">{review.comment}</p>
-                 
+
                   {/* Display review image if available */}
                   {review.shoePicture && (
                     <div className="mt-3">
-                      <img 
-                        src={review.shoePicture} 
-                        alt="Review" 
-                        className="w-24 h-auto rounded-lg shadow" 
+                      <img
+                        src={review.shoePicture}
+                        alt="Review"
+                        className="w-24 h-auto rounded-lg shadow"
                       />
-                      
                     </div>
                   )}
 
                   {/* Show Edit Button Only for Review Author */}
-                  {isAuthenticated && user &&review.userId === user._id && (
+                  {isAuthenticated && user && review.userId === user._id && (
                     <div className="flex gap-2 mt-2">
                       <button
                         className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
@@ -435,16 +500,20 @@ const Product = () => {
           <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500 rounded-lg shadow-md">
             <h3 className="text-xl font-medium">Write a Review</h3>
             <div>
-              <label className="block mb-2 font-medium">Rating (1-5)</label>
-              <input
-                type="number"
-                value={rating}
-                onChange={(e) => setRating(Number(e.target.value))}
-                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                min="1"
-                max="5"
-              />
+              <label className="block mb-2 font-medium">Rating</label>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar
+                    key={star}
+                    className={`cursor-pointer text-2xl ${
+                      star <= rating ? "text-yellow-500" : "text-gray-300"
+                    }`}
+                    onClick={() => setRating(star)}
+                  />
+                ))}
+              </div>
             </div>
+
             <div>
               <label className="block mb-2 font-medium">Comment</label>
               <textarea
@@ -456,7 +525,9 @@ const Product = () => {
             </div>
             {/* New Image Upload Field */}
             <div>
-              <label className="block mb-2 font-medium">Upload Image (Optional)</label>
+              <label className="block mb-2 font-medium">
+                Upload Image (Optional)
+              </label>
               <input
                 type="file"
                 accept="image/*"
@@ -465,12 +536,12 @@ const Product = () => {
               />
               {reviewImagePreview && (
                 <div className="mt-2">
-                  <img 
-                    src={reviewImagePreview} 
-                    alt="Preview" 
-                    className="max-w-xs h-32 object-contain rounded" 
+                  <img
+                    src={reviewImagePreview}
+                    alt="Preview"
+                    className="max-w-xs h-32 object-contain rounded"
                   />
-                  <button 
+                  <button
                     onClick={() => {
                       setReviewImage(null);
                       setReviewImagePreview("");
@@ -491,20 +562,25 @@ const Product = () => {
           </div>
 
           {isModalOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50">
               <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-w-full mx-4">
                 <h2 className="text-xl font-semibold mb-4">Edit Review</h2>
 
                 {/* Rating Input */}
                 <label className="block mb-2 font-medium">Rating (1-5)</label>
-                <input
-                  type="number"
-                  value={editedRating}
-                  onChange={(e) => setEditedRating(Number(e.target.value))}
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="1"
-                  max="5"
-                />
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      className={`cursor-pointer text-2xl ${
+                        star <= editedRating
+                          ? "text-yellow-500"
+                          : "text-gray-300"
+                      }`}
+                      onClick={() => setEditedRating(star)}
+                    />
+                  ))}
+                </div>
 
                 {/* Comment Input */}
                 <label className="block mt-4 mb-2 font-medium">Comment</label>
@@ -517,7 +593,9 @@ const Product = () => {
 
                 {/* Edit Image Upload Field */}
                 <div className="mt-4">
-                  <label className="block mb-2 font-medium">Change Image (Optional)</label>
+                  <label className="block mb-2 font-medium">
+                    Change Image (Optional)
+                  </label>
                   <input
                     type="file"
                     accept="image/*"
@@ -526,16 +604,18 @@ const Product = () => {
                   />
                   {(editedImagePreview || editingReview?.imageUrl) && (
                     <div className="mt-2">
-                      <img 
-                        src={editedImagePreview || editingReview?.imageUrl} 
-                        alt="Preview" 
-                        className="max-w-xs h-32 object-contain rounded" 
+                      <img
+                        src={editedImagePreview || editingReview?.imageUrl}
+                        alt="Preview"
+                        className="max-w-xs h-32 object-contain rounded"
                       />
                       {editedImagePreview && (
-                        <button 
+                        <button
                           onClick={() => {
                             setEditedImage(null);
-                            setEditedImagePreview(editingReview?.imageUrl || "");
+                            setEditedImagePreview(
+                              editingReview?.imageUrl || ""
+                            );
                           }}
                           className="mt-1 text-red-500 text-xs"
                         >

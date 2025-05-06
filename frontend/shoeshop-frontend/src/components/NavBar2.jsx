@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FiSearch,
@@ -11,9 +11,12 @@ import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const NavBar2 = () => {
   const [visible, setVisible] = useState(false);
+  const{setShowSearch} = useContext(ShopContext)
+  const [cartCount, setCartCount] = useState(0);
 
   const { getCartCount } = useContext(ShopContext);
 
@@ -30,11 +33,36 @@ const NavBar2 = () => {
     navigate("/orders");
   };
 
+  const navigateWishlist =() => {
+      navigate("/wishlist");
+  }
+
   const handleIconClick = () => {
     if (!isAuthenticated || !user) {
       navigate("/customerlogin");
     }
   };
+
+   
+  
+
+  //  const fetchCartCount = async () => {
+  //   try {
+  //     const res = await axios.get(`http://localhost:5000/api/cart/count/${user._id}`);
+  //     setCartCount(res.data.itemCount); // Store the count in state
+  //   } catch (err) {
+  //     console.error("Failed to fetch cart count:", err);
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   if (user && user._id) {
+  //     fetchCartCount();
+  //   }
+  // }, []);
+ 
+  
+  
 
   return (
     <div className="flex items-center justify-between py-5 font-medium ml-10 mr-10 text-lg font-display">
@@ -75,7 +103,7 @@ const NavBar2 = () => {
             Login
           </Link>
         )}
-        <FiSearch className="w-5 cursor-pointer" />
+        <FiSearch onClick={()=>setShowSearch(true)}className="w-5 cursor-pointer" />
         <div className="group relative" onClick={handleIconClick}>
           <FiUser className="w-5 cursor-pointer" />
           {isAuthenticated && user && (
@@ -90,7 +118,7 @@ const NavBar2 = () => {
                 >
                   Orders
                 </p>
-                <p className="cursor-pointer hover:text-black">WishList</p>
+                <p className="cursor-pointer hover:text-black" onClick={navigateWishlist}>WishList</p>
                 <p
                   onClick={handleLogout}
                   className="cursor-pointer hover:text-black"
@@ -113,8 +141,8 @@ const NavBar2 = () => {
           }}
         >
           <FiShoppingCart className="w-5 min-w-5" />
-          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-            {getCartCount()}
+          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 ">
+           
           </p>
         </div>
 

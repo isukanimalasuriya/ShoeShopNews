@@ -139,7 +139,7 @@ const Cart = () => {
                                     } />
                                     <HiOutlinePlusCircle className='w-5 mr-4 sm:w-5 cursor-pointer' onClick={() => updateQuantity(index, item.quantity + 1)}/>
                                 </div>
-                                <MdDelete className='w-5 mr-4 sm:w-5 cursor-pointer' onClick={() => handleDelete(index, item)}/>
+                                <MdDelete size={24}className='w-5 mr-4 sm:w-5 cursor-pointer' onClick={() => handleDelete(index, item)}/>
                             </div>
                         );
                     })

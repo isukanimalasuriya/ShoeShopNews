@@ -116,7 +116,7 @@ const PlaceOrder = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     if(message == "Order placed successfully!"){
-      // navigate("/");
+      navigate("/");
     }
     if(message == "Payment Successful!"){
       navigate("/");
@@ -298,6 +298,9 @@ const PlaceOrder = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
+                pattern="[0-9]{10}"
+                title="Phone number must be exactly 10 digits"
+                maxLength="10"
                 className="w-full h-10 px-3 border-2 border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 required
               />
@@ -345,7 +348,7 @@ const PlaceOrder = () => {
               onClick={() => handleClick("green")}
               className="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded transition"
             >
-              Place Order (Direct)
+              Place Order (Cash on delivery)
             </button>
             <button
               onClick={() => handleClick("yellow")}

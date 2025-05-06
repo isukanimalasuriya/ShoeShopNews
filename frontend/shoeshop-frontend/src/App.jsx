@@ -30,6 +30,8 @@ import EmployeeLogin from "./pages/EmployeeLogin";
 import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
+import Wishlist from "../src/pages/Wishlist";
+import SearchBar from "./components/SearchBar";
 
 
 
@@ -61,6 +63,7 @@ function App() {
       <Toaster position="top-right"/>
       <ToastContainer />
       {!noHeaderRoutes.includes(location.pathname) && <NavBar2 />}
+      <SearchBar/>
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/customerlogin" element={<CustomerLoginPage />}/>
@@ -87,6 +90,8 @@ function App() {
         <Route path="/orders"  element={<Orders/>}/>
         <Route path="/allorders"  element={<AllOrders />}/>
         <Route path="/reviews" element={<ReviewSection/>}/>
+        <Route path="/wishlist" element={<Wishlist/>}/>
+
 
       </Routes>
       <EmployeeRoutes />

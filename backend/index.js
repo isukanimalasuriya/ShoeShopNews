@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import mongoose, { connect } from "mongoose";
 // import productRouter from "../backend/routes/productRouter.js"
 import cartRoute from "./routes/cartRoute.js";
-// import wishlistRoute from "./routes/wishlistRoute.js";
+import wishlistRoute from "./routes/wishlistRoute.js";
 import reviewRoute from "./routes/reviewRoute.js";
 // import customizeShoeRoute from "./routes/customizeshoueRoute.js";
 // import userRouter from "./routes/userRouter.js"
@@ -42,7 +42,7 @@ app.use(function(req, res, next) {
 // app.use("/api/users", userRouter)
  app.use("/api/product", productRouter);
  app.use("/api/cart", cartRoute);
-// app.use("/api/wishlist", wishlistRoute);
+app.use("/api/wishlist", wishlistRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/order", orderRoute);
 // app.use("/api/customize", customizeShoeRoute);
