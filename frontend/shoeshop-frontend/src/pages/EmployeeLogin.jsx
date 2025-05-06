@@ -34,6 +34,9 @@ const EmployeeLogin = () => {
             else if(user.role === "FINANCE_MANAGER"){
               navigate("/employeeDashboard")
             }
+            else if(user.role === "MARKETING_MANAGER"){
+              navigate("/employeeDashboard")
+            }
             else if(user.role === "INVENTORY_MANAGER"){
               navigate("/dashboard")
             }

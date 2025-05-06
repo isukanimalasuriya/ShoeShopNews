@@ -6,11 +6,33 @@ import {
   LineChart, Line, PieChart, Pie, Cell, Legend, XAxis, YAxis, Tooltip,
   CartesianGrid, ResponsiveContainer
 } from 'recharts';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [orders, setOrders] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      const employeeData = localStorage.getItem('employee');
+    
+      if (!token || !employeeData) {
+        navigate('/employeelogin');
+        return;
+      }
+    
+      const user = JSON.parse(employeeData);
+    
+      if (user.role === 'admin' || user.role === 'FINANCE_MANAGER') {
+        setIsAuthorized(true);
+      } else {
+        // Optional: redirect or show unauthorized message
+        navigate('/unauthorized'); // Or you can navigate elsewhere
+      }
+      }, [navigate]);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/order/all')
