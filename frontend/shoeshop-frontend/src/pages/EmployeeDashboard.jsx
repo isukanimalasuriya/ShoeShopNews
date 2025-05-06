@@ -64,7 +64,7 @@ const EmployeeDashboard = () => {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card title="Today's Status" value="Present" icon={<Clock className="w-8 h-8" />} />
-            <Card title="Leave Balance" value={`${employee.leaveBalance} Days`} icon={<Calendar className="w-8 h-8" />} />
+            <Card title="Leave Balance" value={`${employee.leaves} Days`} icon={<Calendar className="w-8 h-8" />} />
             <Card title="Current Salary" value={`LKR ${employee.salary}`} icon={<DollarSign className="w-8 h-8" />} />
             <Card title="Performance" value={employee.performance} icon={<Award className="w-8 h-8" />} />
           </div>
