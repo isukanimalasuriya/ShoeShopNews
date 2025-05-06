@@ -68,17 +68,17 @@ const EmployeeDashboard = () => {
             <Card title="Today's Status" value="Present" icon={<Clock className="w-8 h-8" />} />
             <Card
               title="Leave Balance"
-              value={`${employee.leaves} Days`}
+              value={` 7Days`}
               icon={<Calendar className="w-8 h-8" />}
             />
             <Card
               title="Current Salary"
-              value={`LKR ${employee.salary}`}
+              value={`LKR 50,000`}
               icon={<DollarSign className="w-8 h-8" />}
             />
             <Card
               title="Performance"
-              value={employee.performance}
+              value={'Good'}
               icon={<Award className="w-8 h-8" />}
             />
           </div>

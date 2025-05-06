@@ -242,8 +242,7 @@ const ApplyLeave = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               >
                 <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
+               
               </select>
             </div>
           </form>
