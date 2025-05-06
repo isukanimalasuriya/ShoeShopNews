@@ -211,21 +211,26 @@ export const leaveService = {
   }
 };
 
-export const attendanceService = {
+export const attendanceService = 
+
+
+{
   getAllAttendance: async () => {
     try {
-      const response = await axios.get(`${API_URL}/attendance`);
-      return response.data;
+      const response = await axios.get(`${API_URL}/api/attendance`);
+      // Extract the records from the response
+      return response.data.records || response.data;
     } catch (error) {
       console.error("Error fetching attendance:", error?.response?.data || error.message);
       throw error;
     }
   },
-
+  
+  // Similar fixes for other attendance service methods:
   getAttendanceById: async (id) => {
     try {
-      const response = await axios.get(`${API_URL}/attendance/${id}`);
-      return response.data;
+      const response = await axios.get(`${API_URL}/api/attendance/${id}`);
+      return response.data.records || response.data;
     } catch (error) {
       console.error(`Error fetching attendance record ${id}:`, error?.response?.data || error.message);
       throw error;
@@ -234,7 +239,7 @@ export const attendanceService = {
 
   addAttendance: async (attendanceData) => {
     try {
-      const response = await axios.post(`${API_URL}/attendance`, attendanceData);
+      const response = await axios.post(`${API_URL}/api/attendance`, attendanceData);
       return response.data;
     } catch (error) {
       console.error("Error adding attendance record:", error?.response?.data || error.message);
@@ -244,7 +249,7 @@ export const attendanceService = {
 
   updateAttendance: async (id, attendanceData) => {
     try {
-      const response = await axios.put(`${API_URL}/attendance/${id}`, attendanceData);
+      const response = await axios.put(`${API_URL}/api/attendance/${id}`, attendanceData);
       return response.data;
     } catch (error) {
       console.error(`Error updating attendance record ${id}:`, error?.response?.data || error.message);
@@ -254,7 +259,7 @@ export const attendanceService = {
 
   deleteAttendance: async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/attendance/${id}`);
+      const response = await axios.delete(`${API_URL}/api/attendance/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error deleting attendance record ${id}:`, error?.response?.data || error.message);
@@ -263,3 +268,57 @@ export const attendanceService = {
   }
 };
 
+export const salaryService = {
+  getAllSalaries: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/salary`);
+      // Format the data to match what the component expects
+      return { 
+        salaries: response.data.records || response.data 
+      };
+    } catch (error) {
+      console.error("Error fetching salary data:", error?.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  getSalaryById: async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/salary/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching salary ${id}:`, error?.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  addSalary: async (salaryData) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/salary`, salaryData);
+      return response.data;
+    } catch (error) {
+      console.error("Error adding salary:", error?.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  updateSalary: async (id, salaryData) => {
+    try {
+      const response = await axios.put(`${API_URL}/api/salary/${id}`, salaryData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating salary ${id}:`, error?.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  deleteSalary: async (id) => {
+    try {
+      const response = await axios.delete(`${API_URL}/api/salary/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting salary ${id}:`, error?.response?.data || error.message);
+      throw error;
+    }
+  }
+}

@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
 import { DollarSign, TrendingUp } from 'lucide-react';
 import EmSidebar from './EmSidebar';
+import { useNavigate } from "react-router-dom";
 
 const SalaryPromotion = () => {
   const [activeTab, setActiveTab] = useState('salary');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/employeelogin'); // Redirect if no token found
+      }
+  }, [navigate]);
 
   return (
     <div className="flex flex-1 bg-gray-100">

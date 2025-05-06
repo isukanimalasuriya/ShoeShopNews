@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Clock, Calendar, DollarSign, Award, LogOut } from "lucide-react";
+import { Clock, Calendar, DollarSign, Award, LogOut, Gift } from "lucide-react";
 import EmSidebar from "./EmSidebar";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,10 @@ const EmployeeDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/employeelogin'); // Redirect if no token found
+        }
     const data = JSON.parse(localStorage.getItem("employee"));
     if (data) {
       setEmployee(data);
@@ -17,29 +21,44 @@ const EmployeeDashboard = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("employee");
-    navigate("/EmployeeOT");
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/employeelogin');
+  };
+
+  const handleTrackBonus = () => {
+    navigate("/EmployeeBonusTracking");
   };
 
   if (!employee) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-1 bg-gray-100">
+    <div className="flex flex-1 bg-gray-100 min-h-screen">
       <EmSidebar />
       <main className="flex-1 p-6 relative">
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="absolute top-6 right-6 flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow"
+          className="absolute top-6 right-6 flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 mt-9 mr-9 rounded-lg shadow"
         >
           <LogOut className="mr-2" size={18} /> Logout
         </button>
 
         <div className="space-y-6">
           {/* Header */}
-          <div className="bg-black text-white p-6 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold">Welcome, {employee.name}</h1>
-            <p className="text-gray-300 mt-2">Role: {employee.role}</p>
+          <div className="bg-black text-white p-6 rounded-lg shadow-lg flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Welcome, {employee.name}</h1>
+              <p className="text-gray-300 mt-2">Role: {employee.role}</p>
+            </div>
+
+            {/* Track Bonus Button */}
+            <button
+              onClick={handleTrackBonus}
+              className="flex items-center bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg shadow"
+            >
+              <Gift className="mr-2" size={18} /> Track Bonus
+            </button>
           </div>
 
           {/* Stats Cards */}

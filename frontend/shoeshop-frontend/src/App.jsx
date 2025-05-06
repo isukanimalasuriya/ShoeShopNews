@@ -31,7 +31,7 @@ import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
 import Employees from "./pages/Employees";
-import Leave from "./pages/Leave"; 
+import Leave from "./pages/Leave";
 import HRDashboard from "./pages/HRDashboard";
 import Department from "./pages/Department";
 
@@ -45,7 +45,12 @@ import TrackingBonus from "./pages/TrackingBonus";
 import Salary from "./pages/Salary";
 import EMAttendance from "./pages/EMAttendance";
 
-import EmployeeOT from "./pages/EmployeeOT.jsx";
+import EmployeeOT from "./pages/EmployeeOT";
+import EmployeeBonusTracking from "./pages/EmployeeBonusTracking";
+import SalesPerformance from "./pages/SalesPerformance";
+import AttendancePage from "./pages/Attendance";
+import AddNewAttendance from "./pages/AddNewAttendance";
+import AddSalary from "./pages/AddSalary";
 
 
 
@@ -127,7 +132,7 @@ const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path
         <Route path="/hrdashboard" element={<HRDashboard />} />
         <Route path="/department" element={<Department />} />
       
-        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/attendance" element={<AttendancePage />} />
         <Route path="/employeeDashboard" element={<EmployeeDashboard />} />
         <Route path="/applyleave" element={<Applyleave />} />
         <Route path="/salary&promotion" element={<SalaryPromotion />} />
@@ -139,8 +144,11 @@ const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path
     
        <Route path="/EmployeeOT" element={< EmployeeOT/>} />
         
-   
-     
+       <Route path="/EmployeeBonusTracking" element={< EmployeeBonusTracking/>} />
+       <Route path="/SalesPerformance" element={<SalesPerformance/>} />
+       <Route path="/AddNewAttendance" element={<AddNewAttendance/>} />
+       <Route path="/AddSalary" element={<AddSalary/>} />
+       
 
       </Routes>
 

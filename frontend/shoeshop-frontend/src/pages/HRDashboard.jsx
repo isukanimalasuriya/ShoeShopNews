@@ -11,15 +11,28 @@ const HRDashboard = () => {
     approved: 0,
     rejected: 0
   });
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/employeelogin'); // Redirect if no token found
-        }
+  const employeeData = localStorage.getItem('employee');
+
+  if (!token || !employeeData) {
+    navigate('/employeelogin');
+    return;
+  }
+
+  const user = JSON.parse(employeeData);
+
+  if (user.role === 'admin' || user.role === 'HR_MANAGER') {
+    setIsAuthorized(true);
     fetchEmployeeCount();
     fetchLeaveStats();
+  } else {
+    // Optional: redirect or show unauthorized message
+    navigate('/unauthorized'); // Or you can navigate elsewhere
+  }
   }, []);
 
   const fetchEmployeeCount = async () => {

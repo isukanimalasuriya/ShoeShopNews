@@ -10,9 +10,12 @@ function TrackingBonus() {
   const navigate = useNavigate();
 
   const [employees] = useState([
-    { id: 1, name: 'Thary', department: 'Deleiver_person', overtimeHours: 12, bonusAmount: 500 },
+    { id: 1, name: 'Tharu', department: 'Deleiver_person', overtimeHours: 12, bonusAmount: 500 },
     { id: 2, name: 'Isuka', department: 'admin', overtimeHours: 8, bonusAmount: 300 },
     { id: 3, name: 'Himansha', department: 'Deliver_manager', overtimeHours: 15, bonusAmount: 600 },
+    { id: 4, name: 'Devshan', department: 'HR Assistent', overtimeHours: 15, bonusAmount: 600 },
+    { id: 5, name: 'Seneth', department: 'Inventory manager', overtimeHours: 14, bonusAmount: 500 },
+    { id: 6, name: 'Nimmi', department: 'Deliver_manager', overtimeHours: 11, bonusAmount: 300 },
   ]);
 
     useEffect(() => {

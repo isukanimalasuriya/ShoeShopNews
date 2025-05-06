@@ -107,17 +107,24 @@ export const addEmployee = async (req, res, next) => {
     let employee;
 
     try {
-        employee = new Employee({ name, email, password, role, age });
+        const hashedPassword = await brcypt.hash(password, 10);
+        employee = new Employee({ name, email, password: hashedPassword, role, age });
         await employee.save();
+
+        const employeeResponse = employee.toObject();
+        delete employeeResponse.password;
+        
+        return res.status(201).json({ employee: employeeResponse });
     } catch (err) {
         console.log(err);
-    }
-
-    if (!employee) {
         return res.status(400).json({ message: "Unable to add employee" });
     }
 
-    return res.status(201).json({ employee });
+    // if (!employee) {
+    //     return res.status(400).json({ message: "Unable to add employee" });
+    // }
+
+    // return res.status(201).json({ employee });
 };
 
 // Get an employee by ID
