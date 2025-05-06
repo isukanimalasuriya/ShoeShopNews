@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CategoryPage = () => {
@@ -26,11 +26,24 @@ const CategoryPage = () => {
     },
   ];
   const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState(false);
   useEffect(() => {
-          const token = localStorage.getItem('token');
-          if (!token) {
-            navigate('/employeelogin'); // Redirect if no token found
-          }
+    const token = localStorage.getItem('token');
+    const employeeData = localStorage.getItem('employee');
+  
+    if (!token || !employeeData) {
+      navigate('/employeelogin');
+      return;
+    }
+  
+    const user = JSON.parse(employeeData);
+  
+    if (user.role === 'admin' || user.role === 'INVENTORY_MANAGER') {
+      setIsAuthorized(true);
+    } else {
+      // Optional: redirect or show unauthorized message
+      navigate('/unauthorized'); // Or you can navigate elsewhere
+    }
         }, [navigate]);
 
   return (
