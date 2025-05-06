@@ -40,6 +40,9 @@ export default function EmployeeSalesPerformance() {
     { id: 4, client: "InnovateCo", amount: 9600, date: "2025-04-27", status: "pending" }
   ];
 
+  const formatLKR = (value) =>
+    value.toLocaleString('en-LK', { style: 'currency', currency: 'LKR' });
+
   const currentPeriodData = selectedPeriod === 'monthly' ? monthlySalesData : weeklySalesData;
   const currentData = currentPeriodData[currentPeriodData.length - 1];
   const previousData = currentPeriodData[currentPeriodData.length - 2];
@@ -81,7 +84,7 @@ export default function EmployeeSalesPerformance() {
             <div className="flex justify-between">
               <div>
                 <p className="text-sm text-gray-500 mb-1">Current {periodLabel} Sales</p>
-                <p className="text-2xl font-bold">${currentData.sales.toLocaleString()}</p>
+                <p className="text-2xl font-bold">{formatLKR(currentData.sales)}</p>
                 <div className={`flex items-center mt-1 text-sm ${salesChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {salesChange >= 0 ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                   <span>{Math.abs(salesChange)}% from previous {periodLabel}</span>
@@ -100,7 +103,7 @@ export default function EmployeeSalesPerformance() {
                 <p className="text-sm text-gray-500 mb-1">Target Achievement</p>
                 <p className="text-2xl font-bold">{targetAchievement}%</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  ${totalSales.toLocaleString()} of ${totalTarget.toLocaleString()}
+                  {formatLKR(totalSales)} of {formatLKR(totalTarget)}
                 </p>
               </div>
               <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -142,8 +145,8 @@ export default function EmployeeSalesPerformance() {
                     </div>
                   </div>
                   <div className="flex justify-between text-sm text-gray-500 mb-2">
-                    <span>Sales: ${data.sales.toLocaleString()}</span>
-                    <span>Target: ${data.target.toLocaleString()}</span>
+                    <span>Sales: {formatLKR(data.sales)}</span>
+                    <span>Target: {formatLKR(data.target)}</span>
                   </div>
                   <div className="relative pt-1">
                     <div className="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
@@ -185,7 +188,7 @@ export default function EmployeeSalesPerformance() {
                     <div className="text-sm text-gray-500">{tx.date}</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-medium">${tx.amount.toLocaleString()}</div>
+                    <div className="font-medium">{formatLKR(tx.amount)}</div>
                     <div>
                       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
                         tx.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
@@ -264,10 +267,7 @@ export default function EmployeeSalesPerformance() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-sm text-gray-500 flex justify-between items-center">
-          <p>Contact: {employee.email} • {employee.phone}</p>
-          <p>Last updated: May 6, 2025</p>
-        </div>
+        
       </div>
     </div>
   );

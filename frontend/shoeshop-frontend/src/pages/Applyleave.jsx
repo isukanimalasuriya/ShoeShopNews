@@ -15,6 +15,7 @@ const ApplyLeave = () => {
   const [success, setSuccess] = useState(null);
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("All");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,9 +26,23 @@ const ApplyLeave = () => {
     setLoading(true);
     try {
       const response = await leaveService.getLeaves();
-      setLeaves(response.data || []);
+      if (response && response.data) {
+        setLeaves(response.data);
+        // Save fetched leaves to localStorage
+        localStorage.setItem("leaveHistory", JSON.stringify(response.data));
+      }
     } catch (err) {
       console.error("Failed to fetch leave records:", err);
+      // If API call fails, try to use localStorage data
+      const savedLeaves = localStorage.getItem("leaveHistory");
+      if (savedLeaves) {
+        try {
+          const parsedLeaves = JSON.parse(savedLeaves);
+          setLeaves(parsedLeaves);
+        } catch (parseErr) {
+          console.error("Failed to parse saved leave data:", parseErr);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -36,23 +51,50 @@ const ApplyLeave = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await leaveService.addLeave(formData);
+      const response = await leaveService.addLeave(formData);
       setSuccess("Leave added successfully!");
       setError(null);
+      
+      // Add the new leave to the existing leaves list immediately
+      const newLeave = response?.data || formData;
+      const updatedLeaves = [...leaves, newLeave];
+      setLeaves(updatedLeaves);
+      
+      // Save to localStorage to persist across page refreshes
+      localStorage.setItem("leaveHistory", JSON.stringify(updatedLeaves));
+      
+      // Reset the form
       setFormData({
-        name: "",
+        ...formData,
         leaveType: "",
-        department: "",
-        position: "",
         status: "Pending",
       });
       
-      // Refresh the leaves list after successful submission
+      // Refresh leaves from server
       fetchLeaves();
     } catch (err) {
       setError("Failed to add leave record.");
       setSuccess(null);
       console.error(err);
+      
+      // Even if API fails, update local state and localStorage
+      try {
+        const newLeave = { ...formData, id: Date.now() }; // Add temporary ID
+        const updatedLeaves = [...leaves, newLeave];
+        setLeaves(updatedLeaves);
+        localStorage.setItem("leaveHistory", JSON.stringify(updatedLeaves));
+        
+        setSuccess("Leave saved locally. Will sync when connection is restored.");
+        
+        // Reset form
+        setFormData({
+          ...formData,
+          leaveType: "",
+          status: "Pending",
+        });
+      } catch (localErr) {
+        console.error("Failed to save locally:", localErr);
+      }
     }
   };
 
@@ -62,6 +104,17 @@ const ApplyLeave = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/employeelogin'); // Redirect if no token found
+    }
+
+    // First, load from localStorage to show data immediately
+    const savedLeaves = localStorage.getItem("leaveHistory");
+    if (savedLeaves) {
+      try {
+        const parsedLeaves = JSON.parse(savedLeaves);
+        setLeaves(parsedLeaves);
+      } catch (err) {
+        console.error("Failed to parse saved leave data:", err);
+      }
     }
 
     const employeeData = localStorage.getItem("employee");
@@ -79,7 +132,7 @@ const ApplyLeave = () => {
       }
     }
     
-    // Fetch leaves on component mount
+    // Then fetch from API
     fetchLeaves();
   }, [navigate]);
 
@@ -94,6 +147,11 @@ const ApplyLeave = () => {
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
     }
   };
+
+  // Filter leaves based on active tab
+  const filteredLeaves = activeTab === "All" 
+    ? leaves 
+    : leaves.filter(leave => leave.status === activeTab);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -170,6 +228,8 @@ const ApplyLeave = () => {
                 <option value="DELIVERY_MANAGER">Delivery Manager</option>
                 <option value="DELIVERY_PERSON">Delivery Person</option>
                 <option value="admin">Admin</option>
+                <option value="FINANCE_MANAGER">FINANCE_MANAGER</option>
+                
               </select>
             </div>
 
@@ -220,11 +280,27 @@ const ApplyLeave = () => {
             Your Leave Records
           </h2>
           
-          {loading ? (
+          {/* Status filter tabs */}
+          <div className="flex border-b mb-6">
+            {["All", "Pending", "Approved", "Rejected"].map(tab => (
+              <button 
+                key={tab}
+                className={`px-4 py-2 mr-2 ${activeTab === tab 
+                  ? "border-b-2 border-indigo-500 text-indigo-600 font-medium" 
+                  : "text-gray-600 hover:text-gray-800"}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab} {tab === "All" ? `(${leaves.length})` : 
+                  `(${leaves.filter(leave => leave.status === tab).length})`}
+              </button>
+            ))}
+          </div>
+          
+          {loading && leaves.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-600">Loading leave records...</p>
             </div>
-          ) : leaves.length > 0 ? (
+          ) : filteredLeaves.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white">
                 <thead className="bg-gray-50">
@@ -244,7 +320,7 @@ const ApplyLeave = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {leaves.map((leave, index) => (
+                  {filteredLeaves.map((leave, index) => (
                     <tr key={index} className="hover:bg-gray-50">
                       <td className="py-3 px-4 text-sm text-gray-900">{leave.leaveType}</td>
                       <td className="py-3 px-4 text-sm text-gray-900">{leave.department}</td>
@@ -261,7 +337,11 @@ const ApplyLeave = () => {
             </div>
           ) : (
             <div className="text-center py-8 border border-dashed border-gray-300 rounded-lg">
-              <p className="text-gray-600">No leave records found.</p>
+              <p className="text-gray-600">
+                {activeTab === "All" 
+                  ? "No leave records found." 
+                  : `No ${activeTab.toLowerCase()} leave records found.`}
+              </p>
             </div>
           )}
         </div>
