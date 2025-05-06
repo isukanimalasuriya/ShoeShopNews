@@ -39,36 +39,10 @@ const ApplyLeave = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const fetchLeaves = async () => {
-    setLoading(true);
-    try {
-      const response = await leaveService.getLeaves();
-      if (response && response.data) {
-        setLeaves(response.data);
-        // Save fetched leaves to localStorage
-        localStorage.setItem("leaveHistory", JSON.stringify(response.data));
-      }
-    } catch (err) {
-      console.error("Failed to fetch leave records:", err);
-      // If API call fails, try to use localStorage data
-      const savedLeaves = localStorage.getItem("leaveHistory");
-      if (savedLeaves) {
-        try {
-          const parsedLeaves = JSON.parse(savedLeaves);
-          setLeaves(parsedLeaves);
-        } catch (parseErr) {
-          console.error("Failed to parse saved leave data:", parseErr);
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await leaveService.addLeave(formData);
+      await leaveService.addLeave(formData);
       setSuccess("Leave added successfully!");
       setError(null);
       // Reset form
@@ -83,25 +57,6 @@ const ApplyLeave = () => {
       setError("Failed to add leave record.");
       setSuccess(null);
       console.error(err);
-      
-      // Even if API fails, update local state and localStorage
-      try {
-        const newLeave = { ...formData, id: Date.now() }; // Add temporary ID
-        const updatedLeaves = [...leaves, newLeave];
-        setLeaves(updatedLeaves);
-        localStorage.setItem("leaveHistory", JSON.stringify(updatedLeaves));
-        
-        setSuccess("Leave saved locally. Will sync when connection is restored.");
-        
-        // Reset form
-        setFormData({
-          ...formData,
-          leaveType: "",
-          status: "Pending",
-        });
-      } catch (localErr) {
-        console.error("Failed to save locally:", localErr);
-      }
     }
   };
 
@@ -225,7 +180,8 @@ const ApplyLeave = () => {
                 disabled
               >
                 <option value="Pending">Pending</option>
-               
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
               </select>
             </div>
 
@@ -314,78 +270,6 @@ const ApplyLeave = () => {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Leave Records Display Section */}
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">
-            Your Leave Records
-          </h2>
-          
-          {/* Status filter tabs */}
-          <div className="flex border-b mb-6">
-            {["All", "Pending", "Approved", "Rejected"].map(tab => (
-              <button 
-                key={tab}
-                className={`px-4 py-2 mr-2 ${activeTab === tab 
-                  ? "border-b-2 border-indigo-500 text-indigo-600 font-medium" 
-                  : "text-gray-600 hover:text-gray-800"}`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab} {tab === "All" ? `(${leaves.length})` : 
-                  `(${leaves.filter(leave => leave.status === tab).length})`}
-              </button>
-            ))}
-          </div>
-          
-          {loading && leaves.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-gray-600">Loading leave records...</p>
-            </div>
-          ) : filteredLeaves.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      Leave Type
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      Department
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      Position
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {filteredLeaves.map((leave, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="py-3 px-4 text-sm text-gray-900">{leave.leaveType}</td>
-                      <td className="py-3 px-4 text-sm text-gray-900">{leave.department}</td>
-                      <td className="py-3 px-4 text-sm text-gray-900">{leave.position}</td>
-                      <td className="py-3 px-4 text-sm">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusBadgeColor(leave.status)}`}>
-                          {leave.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="text-center py-8 border border-dashed border-gray-300 rounded-lg">
-              <p className="text-gray-600">
-                {activeTab === "All" 
-                  ? "No leave records found." 
-                  : `No ${activeTab.toLowerCase()} leave records found.`}
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>
