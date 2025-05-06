@@ -8,10 +8,10 @@ const EmployeeDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/employeelogin'); // Redirect if no token found
-        }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/employeelogin");
+    }
     const data = JSON.parse(localStorage.getItem("employee"));
     if (data) {
       setEmployee(data);
@@ -21,9 +21,9 @@ const EmployeeDashboard = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/employeelogin');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/employeelogin");
   };
 
   const handleTrackBonus = () => {
@@ -51,11 +51,13 @@ const EmployeeDashboard = () => {
               <h1 className="text-3xl font-bold">Welcome, {employee.name}</h1>
               <p className="text-gray-300 mt-2">Role: {employee.role}</p>
             </div>
+          </div>
 
-            {/* Track Bonus Button */}
+          {/* Moved Track Bonus Button below header */}
+          <div className="flex justify-end">
             <button
               onClick={handleTrackBonus}
-              className="flex items-center bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg shadow"
+              className="flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow mt-2"
             >
               <Gift className="mr-2" size={18} /> Track Bonus
             </button>
@@ -64,24 +66,41 @@ const EmployeeDashboard = () => {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card title="Today's Status" value="Present" icon={<Clock className="w-8 h-8" />} />
-            <Card title="Leave Balance" value={`${employee.leaves} Days`} icon={<Calendar className="w-8 h-8" />} />
-            <Card title="Current Salary" value={`LKR ${employee.salary}`} icon={<DollarSign className="w-8 h-8" />} />
-            <Card title="Performance" value={employee.performance} icon={<Award className="w-8 h-8" />} />
+            <Card
+              title="Leave Balance"
+              value={`${employee.leaves} Days`}
+              icon={<Calendar className="w-8 h-8" />}
+            />
+            <Card
+              title="Current Salary"
+              value={`LKR ${employee.salary}`}
+              icon={<DollarSign className="w-8 h-8" />}
+            />
+            <Card
+              title="Performance"
+              value={employee.performance}
+              icon={<Award className="w-8 h-8" />}
+            />
           </div>
 
           {/* Activities and Events */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Section title="Recent Activities" items={[
-              { date: "2025-03-15", label: "Marked attendance" },
-              { date: "2025-03-18", label: "Applied for casual leave" },
-              { date: "2025-03-19", label: "Completed monthly report" },
-            ]} />
-
-            <Section title="Upcoming Events" items={[
-              { date: "2025-03-20", label: "Team Meeting" },
-              { date: "2025-03-25", label: "Performance Review" },
-              { date: "2025-04-01", label: "Training Session" },
-            ]} />
+            <Section
+              title="Recent Activities"
+              items={[
+                { date: "2025-03-15", label: "Marked attendance" },
+                { date: "2025-03-18", label: "Applied for casual leave" },
+                { date: "2025-03-19", label: "Completed monthly report" },
+              ]}
+            />
+            <Section
+              title="Upcoming Events"
+              items={[
+                { date: "2025-03-20", label: "Team Meeting" },
+                { date: "2025-03-25", label: "Performance Review" },
+                { date: "2025-04-01", label: "Training Session" },
+              ]}
+            />
           </div>
         </div>
       </main>
@@ -106,7 +125,10 @@ const Section = ({ title, items }) => (
     <h2 className="text-xl font-semibold text-black mb-4">{title}</h2>
     <div className="space-y-4">
       {items.map((item, index) => (
-        <div key={index} className="flex items-center justify-between py-2 border-b border-gray-200">
+        <div
+          key={index}
+          className="flex items-center justify-between py-2 border-b border-gray-200"
+        >
           <span className="text-gray-700">{item.label}</span>
           <span className="text-sm text-gray-500">{item.date}</span>
         </div>
