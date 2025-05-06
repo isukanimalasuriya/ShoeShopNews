@@ -12,6 +12,11 @@ const orderSchema = new mongoose.Schema({
     phonenumber:{type:Number,required:true},
     email:{type:String,required:true},
     city:{type:String,required:true},
+    deliveryStatus: {
+      type: String,
+      enum: ["processing", "pickedup", "delivered"],
+      default: "processing",
+    },
     items: [
         {
           shoeId: {

@@ -1,6 +1,6 @@
 import Employee from "../modeles/employeeModel.js";
 import { User } from "../modeles/user.model.js";
-import brcypt from "bcrypt";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
@@ -19,7 +19,7 @@ export function loginUser(req, res){
                 res.status(404).json({error: "User not found"})
             }else{
 
-                const isPasswordCorrect = brcypt.compareSync(data.password, user.password)
+                const isPasswordCorrect = bcrypt.compareSync(data.password, user.password)
 
                 if(isPasswordCorrect){
                     const token = jwt.sign({
@@ -107,7 +107,7 @@ export const addEmployee = async (req, res, next) => {
     let employee;
 
     try {
-        const hashedPassword = await brcypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
         employee = new Employee({ name, email, password: hashedPassword, role, age });
         await employee.save();
 
@@ -180,4 +180,56 @@ export const deleteEmployee = async (req, res, next) => {
     }
 
     return res.status(200).json({ message: "Employee deleted successfully" });
+};
+
+
+export const updatePassword = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Get user from token payload
+    const { email } = decoded;
+    
+    const { currentPassword, newPassword } = req.body;
+
+    // Validation
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
+    const employee = await Employee.findOne({ email });
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // Verify current password
+    const isMatch = await bcrypt.compare(currentPassword, employee.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    // Update password
+    await Employee.findOneAndUpdate(
+      { email },
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    return res.status(200).json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Password update error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
 };

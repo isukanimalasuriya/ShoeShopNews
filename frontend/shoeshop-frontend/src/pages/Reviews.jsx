@@ -193,15 +193,18 @@ const ReviewSection = ({ productId }) => {
         <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500 rounded-lg shadow-md">
           <h3 className="text-xl font-medium">Write a Review</h3>
           <div>
-            <label className="block mb-2 font-medium">Rating (1-5)</label>
-            <input
-              type="number"
-              value={rating}
-              onChange={(e) => setRating(Number(e.target.value))}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              min="1"
-              max="5"
-            />
+            <label className="block mb-2 font-medium">Rating</label>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                  key={star}
+                  className={`cursor-pointer text-2xl ${
+                    star <= rating ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                  onClick={() => setRating(star)}
+                />
+              ))}
+            </div>
           </div>
           <div>
             <label className="block mb-2 font-medium">Comment</label>
@@ -213,7 +216,9 @@ const ReviewSection = ({ productId }) => {
             />
           </div>
           <div>
-            <label className="block mb-2 font-medium">Upload a Photo (optional)</label>
+            <label className="block mb-2 font-medium">
+              Upload a Photo (optional)
+            </label>
             <input
               type="file"
               accept="image/*"

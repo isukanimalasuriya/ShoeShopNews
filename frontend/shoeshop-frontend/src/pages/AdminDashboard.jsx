@@ -12,6 +12,8 @@ import {
   PersonStanding
 } from 'lucide-react';
 import HRDashboard from './HRDashboard';
+import ShoeDashboard from './ShoeDashboard';
+import Dashboard from './AllOrders';
 
 const AdminDashboard = () => {
     const [activeComponent, setActiveComponent] = useState('dashboard');
@@ -39,9 +41,9 @@ const AdminDashboard = () => {
       case 'users':
         return <CustomersList />;
       case 'products':
-        return <ProductsList />;
+        return <ShoeDashboard />;
       case 'orders':
-        return <OrdersList />;
+        return <Dashboard />;
       case 'HRDashboard':
         return <HRDashboard />;
       default:
@@ -52,8 +54,8 @@ const AdminDashboard = () => {
   const menuItems = [
     { key: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} />, isExternalRoute: false },
     { key: 'users', label: 'Users', icon: <Users size={18} />, isExternalRoute: false },
-    { key: 'products', label: 'Products', icon: <Package size={18} />, isExternalRoute: false },
-    { key: 'orders', label: 'Orders', icon: <ShoppingCart size={18} />, isExternalRoute: false },
+    { key: 'products', label: 'Products', icon: <Package size={18} />, isExternalRoute: true, route: '/dashboard' },
+    { key: 'orders', label: 'Orders', icon: <ShoppingCart size={18} />, isExternalRoute: true, route: '/AllOrders' },
     { key: 'HRDashboard', label: 'HR Dashboard', icon: <PersonStanding size={18} />, isExternalRoute: true, route: '/HRdashboard' }
   ];
 

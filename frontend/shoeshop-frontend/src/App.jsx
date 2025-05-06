@@ -30,6 +30,8 @@ import EmployeeLogin from "./pages/EmployeeLogin";
 import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
+import Wishlist from "../src/pages/Wishlist";
+import SearchBar from "./components/SearchBar";
 import Employees from "./pages/Employees";
 import Leave from "./pages/Leave";
 import HRDashboard from "./pages/HRDashboard";
@@ -57,6 +59,19 @@ import AddSalary from "./pages/AddSalary";
 
 
 
+//inventory
+import Sidebar from './components/Sidebar';
+import DashboardPage from './pages/ShoeDashboard';
+import ShoeListPage from './pages/ShoeListPage';
+import AddShoePage from './pages/AddShoe';
+
+import RestockPage from './pages/RestockPage';
+import ShoeDetailPage from './pages/ShoeDetailPage';
+import EditShoePage from './pages/EditShoe';
+import CategoryPage from './pages/CategoryPage'; 
+
+
+
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
 
@@ -77,14 +92,18 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard'];
-  const noHeaderRoutes = ['/employeelogin', '/admindashboard'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard','/shoes', '/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard', '/dashboard','/shoes','/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit'];
+  const sidebarRoutes = ['/dashboard', '/shoes', '/shoes/add', '/restock', '/shoes/:id', '/shoes/:id/edit', '/categories'];
+
+const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path));
 
   return (
     <>
       <Toaster position="top-right"/>
       <ToastContainer />
       {!noHeaderRoutes.includes(location.pathname) && <NavBar2 />}
+      <SearchBar/>
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/customerlogin" element={<CustomerLoginPage />}/>
@@ -111,6 +130,8 @@ function App() {
         <Route path="/orders"  element={<Orders/>}/>
         <Route path="/allorders"  element={<AllOrders />}/>
         <Route path="/reviews" element={<ReviewSection/>}/>
+        <Route path="/wishlist" element={<Wishlist/>}/>
+
         <Route path="/employee"element={<Employees/>}/>
         <Route path="/leaves" element={<Leave />} /> 
         <Route path="/hrdashboard" element={<HRDashboard />} />
@@ -135,6 +156,25 @@ function App() {
        
 
       </Routes>
+
+      {showSidebar && (
+  <div style={{ display: 'flex' }}>
+    <Sidebar />
+    <div style={{ flex: 1, padding: '20px' }}>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/shoes" element={<ShoeListPage />} />
+        <Route path="/shoes/add" element={<AddShoePage />} />
+        <Route path="/restock" element={<RestockPage />} />
+        <Route path="/shoes/:id" element={<ShoeDetailPage />} />
+        <Route path="/shoes/:id/edit" element={<EditShoePage />} />
+        <Route path="/categories" element={<CategoryPage />} />
+      </Routes>
+    </div>
+  </div>
+)}
+
+
       <EmployeeRoutes />
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
     </>

@@ -6,7 +6,8 @@ import axios from 'axios';
 
 
 const Collection = () => {
-    const { products } = useContext(ShopContext);
+    const { products,search } = useContext(ShopContext);
+    const [allProducts, setAllProducts] = useState([]);
     const [filterProducts,setFilterProducts] = useState([]);
 
     useEffect(()=>{
@@ -14,12 +15,20 @@ const Collection = () => {
       axios.get('http://localhost:5000/api/product/')
         .then((res) => {
           // debugger
+          setAllProducts(res.data);
           setFilterProducts(res.data);
           console.log('res is ====>  ', res.data);
         }).catch((err) => {
           console.error(err);
         })
     },[])
+
+    useEffect(() => {
+      const filtered = allProducts.filter((item) =>
+        item.brand.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilterProducts(filtered);
+    }, [search, allProducts]); 
   return (
     <div>
       <div className="flex-1 m-8 font-display">

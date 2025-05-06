@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Clock, Calendar, DollarSign, Award, LogOut, Gift } from "lucide-react";
+import { Clock, Calendar, DollarSign, Award, LogOut, Gift,Package, Lock  } from "lucide-react";
 import EmSidebar from "./EmSidebar";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const EmployeeDashboard = () => {
   const [employee, setEmployee] = useState(null);
@@ -36,14 +37,6 @@ const EmployeeDashboard = () => {
     <div className="flex flex-1 bg-gray-100 min-h-screen">
       <EmSidebar />
       <main className="flex-1 p-6 relative">
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="absolute top-6 right-6 flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 mt-9 mr-9 rounded-lg shadow"
-        >
-          <LogOut className="mr-2" size={18} /> Logout
-        </button>
-
         <div className="space-y-6">
           {/* Header */}
           <div className="bg-black text-white p-6 rounded-lg shadow-lg flex justify-between items-center">
@@ -102,6 +95,11 @@ const EmployeeDashboard = () => {
               ]}
             />
           </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            <Link to="/Allorders">
+                      <Card title="Orders" value="23 Orders" icon={<Package className="w-8 h-8" />} />
+            </Link>
         </div>
       </main>
     </div>

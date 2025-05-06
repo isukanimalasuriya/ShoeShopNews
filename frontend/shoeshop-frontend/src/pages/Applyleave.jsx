@@ -216,21 +216,15 @@ const ApplyLeave = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
-              <select
+              <input
                 name="position"
                 value={formData.position}
+                readOnly
                 onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               >
-                <option value="">Select Position</option>
-                <option value="HR_MANAGER">HR Manager</option>
-                <option value="DELIVERY_MANAGER">Delivery Manager</option>
-                <option value="DELIVERY_PERSON">Delivery Person</option>
-                <option value="admin">Admin</option>
-                <option value="FINANCE_MANAGER">FINANCE_MANAGER</option>
-                
-              </select>
+              </input>
             </div>
 
             <div>
