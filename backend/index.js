@@ -21,6 +21,9 @@ import LeaveRoutes from "./routes/LeaveRoutes.js";
 import EmployeeRoutes from "./routes/EmployeeRoutes.js";
 import SalaryRoutes from "./routes/SalaryRoutes.js"
 
+import shoeRoutes from './routes/shoeRoutes.js';
+import restock from './routes/restock.js';
+
 // import router from "./routes/authRouter.js";
 
 dotenv.config();
@@ -48,6 +51,13 @@ app.use("/api/order", orderRoute);
 // app.use("/api/customize", customizeShoeRoute);
 app.use("/api/users", userRouter);
 // app.use("/payment", paymentRoutes);
+
+//inventory
+app.use('/api/shoes',  shoeRoutes);
+app.use('/api/restock', restock);
+
+// Serve static files
+app.use('/uploads', express.static('Uploads'));
 
 app.use("/api/attendance", AttendanceRoutes);
 

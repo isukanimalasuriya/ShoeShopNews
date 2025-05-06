@@ -57,6 +57,19 @@ import AddSalary from "./pages/AddSalary";
 
 
 
+//inventory
+import Sidebar from './components/Sidebar';
+import DashboardPage from './pages/ShoeDashboard';
+import ShoeListPage from './pages/ShoeListPage';
+import AddShoePage from './pages/AddShoe';
+
+import RestockPage from './pages/RestockPage';
+import ShoeDetailPage from './pages/ShoeDetailPage';
+import EditShoePage from './pages/EditShoe';
+import CategoryPage from './pages/CategoryPage'; 
+
+
+
 const RedirectAuthenticatedUser = ({children})=>{
   const {isAuthenticated, user} = useAuthStore();
 
@@ -77,8 +90,11 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard'];
-  const noHeaderRoutes = ['/employeelogin', '/admindashboard'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard','/shoes', '/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard', '/dashboard','/shoes','/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit'];
+  const sidebarRoutes = ['/dashboard', '/shoes', '/shoes/add', '/restock', '/shoes/:id', '/shoes/:id/edit', '/categories'];
+
+const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path));
 
   return (
     <>
@@ -135,6 +151,25 @@ function App() {
        
 
       </Routes>
+
+      {showSidebar && (
+  <div style={{ display: 'flex' }}>
+    <Sidebar />
+    <div style={{ flex: 1, padding: '20px' }}>
+      <Routes>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/shoes" element={<ShoeListPage />} />
+        <Route path="/shoes/add" element={<AddShoePage />} />
+        <Route path="/restock" element={<RestockPage />} />
+        <Route path="/shoes/:id" element={<ShoeDetailPage />} />
+        <Route path="/shoes/:id/edit" element={<EditShoePage />} />
+        <Route path="/categories" element={<CategoryPage />} />
+      </Routes>
+    </div>
+  </div>
+)}
+
+
       <EmployeeRoutes />
       {!noFooterRoutes.includes(location.pathname) && <Footer />}
     </>
