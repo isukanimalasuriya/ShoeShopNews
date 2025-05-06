@@ -174,3 +174,37 @@ export async function deleteCartItem(req, res) {
     res.status(500).json({ message: "Failed to delete cart item", error });
   }
 }
+
+export async function cartCount(req, res) {
+  try {
+    const { userId } = req.params;
+    console.log(userId)
+
+    // Check if userId is provided
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find the cart for the given userId
+    const cart = await Cart.findOne({ userId });
+
+    // Check if the cart exists
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    // Get the count of items in the cart
+    const itemCount = cart.items.length;
+
+    // Return the count of items in the cart
+    res.json({ itemCount });
+
+  } catch (error) {
+    // Handle any errors
+    console.error(error);
+    res.status(500).json({ message: "Error fetching cart count", error });
+  }
+}
+
+
+

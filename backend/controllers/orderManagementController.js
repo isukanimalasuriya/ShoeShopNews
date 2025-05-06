@@ -89,4 +89,45 @@ export async function getAllOrders(req, res) {
   }
 }
 
+export async function deleteOrder(req,res) {
+  try {
+    const order = await Orders.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
 
+    const now = new Date();
+    const orderTime = new Date(order.orderDate);
+    const oneHour = 60 * 60 * 1000;
+
+    if (order.paymentStatus === "Paid" || now - orderTime > oneHour) {
+      return res.status(403).json({ message: "Cannot delete: paid or expired" });
+    }
+
+    // Restore stock for each item
+    for (const item of order.items) {
+      const { shoeId, color, size, quantity } = item;
+
+      const shoe = await Shoes.findById(shoeId);
+      if (!shoe) continue;
+
+      const variant = shoe.variants.find(v => v.color === color);
+      if (!variant) continue;
+
+      const sizeObj = variant.sizes.find(s => s.size === size);
+      if (!sizeObj) continue;
+
+      // Restore stock and reduce sales count
+      sizeObj.stock += quantity;
+      shoe.salesCount = Math.max(0, (shoe.salesCount || 0) - quantity);
+
+      await shoe.save();
+    }
+
+    // Delete the order
+    await Orders.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Order deleted and stock restored" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete order" });
+  }
+}

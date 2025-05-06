@@ -1,25 +1,39 @@
 import Review from "../modeles/review.js";
 import mongoose from "mongoose";
-
+import Orders from "../modeles/order.js";
 
 export async function addReview(req, res) {
     try {
-        const { brandId, userId, userFullName, rating, comment,shoePhoto,profilepicture} = req.body;
+        const { brandId, userId, userFullName, rating, comment, profilepicture } = req.body;
+        const shoePicture = `/images/${req.file.filename}`;
 
+        // Check if user has ordered this specific shoe
+        const existingOrder = await Orders.findOne({
+            userId: userId,
+            "items.shoeId": brandId
+        });
 
-        // Create a new review since no duplicate exists
+        if (!existingOrder) {
+            return res.status(403).json({ error: "You are not allowed to review this item. Purchase required." });
+        }
+
+        // Optional: check if user already reviewed the shoe (prevent duplicate reviews)
+        const alreadyReviewed = await Review.findOne({ brandId, userId });
+        if (alreadyReviewed) {
+            return res.status(400).json({ error: "You have already reviewed this item." });
+        }
+
+        // Create a new review
         const newReview = new Review({
             brandId,
             userId,
             userFullName,
             rating,
             comment,
-            shoePhoto,
+            shoePicture,
             profilepicture
         });
 
-        console.log(newReview);
-        
         await newReview.save();
         res.status(200).json({ message: "Review added successfully" });
 
@@ -44,38 +58,36 @@ export async function getReview(req, res) {
 }
 
 
-export async function updateReview(req,res) {
-
-    try{
-
-        const {reviewId} = req.params;
-
-        const data = req.body;
-
-        const review = await Review.findById(reviewId);
-        if (!review) {
-            return res.status(404).json({ message: "Review not found" });
-        }
-        
-      
-        
-        if (review.userId !== data.userId) {
-            console.log("------------------------------>",data)
-            return res.status(403).json({ message: "Unauthorized to update this review" });
-        }
-
-        
-
-        const reviewObjId = new mongoose.Types.ObjectId(reviewId);
-
-        await Review.updateOne({_id:reviewObjId},data)
-
-        res.json({message:"Review updated successfully"})
-
-    }catch(error){
-        res.status(500).json({
-                message:"Failed to update Review"
-        })
+export async function updateReview(req, res) {
+    try {
+      const { reviewId } = req.params;
+      const data = req.body;
+  
+      console.log("Incoming data:", data);
+      console.log("Uploaded file:", req.file);
+  
+      const review = await Review.findById(reviewId);
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+  
+      // Check permission
+      if (review.userId !== data.userId) {
+        return res.status(403).json({ message: "Unauthorized to update this review" });
+      }
+  
+      // Update image path if a new file was uploaded
+      if (req.file) {
+        data.shoePicture = `/images/${req.file.filename}`;
+      }
+  
+      // Update the review
+      await Review.updateOne({ _id: reviewId }, data);
+  
+      res.json({ message: "Review updated successfully" });
+    } catch (error) {
+      console.error("Update error:", error);
+      res.status(500).json({ message: "Failed to update Review" });
     }
 }
 

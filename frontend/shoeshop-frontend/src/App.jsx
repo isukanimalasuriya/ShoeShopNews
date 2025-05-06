@@ -30,6 +30,8 @@ import EmployeeLogin from "./pages/EmployeeLogin";
 import Orders from "./pages/Orders";
 import AllOrders from "./pages/AllOrders"
 import ReviewSection from "./pages/Reviews";
+import Wishlist from "../src/pages/Wishlist";
+import SearchBar from "./components/SearchBar";
 import Employees from "./pages/Employees";
 import Leave from "./pages/Leave";
 import HRDashboard from "./pages/HRDashboard";
@@ -101,6 +103,7 @@ const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path
       <Toaster position="top-right"/>
       <ToastContainer />
       {!noHeaderRoutes.includes(location.pathname) && <NavBar2 />}
+      <SearchBar/>
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/customerlogin" element={<CustomerLoginPage />}/>
@@ -127,6 +130,8 @@ const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path
         <Route path="/orders"  element={<Orders/>}/>
         <Route path="/allorders"  element={<AllOrders />}/>
         <Route path="/reviews" element={<ReviewSection/>}/>
+        <Route path="/wishlist" element={<Wishlist/>}/>
+
         <Route path="/employee"element={<Employees/>}/>
         <Route path="/leaves" element={<Leave />} /> 
         <Route path="/hrdashboard" element={<HRDashboard />} />
