@@ -12,6 +12,13 @@ const EditShoe = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/employeelogin'); // Redirect if no token found
+        }
+      }, [navigate]);
+
+  useEffect(() => {
     fetchShoe();
   }, [id]);
 

@@ -9,6 +9,13 @@ const ShoeListPage = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/employeelogin'); // Redirect if no token found
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     const fetchShoes = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/shoes');
