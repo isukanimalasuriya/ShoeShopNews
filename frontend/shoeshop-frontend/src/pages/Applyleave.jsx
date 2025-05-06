@@ -13,10 +13,24 @@ const ApplyLeave = () => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [leaves, setLeaves] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const fetchLeaves = async () => {
+    setLoading(true);
+    try {
+      const response = await leaveService.getLeaves();
+      setLeaves(response.data || []);
+    } catch (err) {
+      console.error("Failed to fetch leave records:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -32,6 +46,9 @@ const ApplyLeave = () => {
         position: "",
         status: "Pending",
       });
+      
+      // Refresh the leaves list after successful submission
+      fetchLeaves();
     } catch (err) {
       setError("Failed to add leave record.");
       setSuccess(null);
@@ -42,12 +59,12 @@ const ApplyLeave = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-        const token = localStorage.getItem('token');
-            if (!token) {
-              navigate('/employeelogin'); // Redirect if no token found
-            }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/employeelogin'); // Redirect if no token found
+    }
 
-            const employeeData = localStorage.getItem("employee");
+    const employeeData = localStorage.getItem("employee");
     if (employeeData) {
       try {
         const parsedEmployee = JSON.parse(employeeData);
@@ -61,13 +78,28 @@ const ApplyLeave = () => {
         console.error("Failed to parse employee data:", err);
       }
     }
-    }, [navigate]);
+    
+    // Fetch leaves on component mount
+    fetchLeaves();
+  }, [navigate]);
+
+  // Helper function to get appropriate badge color based on status
+  const getStatusBadgeColor = (status) => {
+    switch (status) {
+      case "Approved":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "Rejected":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    }
+  };
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
       <EmSidebar />
       <div className="flex-1 p-8">
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 mb-8">
           <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-4">
             Apply for Leave
           </h1>
@@ -180,6 +212,58 @@ const ApplyLeave = () => {
               Clear
             </button>
           </div>
+        </div>
+
+        {/* Leave Records Display Section */}
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">
+            Your Leave Records
+          </h2>
+          
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">Loading leave records...</p>
+            </div>
+          ) : leaves.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Leave Type
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Department
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Position
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {leaves.map((leave, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="py-3 px-4 text-sm text-gray-900">{leave.leaveType}</td>
+                      <td className="py-3 px-4 text-sm text-gray-900">{leave.department}</td>
+                      <td className="py-3 px-4 text-sm text-gray-900">{leave.position}</td>
+                      <td className="py-3 px-4 text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusBadgeColor(leave.status)}`}>
+                          {leave.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-8 border border-dashed border-gray-300 rounded-lg">
+              <p className="text-gray-600">No leave records found.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
