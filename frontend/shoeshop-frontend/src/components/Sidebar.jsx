@@ -14,11 +14,9 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear any authentication state
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    // Redirect to login page
-    // navigate("/login");
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/employeelogin');
   };
 
   const handleSetActive = (path) => {
@@ -28,7 +26,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl flex flex-col py-8 px-4 border-r border-gray-200">
       <h2 className="text-2xl font-bold text-gray-800 mb-12 pl-4">
-        Admin Menu
+        Inventory Menu
       </h2>
       <ul className="space-y-2 w-full">
         <li>

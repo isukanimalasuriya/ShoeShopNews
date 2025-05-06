@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddShoeForm from '../components/inventory/AddShoeForm';
 import { createShoe } from '../services/api.js';
@@ -7,6 +7,13 @@ const AddShoe = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/employeelogin'); // Redirect if no token found
+      }
+    }, [navigate]);
 
   const handleSubmit = async (formData) => {
     try {

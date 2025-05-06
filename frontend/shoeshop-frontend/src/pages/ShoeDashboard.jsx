@@ -8,6 +8,7 @@ import {
   FiAlertCircle,
 } from "react-icons/fi";
 import StockChart from "../components/inventory/StockChart";
+import { useNavigate } from "react-router-dom";
 
 const ShoeDashboard = () => {
   const [stats, setStats] = useState({
@@ -17,6 +18,14 @@ const ShoeDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/employeelogin'); // Redirect if no token found
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchInventoryStats = async () => {

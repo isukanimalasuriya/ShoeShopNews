@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiRotateCw, FiAlertTriangle, FiSearch, FiLoader, FiAlertCircle, FiDownload } from 'react-icons/fi';
 import jsPDF from 'jspdf';
+import { useNavigate } from "react-router-dom";
 
 const RestockPage = () => {
   const [lowStockItems, setLowStockItems] = useState([]);
@@ -9,6 +10,14 @@ const RestockPage = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            navigate('/employeelogin'); // Redirect if no token found
+          }
+        }, [navigate]);
 
   useEffect(() => {
     const fetchLowStockItems = async () => {
