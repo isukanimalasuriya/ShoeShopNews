@@ -15,7 +15,7 @@ const HRDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
   const employeeData = localStorage.getItem('employee');
 
   if (!token || !employeeData) {

@@ -7,12 +7,25 @@ const AddShoe = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/employeelogin'); // Redirect if no token found
-      }
+    const token = localStorage.getItem('token');
+    const employeeData = localStorage.getItem('employee');
+  
+    if (!token || !employeeData) {
+      navigate('/employeelogin');
+      return;
+    }
+  
+    const user = JSON.parse(employeeData);
+  
+    if (user.role === 'admin' || user.role === 'INVENTORY_MANAGER') {
+      setIsAuthorized(true);
+    } else {
+      // Optional: redirect or show unauthorized message
+      navigate('/unauthorized'); // Or you can navigate elsewhere
+    }
     }, [navigate]);
 
   const handleSubmit = async (formData) => {
