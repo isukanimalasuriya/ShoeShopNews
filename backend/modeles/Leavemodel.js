@@ -15,7 +15,7 @@ const leaveSchema = new mongoose.Schema({
     },
     position: {
         type: String,
-            enum: ["HR_MANAGER", "DELIVERY_MANAGER", "DELIVERY_PERSON","admin","FINANCE_MANAGER"],
+            enum: ["HR_MANAGER", "DELIVERY_MANAGER", "DELIVERY_PERSON","admin", "FINANCE_MANAGER", "MARKETING_MANAGER"],
             required: true
     },
     status: {
