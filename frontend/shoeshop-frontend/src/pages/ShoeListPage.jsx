@@ -67,7 +67,7 @@ const ShoeListPage = () => {
   const hasCategory = query.has('category');
 
   return (
-    <div className="p-8">
+    <div className="-mt-30">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Shoe Inventory</h1>
       <div className="flex items-center mb-6 space-x-4">
         <Link
