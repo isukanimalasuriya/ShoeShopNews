@@ -19,6 +19,10 @@ import userRouter from "./routes/employeeRoute.js";
 import AttendanceRoutes from "./routes/AttendanceRoutes.js";
 import LeaveRoutes from "./routes/LeaveRoutes.js";
 import EmployeeRoutes from "./routes/EmployeeRoutes.js";
+import SalaryRoutes from "./routes/SalaryRoutes.js"
+
+import shoeRoutes from './routes/shoeRoutes.js';
+import restock from './routes/restock.js';
 
 import multer from 'multer';
 // import router from "./routes/authRouter.js";
@@ -49,10 +53,18 @@ app.use("/api/order", orderRoute);
 app.use("/api/users", userRouter);
 // app.use("/payment", paymentRoutes);
 
+//inventory
+app.use('/api/shoes',  shoeRoutes);
+app.use('/api/restock', restock);
+
+// Serve static files
+app.use('/uploads', express.static('Uploads'));
+
 app.use("/api/attendance", AttendanceRoutes);
 
 app.use("/api/leaves", LeaveRoutes);
 app.use("/api/employees",EmployeeRoutes);
+app.use("/api/salary",SalaryRoutes);
 
 
 app.listen(PORT,()=>{

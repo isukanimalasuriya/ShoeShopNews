@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Input from '../components/Input';
 import { Mail, User, Lock, Loader, Phone } from "lucide-react";
 import { Link,useNavigate } from "react-router-dom";
-import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
+//import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import { useAuthStore } from "../store/authStore";
 
 const CustomerSignup = () => {
@@ -83,8 +83,9 @@ const CustomerSignup = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
         />
+        {/*
         {error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
-        <PasswordStrengthMeter password={password} />
+        <PasswordStrengthMeter password={password} />*/}
 
         <motion.button className='mt-5 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white 
 						font-bold rounded-lg shadow-lg hover:from-green-600

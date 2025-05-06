@@ -23,13 +23,14 @@ const shoeSchema = new mongoose.Schema(
         imageUrl: { type: String, required: true },
       },
     ],
-    salesCount: { type: Number},
+    salesCount: { type: Number },
     description: { type: String },
     availability: { type: Boolean, required: true, default: true },
   },
-  { timestamps: true } // Adds createdAt and updatedAt fields automatically
+  { timestamps: true }
 );
 
-// Ensure `_id` is automatically assigned
-const Shoes = mongoose.model("Shoes", shoeSchema);
+// ✅ Fix for OverwriteModelError:
+const Shoes = mongoose.models.Shoes || mongoose.model("Shoes", shoeSchema);
+
 export default Shoes;

@@ -21,14 +21,21 @@ const EmployeeLogin = () => {
             toast.success("Login success")
             const user = res.data.user
             localStorage.setItem("token", res.data.token)
+            localStorage.setItem("employee", JSON.stringify(user))
             if(user.role === "admin"){
               navigate("/admindashboard")
             }
             else if(user.role === "HR_MANAGER"){
-              navigate("/employeedashboardhr")
+              navigate("/HRdashboard")
             }
             else if(user.role === "DELIVERY_MANAGER"){
               navigate("/admindashboard")
+            }
+            else if(user.role === "FINANCE_MANAGER"){
+              navigate("/employeeDashboard")
+            }
+            else if(user.role === "INVENTORY_MANAGER"){
+              navigate("/dashboard")
             }
             else{
               navigate("/employeelogin")
