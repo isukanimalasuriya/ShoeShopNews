@@ -24,6 +24,14 @@ const EmSidebar = () => {
         </li>
         <li>
           <Link 
+            to="/employeedetails" 
+            className="block text-gray-700 font-semibold hover:bg-indigo-100 hover:text-indigo-600 rounded-lg px-4 py-2 transition duration-200"
+          >
+            Profile Details
+          </Link>
+        </li>
+        <li>
+          <Link 
             to="/applyleave" 
             className="block text-gray-700 font-semibold hover:bg-indigo-100 hover:text-indigo-600 rounded-lg px-4 py-2 transition duration-200"
           >
