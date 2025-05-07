@@ -404,8 +404,11 @@ const Product = () => {
             ADD TO CART
           </button>
           <button className="" onClick={handleAddToWishlists}>
-          <div className="bg-amber-400 w-10 h-10 ml-16 relative top-2 flex items-center justify-center rounded-full">
+          <div className="bg-gray-300 w-28 h-10 ml-16 relative top-2 flex items-center justify-center rounded-sm cursor-pointer">
+            <div className="flex items-center justify-center ml-1 mr-1 mt-1 mb-1">
               <img src={Heart} alt="Add to Wishlist" className="w-8 h-8" />
+              Wishlist
+            </div>
           </div>
           </button>
           <hr className="mt-8 sm:w-4/5" />

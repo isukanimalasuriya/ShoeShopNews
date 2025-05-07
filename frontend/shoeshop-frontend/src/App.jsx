@@ -69,6 +69,8 @@ import RestockPage from './pages/RestockPage';
 import ShoeDetailPage from './pages/ShoeDetailPage';
 import EditShoePage from './pages/EditShoe';
 import CategoryPage from './pages/CategoryPage'; 
+import AboutUs from "./pages/AboutUs";
+import ConatactUs from "./pages/ConatactUs";
 
 
 
@@ -131,6 +133,8 @@ const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path
         <Route path="/allorders"  element={<AllOrders />}/>
         <Route path="/reviews" element={<ReviewSection/>}/>
         <Route path="/wishlist" element={<Wishlist/>}/>
+        <Route path="/About" element={<AboutUs/>}/>
+        <Route path="/Contact" element={<ConatactUs/>}/>
 
         <Route path="/employee"element={<Employees/>}/>
         <Route path="/leaves" element={<Leave />} /> 

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
 
+const isValidPhoneNumber = (phone) => /^[0-9]{10}$/.test(phone);
 const PlaceOrder = () => {
   const [message, setMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,6 +131,12 @@ const PlaceOrder = () => {
       setIsModalOpen(true);
       return;
     }
+
+    if (!isValidPhoneNumber(formData.phone)) {
+      setMessage("Invalid phone number. It must be exactly 10 digits.");
+      setIsModalOpen(true);
+      return;
+    }
   
     await saveOrderToDatabase("Unpaid"); // Save with status "Unpaid"
     setMessage("Order placed successfully!");
@@ -198,6 +205,12 @@ const PlaceOrder = () => {
     // Validate form inputs first
     if (!formData.firstName || !formData.lastName || !formData.address || !formData.phone) {
       setMessage("Please fill all required fields");
+      setIsModalOpen(true);
+      return;
+    }
+
+    if (!isValidPhoneNumber(formData.phone)) {
+      setMessage("Invalid phone number. It must be exactly 10 digits.");
       setIsModalOpen(true);
       return;
     }
@@ -361,7 +374,7 @@ const PlaceOrder = () => {
             <h4 className="font-medium mb-2">Order Summary</h4>
             <div className="flex justify-between mb-2">
               <span>Product:</span>
-              <span>Test Product</span>
+              <span>SHOES</span>
             </div>
             <div className="flex justify-between font-bold">
               <span>Total:</span>
