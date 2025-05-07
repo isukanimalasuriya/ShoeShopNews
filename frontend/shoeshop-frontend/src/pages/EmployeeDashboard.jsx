@@ -79,7 +79,7 @@ const EmployeeDashboard = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
             <Link to="/Allorders">
-                      <Card title="Orders" value="23 Orders" icon={<Package className="w-8 h-8" />} />
+                      <Card title="Orders" value="All Orders" icon={<Package className="w-8 h-8" />} />
             </Link>
         </div>
       </main>
