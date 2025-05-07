@@ -68,7 +68,7 @@ const NavBar2 = () => {
     <div className="flex items-center justify-between py-5 font-medium ml-10 mr-10 text-lg font-display">
       <Link to="/">
         <span className="text-xl w-36">
-          <img src="" /> Shoe Paradise
+          <img src="" />An Shoe Paradise
         </span>
       </Link>
 

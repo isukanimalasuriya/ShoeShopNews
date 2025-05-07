@@ -33,7 +33,7 @@ export async function addItemToWishlist(req, res) {
         );
 
         if (exists) {
-          return res.status(400).json({ message: `Item with shoeId ${newItem.shoeId} already exists in the wishlist.` });
+          return res.status(400).json({ message: `Item is already exists in the wishlist.` });
         }
 
         wishlist.items.push(newItem);
@@ -41,7 +41,7 @@ export async function addItemToWishlist(req, res) {
     }
 
     await wishlist.save();
-    return res.status(200).json({ message: "Item(s) added to wishlist successfully" });
+    return res.status(200).json({ message: "Item is added to wishlist successfully" });
 
   } catch (error) {
     console.error("Error adding item to wishlist:", error);
