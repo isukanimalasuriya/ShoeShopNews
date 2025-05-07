@@ -15,9 +15,20 @@ const CustomerLoginPage = () => {
 
     const handleLogin = async (e) => {
 		e.preventDefault();
+
+	// Frontend validation
+	if (!email || !password) {
+		toast.error("All fields are required to fill");
+		return;
+	}
+
+	try {
 		await login(email, password);
 		toast.success("Login Success");
 		navigate("/customerdashboard");
+	} catch (err) {
+		toast.error("Login failed");
+	}
 	};
 
   return (

@@ -6,6 +6,7 @@ import { Mail, User, Lock, Loader, Phone } from "lucide-react";
 import { Link,useNavigate } from "react-router-dom";
 //import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 const CustomerSignup = () => {
     const [name, setName] = useState("");
@@ -21,15 +22,25 @@ const CustomerSignup = () => {
 
         const phoneRegex = /^\d{10}$/;
         if (!phoneRegex.test(phoneNumber)) {
-            alert("Phone number must be exactly 10 digits.");
+            toast.error("Phone number must be exactly 10 digits");
             return;
         }
 
         if (password.length < 6) {
-            alert("Password must be at least 6 characters.");
+            toast.error("Password must be at least 6 characters.");
+            return;
+        }
+
+        if (!email) {
+            toast.error("Please enter the email");
             return;
         }
         
+        if (!name) {
+            toast.error("Please enter the name");
+            return;
+        }
+
         try {
 			await signup(email, password, name, phoneNumber);
 			navigate("/verify-email");
