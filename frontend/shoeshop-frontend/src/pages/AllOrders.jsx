@@ -114,7 +114,7 @@ const Dashboard = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left">Admin Orders Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left">Finance Manager Orders Dashboard</h1>
         <div className="flex gap-3">
           <input
             type="month"
