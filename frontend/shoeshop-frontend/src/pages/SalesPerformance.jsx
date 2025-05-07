@@ -1,501 +1,274 @@
 import { useState } from 'react';
-import { LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Line, ResponsiveContainer } from 'recharts';
-import { Calendar, Award, BookOpen, User, DollarSign, TrendingUp, Clock, CheckCircle, Play } from 'lucide-react';
+import {
+  Calendar, TrendingUp, Target, Award,
+  ArrowUp, ArrowDown, DollarSign, Users, Clock
+} from 'lucide-react';
+import EmSidebar from './EmSidebar'; // ✅ Make sure this path is correct
 
-// Mock data for sales performance
-const salesData = [
-  { name: 'Jan', sales: 4000, target: 3500 },
-  { name: 'Feb', sales: 3000, target: 3500 },
-  { name: 'Mar', sales: 5000, target: 3500 },
-  { name: 'Apr', sales: 3800, target: 3500 },
-  { name: 'May', sales: 4200, target: 3500 },
-  { name: 'Jun', sales: 5100, target: 4000 },
-];
+export default function EmployeeSalesPerformance() {
+  const [selectedPeriod, setSelectedPeriod] = useState('monthly');
 
-// Mock data for training modules
-const trainingModules = [
-  { id: 1, title: 'New Season Collection Introduction', duration: '45 mins', progress: 100, category: 'Product Knowledge' },
-  { id: 2, title: 'Advanced Customer Service Techniques', duration: '1 hour', progress: 75, category: 'Customer Service' },
-  { id: 3, title: 'Shoe Fitting Masterclass', duration: '1.5 hours', progress: 50, category: 'Technical Skills' },
-  { id: 4, title: 'Inventory Management Basics', duration: '30 mins', progress: 0, category: 'Operations' },
-  { id: 5, title: 'Upselling Strategies', duration: '45 mins', progress: 25, category: 'Sales' },
-];
+  const employee = {
+    id: 1,
+    name: "Emma Johnson",
+    position: "Senior Sales Associate",
+    avatar: "/api/placeholder/100/100",
+    department: "Enterprise Solutions",
+    email: "emma.johnson@company.com",
+    phone: "(555) 123-4567"
+  };
 
-// Mock data for upcoming training sessions
-const upcomingTraining = [
-  { id: 1, title: 'Summer Collection Preview', date: 'May 10, 2025', time: '9:00 AM', trainer: 'Sarah Johnson' },
-  { id: 2, title: 'Sales Techniques Workshop', date: 'May 15, 2025', time: '2:00 PM', trainer: 'Michael Chen' },
-  { id: 3, title: 'Team Building Session', date: 'May 22, 2025', time: '1:00 PM', trainer: 'Lisa Taylor' },
-];
+  const monthlySalesData = [
+    { month: 'Jan', sales: 32500, target: 30000 },
+    { month: 'Feb', sales: 38700, target: 30000 },
+    { month: 'Mar', sales: 42200, target: 35000 },
+    { month: 'Apr', sales: 38900, target: 35000 },
+    { month: 'May', sales: 45200, target: 40000 }
+  ];
 
-// Main component
-export default function EmployeeManagement() {
-  const [activeTab, setActiveTab] = useState('sales');
-  
+  const weeklySalesData = [
+    { week: 'Week 1', sales: 10500, target: 10000 },
+    { week: 'Week 2', sales: 11700, target: 10000 },
+    { week: 'Week 3', sales: 9200, target: 10000 },
+    { week: 'Week 4', sales: 13800, target: 10000 }
+  ];
+
+  const recentTransactions = [
+    { id: 1, client: "Acme Corp", amount: 12500, date: "2025-05-04", status: "completed" },
+    { id: 2, client: "TechNova", amount: 8700, date: "2025-05-02", status: "completed" },
+    { id: 3, client: "GlobalSoft", amount: 15400, date: "2025-04-29", status: "completed" },
+    { id: 4, client: "InnovateCo", amount: 9600, date: "2025-04-27", status: "pending" }
+  ];
+
+  const formatLKR = (value) =>
+    value.toLocaleString('en-LK', { style: 'currency', currency: 'LKR' });
+
+  const currentPeriodData = selectedPeriod === 'monthly' ? monthlySalesData : weeklySalesData;
+  const currentData = currentPeriodData[currentPeriodData.length - 1];
+  const previousData = currentPeriodData[currentPeriodData.length - 2];
+
+  const totalSales = currentPeriodData.reduce((sum, item) => sum + item.sales, 0);
+  const totalTarget = currentPeriodData.reduce((sum, item) => sum + item.target, 0);
+  const targetAchievement = Math.round((totalSales / totalTarget) * 100);
+
+  const salesChange = previousData
+    ? Math.round(((currentData.sales - previousData.sales) / previousData.sales) * 100)
+    : 0;
+
+  const chartData = currentPeriodData;
+  const periodLabel = selectedPeriod === 'monthly' ? 'month' : 'week';
+
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-indigo-800 text-white">
-        
-     
-        
-        
-        <nav className="mt-2">
-        
-          <SidebarItem icon={<TrendingUp size={18} />} text="Sales Performance" active={activeTab === 'sales'} onClick={() => setActiveTab('sales')} />
-          <SidebarItem icon={<BookOpen size={18} />} text="Training Portal" active={activeTab === 'training'} onClick={() => setActiveTab('training')} />
-          <div className="mt-auto pt-20">
-            <SidebarItem icon={<LogoutIcon size={18} />} text="Logout" active={false} />
-          </div>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
-        {activeTab === 'sales' ? <SalesPerformance /> : <TrainingPortal />}
-      </div>
-    </div>
-  );
-}
-
-// Custom logout icon that matches the style
-function LogoutIcon(props) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={props.size || 24}
-      height={props.size || 24}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
-  );
-}
-
-// Sidebar item component
-function SidebarItem({ icon, text, active, onClick }) {
-  return (
-    <div 
-      className={`flex items-center px-4 py-3 cursor-pointer transition-colors ${active ? 'bg-indigo-900 border-l-4 border-white' : 'hover:bg-indigo-700'}`}
-      onClick={onClick}
-    >
-      <span className="mr-3">{icon}</span>
-      <span className="text-sm">{text}</span>
-    </div>
-  );
-}
-
-// Sales Performance Page
-function SalesPerformance() {
-  return (
-    <div className="p-6">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Sales Performance</h1>
-        <p className="text-gray-600">Track your sales metrics and achievements</p>
-      </header>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <StatCard 
-          icon={<DollarSign size={20} className="text-green-500" />}
-          title="Monthly Sales" 
-          value="$12,450" 
-          change="+8.2%" 
-          isPositive={true} 
-        />
-        <StatCard 
-          icon={<Award size={20} className="text-purple-500" />}
-          title="Sales Ranking" 
-          value="#2" 
-          change="Up 1 position" 
-          isPositive={true} 
-        />
-        <StatCard 
-          icon={<TrendingUp size={20} className="text-blue-500" />}
-          title="Conversion Rate" 
-          value="32%" 
-          change="+2.5%" 
-          isPositive={true} 
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">Monthly Sales Performance</h2>
-            <select className="text-sm border rounded px-2 py-1">
-              <option>Last 6 Months</option>
-              <option>This Year</option>
-              <option>Last Year</option>
-            </select>
-          </div>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line 
-                  type="monotone" 
-                  dataKey="sales" 
-                  stroke="#6366F1" 
-                  strokeWidth={2} 
-                  dot={{ r: 4 }} 
-                  activeDot={{ r: 6 }} 
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="target" 
-                  stroke="#94A3B8" 
-                  strokeWidth={2} 
-                  strokeDasharray="5 5" 
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Top Selling Products</h2>
-          <div className="space-y-4">
-            <ProductSaleItem 
-              name="Urban Runner Pro" 
-              category="Running Shoes" 
-              sales={28} 
-              imageSrc="/api/placeholder/40/40" 
-            />
-            <ProductSaleItem 
-              name="Comfort Stride Loafers" 
-              category="Casual Wear" 
-              sales={23} 
-              imageSrc="/api/placeholder/40/40" 
-            />
-            <ProductSaleItem 
-              name="Elegant Step Heels" 
-              category="Formal Wear" 
-              sales={19} 
-              imageSrc="/api/placeholder/40/40" 
-            />
-            <ProductSaleItem 
-              name="Trail Blazer X2" 
-              category="Outdoor" 
-              sales={17} 
-              imageSrc="/api/placeholder/40/40" 
-            />
-            <ProductSaleItem 
-              name="Kids Fun Runners" 
-              category="Children" 
-              sales={15} 
-              imageSrc="/api/placeholder/40/40" 
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-6 bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Customer Feedback</h2>
-        <div className="space-y-4">
-          <CustomerFeedback 
-            name="Jennifer L." 
-            date="April 30, 2025" 
-            rating={5} 
-            comment="Alex was incredibly helpful in finding the perfect running shoes for me. Very knowledgeable about the products!"
-          />
-          <CustomerFeedback 
-            name="Michael T." 
-            date="April 28, 2025" 
-            rating={4} 
-            comment="Good service and recommendations, though I had to wait a bit to get assistance."
-          />
-          <CustomerFeedback 
-            name="Sarah K." 
-            date="April 25, 2025" 
-            rating={5} 
-            comment="Excellent service! Alex went above and beyond to help me find comfortable shoes for my foot condition."
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Training Portal Page
-function TrainingPortal() {
-  return (
-    <div className="p-6">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Training Portal</h1>
-        <p className="text-gray-600">Access training materials and track your progress</p>
-      </header>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <TrainingStatCard 
-          icon={<BookOpen size={20} className="text-indigo-500" />}
-          title="Completed" 
-          value="12" 
-          subtitle="Training modules" 
-          bgColor="bg-indigo-50"
-          textColor="text-indigo-500"
-        />
-        <TrainingStatCard 
-          icon={<Clock size={20} className="text-amber-500" />}
-          title="In Progress" 
-          value="3" 
-          subtitle="Training modules" 
-          bgColor="bg-amber-50"
-          textColor="text-amber-500"
-        />
-        <TrainingStatCard 
-          icon={<CheckCircle size={20} className="text-green-500" />}
-          title="Certifications" 
-          value="4" 
-          subtitle="Earned this year" 
-          bgColor="bg-green-50"
-          textColor="text-green-500"
-        />
-        <TrainingStatCard 
-          icon={<Calendar size={20} className="text-blue-500" />}
-          title="Upcoming" 
-          value="3" 
-          subtitle="Training sessions" 
-          bgColor="bg-blue-50"
-          textColor="text-blue-500"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">My Learning Path</h2>
-            <select className="text-sm border rounded px-2 py-1">
-              <option>All Categories</option>
-              <option>Product Knowledge</option>
-              <option>Sales</option>
-              <option>Customer Service</option>
-            </select>
-          </div>
-          <div className="space-y-4">
-            {trainingModules.map(module => (
-              <TrainingModuleCard key={module.id} module={module} />
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Upcoming Training</h2>
-          <div className="space-y-4">
-            {upcomingTraining.map(training => (
-              <UpcomingTrainingCard key={training.id} training={training} />
-            ))}
-          </div>
-          <div className="mt-6">
-            <h3 className="text-md font-medium text-gray-800 mb-3">Featured Training</h3>
-            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">New Season Collection</h4>
-                <span className="text-xs bg-white bg-opacity-20 rounded-full px-2 py-1">Featured</span>
-              </div>
-              <p className="text-sm text-indigo-100 mb-3">Learn about our exciting new arrivals for the upcoming season.</p>
-              <button className="flex items-center text-xs bg-white text-indigo-700 rounded-full px-3 py-1 font-medium">
-                <Play size={12} className="mr-1" /> Watch Preview
+    <div className="flex">
+      <EmSidebar />
+      <div className="bg-gray-50 min-h-screen p-6 flex-1">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex space-x-2">
+            {['weekly', 'monthly'].map(period => (
+              <button
+                key={period}
+                onClick={() => setSelectedPeriod(period)}
+                className={`px-4 py-2 rounded-lg ${selectedPeriod === period ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
+              >
+                {period.charAt(0).toUpperCase() + period.slice(1)}
               </button>
+            ))}
+          </div>
+        </div>
+
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Current Sales */}
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="flex justify-between">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Current {periodLabel} Sales</p>
+                <p className="text-2xl font-bold">{formatLKR(currentData.sales)}</p>
+                <div className={`flex items-center mt-1 text-sm ${salesChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {salesChange >= 0 ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+                  <span>{Math.abs(salesChange)}% from previous {periodLabel}</span>
+                </div>
+              </div>
+              <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <TrendingUp size={24} className="text-blue-600" />
+              </div>
+            </div>
+          </div>
+
+          {/* Target */}
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="flex justify-between">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Target Achievement</p>
+                <p className="text-2xl font-bold">{targetAchievement}%</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {formatLKR(totalSales)} of {formatLKR(totalTarget)}
+                </p>
+              </div>
+              <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                <Target size={24} className="text-green-600" />
+              </div>
+            </div>
+          </div>
+
+          {/* Rating */}
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="flex justify-between">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Performance Rating</p>
+                <p className="text-2xl font-bold">
+                  {targetAchievement >= 100 ? 'Excellent' : targetAchievement >= 85 ? 'Good' : 'Needs Improvement'}
+                </p>
+                <p className="text-sm text-gray-500 mt-1">Based on target achievement</p>
+              </div>
+              <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <Award size={24} className="text-purple-600" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-6 bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">My Certifications</h2>
-          <button className="text-sm text-indigo-600 hover:text-indigo-800">View All</button>
+        {/* Timeline */}
+        <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
+          <h2 className="text-lg font-medium mb-6">Sales Performance Timeline</h2>
+          <div className="space-y-4">
+            {chartData.map((data, index) => {
+              const label = selectedPeriod === 'monthly' ? data.month : data.week;
+              const percentage = Math.round((data.sales / data.target) * 100);
+              return (
+                <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="font-medium">{label}</div>
+                    <div className={`text-sm font-semibold ${data.sales >= data.target ? 'text-green-600' : 'text-red-600'}`}>
+                      {data.sales >= data.target ? 'Above Target' : 'Below Target'}
+                    </div>
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-500 mb-2">
+                    <span>Sales: {formatLKR(data.sales)}</span>
+                    <span>Target: {formatLKR(data.target)}</span>
+                  </div>
+                  <div className="relative pt-1">
+                    <div className="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                      <div
+                        style={{ width: `${Math.min(percentage, 100)}%` }}
+                        className={`h-2 rounded-l ${
+                          percentage >= 100
+                            ? 'bg-green-500'
+                            : percentage >= 85
+                            ? 'bg-blue-500'
+                            : 'bg-orange-500'
+                        }`}
+                      ></div>
+                    </div>
+                    <span className="text-xs text-blue-600 mt-1 block">{percentage}% of target</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <CertificationCard 
-            title="Footwear Specialist" 
-            date="March 2025" 
-            image="/api/placeholder/60/60"
-          />
-          <CertificationCard 
-            title="Customer Service Excellence" 
-            date="January 2025" 
-            image="/api/placeholder/60/60"
-          />
-          <CertificationCard 
-            title="Sports Shoe Expert" 
-            date="November 2024" 
-            image="/api/placeholder/60/60"
-          />
-          <CertificationCard 
-            title="Sales Professional" 
-            date="September 2024" 
-            image="/api/placeholder/60/60"
-          />
+
+        {/* Transactions + Insights */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Recent Transactions */}
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="flex justify-between mb-6">
+              <h2 className="text-lg font-medium">Recent Transactions</h2>
+              <Calendar size={16} className="text-gray-600" />
+            </div>
+            <div className="space-y-4">
+              {recentTransactions.map(tx => (
+                <div key={tx.id} className="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
+                  <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                    <DollarSign size={18} className="text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium">{tx.client}</div>
+                    <div className="text-sm text-gray-500">{tx.date}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-medium">{formatLKR(tx.amount)}</div>
+                    <div>
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        tx.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Insights */}
+          <div className="bg-white p-6 rounded-xl shadow-sm">
+            <div className="flex justify-between mb-6">
+              <h2 className="text-lg font-medium">Performance Insights</h2>
+              <TrendingUp size={16} className="text-gray-600" />
+            </div>
+            <div className="space-y-4">
+              {[
+                {
+                  icon: <Users size={18} className="text-green-600" />,
+                  bg: 'bg-green-100',
+                  title: 'Client Acquisition',
+                  value: '+20%',
+                  note: `4 new clients this ${periodLabel}`
+                },
+                {
+                  icon: <Clock size={18} className="text-purple-600" />,
+                  bg: 'bg-purple-100',
+                  title: 'Average Deal Time',
+                  value: '-12%',
+                  note: '3.5 days to close'
+                },
+                {
+                  icon: <Target size={18} className="text-blue-600" />,
+                  bg: 'bg-blue-100',
+                  title: 'Conversion Rate',
+                  value: '+5%',
+                  note: '68% of leads converted'
+                }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center p-3 border border-gray-100 rounded-lg">
+                  <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-4 ${item.bg}`}>
+                    {item.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium">{item.title}</div>
+                    <div className="text-sm text-gray-500">{item.note}</div>
+                  </div>
+                  <div className="text-green-600 font-medium">{item.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  );
-}
 
-// Stats Card Component
-function StatCard({ icon, title, value, change, isPositive }) {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex items-center justify-between mb-4">
-        <span className="p-2 rounded-lg bg-gray-100">{icon}</span>
-        <span className={`text-xs font-medium rounded-full px-2 py-1 ${isPositive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-          {change}
-        </span>
-      </div>
-      <h3 className="text-gray-500 text-sm">{title}</h3>
-      <p className="text-2xl font-bold mt-1">{value}</p>
-    </div>
-  );
-}
-
-// Product Sale Item Component
-function ProductSaleItem({ name, category, sales, imageSrc }) {
-  return (
-    <div className="flex items-center">
-      <img src={imageSrc} alt={name} className="w-10 h-10 rounded object-cover" />
-      <div className="ml-3 flex-1">
-        <h3 className="text-sm font-medium">{name}</h3>
-        <p className="text-xs text-gray-500">{category}</p>
-      </div>
-      <div className="text-right">
-        <p className="text-sm font-medium">{sales} sold</p>
-        <div className="w-20 bg-gray-200 rounded-full h-1 mt-1">
-          <div 
-            className="bg-indigo-600 h-1 rounded-full" 
-            style={{ width: `${Math.min(sales / 0.3, 100)}%` }}
-          ></div>
+        {/* Category Breakdown */}
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h2 className="text-lg font-medium mb-6">Sales by Product Category</h2>
+          {[
+            { label: 'Enterprise Solutions', percent: 60 },
+            { label: 'Cloud Services', percent: 25 },
+            { label: 'Consulting', percent: 15 }
+          ].map((item, i) => (
+            <div key={i} className="flex items-center mb-3">
+              <div className="w-1/4 font-medium">{item.label}</div>
+              <div className="w-3/4 flex items-center">
+                <div className="h-6 bg-blue-600 rounded-l" style={{ width: `${item.percent}%` }}></div>
+                <div className="h-6 bg-gray-100 rounded-r" style={{ width: `${100 - item.percent}%` }}></div>
+                <div className="ml-3">{item.percent}%</div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
-  );
-}
 
-// Customer Feedback Component
-function CustomerFeedback({ name, date, rating, comment }) {
-  return (
-    <div className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium">{name}</h3>
-        <span className="text-xs text-gray-500">{date}</span>
+        
+        
       </div>
-      <div className="flex items-center mb-2">
-        {[...Array(5)].map((_, i) => (
-          <svg 
-            key={i}
-            className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        ))}
-      </div>
-      <p className="text-sm text-gray-600">{comment}</p>
-    </div>
-  );
-}
-
-// Training Stats Card
-function TrainingStatCard({ icon, title, value, subtitle, bgColor, textColor }) {
-  return (
-    <div className={`${bgColor} rounded-lg p-6`}>
-      <div className="mb-4">{icon}</div>
-      <p className={`${textColor} text-2xl font-bold`}>{value}</p>
-      <p className="text-gray-600 text-sm">{title}</p>
-      <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
-    </div>
-  );
-}
-
-// Training Module Card
-function TrainingModuleCard({ module }) {
-  return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors">
-      <div className="flex justify-between items-start">
-        <div>
-          <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800 mb-2 inline-block">
-            {module.category}
-          </span>
-          <h3 className="font-medium mb-1">{module.title}</h3>
-          <p className="text-sm text-gray-500 flex items-center">
-            <Clock size={14} className="mr-1" /> {module.duration}
-          </p>
-        </div>
-        {module.progress === 100 ? (
-          <span className="bg-green-500 text-white p-1 rounded-full">
-            <CheckCircle size={16} />
-          </span>
-        ) : (
-          <button className="bg-indigo-600 text-white rounded-full p-1 hover:bg-indigo-700">
-            <Play size={16} />
-          </button>
-        )}
-      </div>
-      <div className="mt-4">
-        <div className="flex justify-between text-xs mb-1">
-          <span>Progress</span>
-          <span>{module.progress}%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className={`h-2 rounded-full ${
-              module.progress === 100 ? 'bg-green-500' : 
-              module.progress > 0 ? 'bg-indigo-600' : 'bg-gray-300'
-            }`}
-            style={{ width: `${module.progress}%` }}
-          ></div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Upcoming Training Card
-function UpcomingTrainingCard({ training }) {
-  return (
-    <div className="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
-      <h3 className="font-medium">{training.title}</h3>
-      <div className="flex items-center mt-2 text-sm text-gray-500">
-        <Calendar size={14} className="mr-1" />
-        <span>{training.date}</span>
-      </div>
-      <div className="flex items-center mt-1 text-sm text-gray-500">
-        <Clock size={14} className="mr-1" />
-        <span>{training.time}</span>
-      </div>
-      <div className="flex justify-between items-center mt-2">
-        <span className="text-xs text-gray-500">Trainer: {training.trainer}</span>
-        <button className="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
-          Add to Calendar
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// Certification Card
-function CertificationCard({ title, date, image }) {
-  return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center text-center hover:border-indigo-300 transition-colors">
-      <div className="w-16 h-16 rounded-full flex items-center justify-center bg-indigo-100 mb-3">
-        <img src={image} alt={title} className="w-10 h-10" />
-      </div>
-      <h3 className="font-medium text-sm">{title}</h3>
-      <p className="text-xs text-gray-500 mt-1">{date}</p>
-      <button className="mt-3 text-xs text-indigo-600 hover:text-indigo-800 font-medium">
-        View Certificate
-      </button>
     </div>
   );
 }

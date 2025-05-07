@@ -94,8 +94,8 @@ function App() {
   console.log("user", user)
 
   const location = useLocation();
-  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard','/shoes', '/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit'];
-  const noHeaderRoutes = ['/employeelogin', '/admindashboard', '/dashboard','/shoes','/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit'];
+  const noFooterRoutes = ['/customerlogin', '/login', '/customerregister', '/customerdashboard', '/employeelogin', '/admindashboard','/shoes', '/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit', '/HRdashboard', '/employee','/department','/leaves','/Salary','/attendance','/employeeDashboard','/applyleave','/salary&promotion','/AddNewEmployee','/trackingbonus','/EmAttendance','/SalesPerformance','/salary','/EmployeeBonusTracking','/employeedetails'];
+  const noHeaderRoutes = ['/employeelogin', '/admindashboard', '/dashboard','/shoes','/dashboard','/categories','/restock','/shoes/add','/shoes/:id/edit', '/HRdashboard', '/employee','/department','/leaves','/Salary','/attendance','/employeeDashboard','/applyleave','/salary&promotion','/AddNewEmployee','/trackingbonus','/EmAttendance','/SalesPerformance','/salary','/EmployeeBonusTracking','/employeedetails'];
   const sidebarRoutes = ['/dashboard', '/shoes', '/shoes/add', '/restock', '/shoes/:id', '/shoes/:id/edit', '/categories'];
 
 const showSidebar = sidebarRoutes.some(path => location.pathname.startsWith(path));

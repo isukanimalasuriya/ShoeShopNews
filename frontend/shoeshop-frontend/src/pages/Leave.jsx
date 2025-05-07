@@ -280,6 +280,8 @@ const Leave = () => {
                 <option value="DELIVERY_MANAGER">Delivery Manager</option>
                 <option value="DELIVERY_PERSON">Delivery Person</option>
                 <option value="admin">Admin</option>
+                <option value="FINANCE_MANAGER">FINANCE_MANAGER</option>
+
               </select>
               <select name="status" value={formData.status} onChange={handleInputChange} className="w-full border rounded px-3 py-2">
                 <option value="">Select Status</option>
