@@ -33,7 +33,7 @@ const AdminDashboard = () => {
       };
 
   // Function to render the appropriate component based on state
-  // Note: HRDashboard is now accessed via direct navigation to '/hr-dashboard' route instead of being rendered here
+  // HRDashboard is accessed via direct navigation to '/hr-dashboard' route instead of being rendered here
   const renderComponent = () => {
     switch (activeComponent) {
       case 'dashboard':
